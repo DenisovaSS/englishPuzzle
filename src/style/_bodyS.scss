@@ -1,0 +1,18 @@
+body {
+  background-color: $back;
+  color: $text;
+  user-select: none;
+}
+h1 {
+  font-family: "MadimiOne";
+}
+p {
+  font-family: "BrandaYolq";
+  font-size: 40px;
+}
+.image {
+  width: 300px;
+  height: 200px;
+  background-size: cover;
+  background-image: url("img/pensil.jpg");
+}
