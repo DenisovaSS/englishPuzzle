@@ -15,7 +15,7 @@ console.log(mult(10, 6));
 console.log('my favoryte');
 
 myName('My qeen');
-function hell() {
-  return console.log('I am angry!!');
+function hell(name: string) {
+  return console.log('I am angry!!', name);
 }
-hell();
+hell('Sveta');
