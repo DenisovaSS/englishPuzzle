@@ -1,5 +1,5 @@
 import './index.html';
-import './style.scss';
+import './style.css';
 import cup from './img/coffee-cup.svg';
 import { myName, mult } from './modules/culc';
 
