@@ -1,0 +1,4 @@
+@import 'lib/normalize.css';
+p {
+  color: tomato;
+}
