@@ -22,6 +22,14 @@ export class ElementCreator {
     return this.element;
   }
 
+  addInnerElement(element: HTMLElement | ElementCreator) {
+    if (element instanceof ElementCreator) {
+      this.element.append(element.getElement());
+    } else {
+      this.element.append(element);
+    }
+  }
+
   setCssClasses(cssClasses: Array<string>) {
     // eslint-disable-next-line array-callback-return
     cssClasses.map((className) => {

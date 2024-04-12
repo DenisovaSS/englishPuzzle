@@ -1,4 +1,10 @@
 @import 'lib/normalize.css';
-p {
+body {
   color: tomato;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-image: url(./img/sashaP.jpg);
+  width: 100vw;
+  height: 100vh;
 }

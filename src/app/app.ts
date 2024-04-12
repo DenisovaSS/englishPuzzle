@@ -1,3 +1,4 @@
+import HeaderView from './view/header/header';
 import MainView from './view/main/main';
 import FooterView from './view/footer/footer';
 
@@ -7,15 +8,16 @@ export default class App {
   }
 
   createView() {
+    const headerView = new HeaderView();
     const mainView = new MainView();
 
     const footerView = new FooterView();
-    if (mainView && footerView) {
-      document.body.append(
-        mainView.getHtmlElement(),
-        // eslint-disable-next-line @typescript-eslint/comma-dangle
-        footerView.getHtmlElement()
-      );
-    }
+
+    document.body.append(
+      headerView.getHtmlElement(),
+      mainView.getHtmlElement(),
+      // eslint-disable-next-line @typescript-eslint/comma-dangle
+      footerView.getHtmlElement()
+    );
   }
 }

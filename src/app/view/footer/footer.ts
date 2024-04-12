@@ -5,7 +5,7 @@ import { ElementParams } from '../../utils/element-creator';
 const cssClasses = {
   FOOTER: 'footer',
 };
-const TEXT = 'SPA example app';
+const TEXT = 'this is footer';
 export default class FooterView extends View {
   constructor() {
     const params: ElementParams = {
