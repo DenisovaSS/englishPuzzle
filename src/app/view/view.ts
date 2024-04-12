@@ -17,7 +17,6 @@ export default class View {
       tag: params.tag,
       classNames: params.classNames,
       textContent: params.textContent,
-      callback: params.callback
     };
     const elementCreator = new ElementCreator(elementParams);
     return elementCreator;

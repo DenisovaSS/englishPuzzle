@@ -1,15 +1,14 @@
 export interface ElementParams {
   tag: string;
   classNames: Array<string>;
-  parent?: HTMLElement | null;
   textContent: string;
-  callback: (event: MouseEvent) => void;
 }
+
 export class ElementCreator {
-  element: HTMLElement | null;
+  element: HTMLElement;
 
   constructor(param: ElementParams) {
-    this.element = null;
+    this.element = document.createElement('div');
     this.createElement(param);
   }
 
@@ -26,23 +25,13 @@ export class ElementCreator {
   setCssClasses(cssClasses: Array<string>) {
     // eslint-disable-next-line array-callback-return
     cssClasses.map((className) => {
-      if (this.element) {
-        this.element.classList.add(className);
-      }
+      this.element?.classList.add(className);
     });
   }
 
   setTextContent(text: string) {
     if (this.element) {
       this.element.textContent = text;
-    }
-  }
-
-  setCallback(callback: (event: Event) => void) {
-    if (typeof callback === 'function') {
-      if (this.element) {
-        this.element.addEventListener('click', (event) => callback(event));
-      }
     }
   }
 }
