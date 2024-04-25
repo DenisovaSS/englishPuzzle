@@ -1,6 +1,7 @@
 import HeaderView from './view/header/header';
 import MainView from './view/main/main';
 import FooterView from './view/footer/footer';
+import LoginView from './view/main/login/login_view';
 
 export default class App {
   constructor() {
@@ -10,7 +11,7 @@ export default class App {
   createView() {
     const headerView = new HeaderView();
     const mainView = new MainView();
-
+    mainView.setContent(new LoginView());
     const footerView = new FooterView();
 
     document.body.append(

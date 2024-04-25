@@ -1,19 +1,96 @@
-import { ElementCreator, ElementParams } from './element-creator';
+export interface ElementParams {
+  tag: string;
+  classNames: Array<string>;
+  textContent: string;
+}
 
-export default class EventElementCreator extends ElementCreator {
-  callback: (event: MouseEvent | KeyboardEvent) => void;
+type EventHandler = (event: Event) => void;
 
-  constructor(
-    param: ElementParams,
-    // eslint-disable-next-line @typescript-eslint/comma-dangle
-    callback: (event: MouseEvent | KeyboardEvent) => void
-  ) {
-    super(param);
-    this.callback = callback;
-    this.setCallback();
+export class ElementCreator {
+  private element: HTMLElement;
+
+  constructor(param: ElementParams) {
+    this.element = document.createElement(param.tag);
+    this.createElement(param);
   }
 
-  setCallback() {
-    this.element.addEventListener('click', this.callback);
+  createElement(param: ElementParams) {
+    this.setCssClasses(param.classNames);
+    this.setTextContent(param.textContent);
+  }
+
+  getElement() {
+    return this.element;
+  }
+
+  addInnerElement(element: HTMLElement | ElementCreator) {
+    if (element instanceof ElementCreator) {
+      this.element.append(element.getElement());
+    } else {
+      this.element.append(element);
+    }
+  }
+
+  setCssClasses(cssClasses: Array<string>) {
+    cssClasses.forEach((className) => {
+      this.element?.classList.add(className);
+    });
+  }
+
+  setTextContent(text: string) {
+    this.element.textContent = text;
+  }
+
+  setEventHandler(eventType: string, eventHandler: EventHandler) {
+    this.element.addEventListener(eventType, eventHandler);
   }
 }
+
+// export interface ElementParams {
+//   tag: string;
+//   classNames: Array<string>;
+//   textContent: string;
+// }
+// type EventHandler = (event: Event) => void;
+// export class ElementCreator {
+//   element: HTMLElement;
+
+//   constructor(param: ElementParams, eventHandler?: EventHandler) {
+//     this.element = document.createElement('div');
+//     if (eventHandler) {
+//       this.element.addEventListener('click', eventHandler);
+//     }
+//     this.createElement(param);
+//   }
+
+//   createElement(param: ElementParams) {
+//     this.element = document.createElement(param.tag);
+//     this.setCssClasses(param.classNames);
+//     this.setTextContent(param.textContent);
+//   }
+
+//   getElement() {
+//     return this.element;
+//   }
+
+//   addInnerElement(element: HTMLElement | ElementCreator) {
+//     if (element instanceof ElementCreator) {
+//       this.element.append(element.getElement());
+//     } else {
+//       this.element.append(element);
+//     }
+//   }
+
+//   setCssClasses(cssClasses: Array<string>) {
+//     // eslint-disable-next-line array-callback-return
+//     cssClasses.map((className) => {
+//       this.element?.classList.add(className);
+//     });
+//   }
+
+//   setTextContent(text: string) {
+//     if (this.element) {
+//       this.element.textContent = text;
+//     }
+//   }
+// }

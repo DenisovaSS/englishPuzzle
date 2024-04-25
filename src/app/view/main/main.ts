@@ -16,14 +16,14 @@ export default class MainView extends View {
     super(params);
   }
 
-  //   setContent(view: View) {
-  //     const element = view.getHtmlElement();
-  //     const currentElement = this.elementCreator.getElement();
-  //     if (currentElement) {
-  //       while (currentElement.firstElementChild) {
-  //         currentElement.firstElementChild.remove();
-  //       }
-  //       currentElement.append(element || '');
-  //     }
-  //   }
+  setContent(view: View) {
+    const element = view.getHtmlElement();
+    const currentElement = this.elementCreator.getElement();
+    if (currentElement) {
+      while (currentElement.firstElementChild) {
+        currentElement.firstElementChild.remove();
+      }
+      currentElement.append(element || '');
+    }
+  }
 }
