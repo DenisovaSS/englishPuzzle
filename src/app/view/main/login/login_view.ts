@@ -12,7 +12,7 @@ const CARD_TEXT_MORE = 'Sign in';
 export default class LoginView extends View {
   constructor() {
     const params: ElementParams = {
-      tag: 'div',
+      tag: 'section',
       classNames: [cssClasses.LOGIN],
       textContent: '',
     };

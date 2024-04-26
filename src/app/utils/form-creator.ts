@@ -1,4 +1,5 @@
 import { InputCreator, InputParams } from './input-element-creator';
+import { myKeySaveLocalStorage } from './consts';
 
 export interface FormParams {
   inputs: InputParams[];
@@ -107,7 +108,7 @@ export class FormCreator {
     this.formElement.querySelectorAll('input').forEach((inputElement) => {
       formData[inputElement.name] = (inputElement as HTMLInputElement).value;
     });
-    const myKeySaveLocalStorage = 'formData';
+
     localStorage.setItem(myKeySaveLocalStorage, JSON.stringify(formData));
   }
 
