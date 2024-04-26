@@ -9,8 +9,9 @@ const cssClasses = {
   GAMEDESCRIPTION: 'description',
   WELCOMENAME: 'greeting',
   BTNCONTAINER: 'btns-container',
-  BUTTONSTART: ['button', 'start-button'],
-  BUTTONLOGOOUT: ['button', 'logout-button'],
+  BUTTON: 'button',
+  BUTTONSTART: 'start-button',
+  BUTTONLOGOOUT: 'logout-button',
 };
 const TEXT_GAME_NAME = 'RSS PUZZLE';
 // eslint-disable-next-line operator-linebreak
@@ -60,6 +61,22 @@ export default class WelcomeView extends View {
     };
     const ContBtnCreator = new ElementCreator(ContBtnParam);
     this.elementCreator.addInnerElement(ContBtnCreator.getElement());
+    const BtnStartParam = {
+      tag: 'div',
+      classNames: [cssClasses.BUTTON, cssClasses.BUTTONSTART],
+      textContent: 'Start',
+    };
+    const BtnStartCreator = new ElementCreator(BtnStartParam);
+    BtnStartCreator.setEventHandler('click', this.nextPage);
+    ContBtnCreator.addInnerElement(BtnStartCreator.getElement());
+    const BtnLogOutParam = {
+      tag: 'div',
+      classNames: [cssClasses.BUTTON, cssClasses.BUTTONLOGOOUT],
+      textContent: 'Logout',
+    };
+    const BtnLogOutCreator = new ElementCreator(BtnLogOutParam);
+    BtnLogOutCreator.setEventHandler('click', this.beforePage);
+    ContBtnCreator.addInnerElement(BtnLogOutCreator.getElement());
   }
 
   greetingCustomer(): string {
@@ -73,5 +90,13 @@ export default class WelcomeView extends View {
     }
 
     return welcome;
+  }
+
+  nextPage() {
+    console.log('here change to Page Game');
+  }
+
+  beforePage() {
+    console.log('here change to Login page');
   }
 }
