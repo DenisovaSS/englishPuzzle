@@ -1,4 +1,11 @@
 @import 'lib/normalize.css';
-p {
-  color: tomato;
+body {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-image: url(./img/sashaP.jpg);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
