@@ -1,10 +1,11 @@
 @import 'lib/normalize.css';
 body {
-  color: tomato;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
   background-image: url(./img/sashaP.jpg);
-  width: 100vw;
   height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }

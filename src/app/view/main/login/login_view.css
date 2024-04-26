@@ -1,6 +1,6 @@
 .login {
   min-width: 30%;
-  max-width: 400px;
+  max-width: 600px;
   gap: 20px;
   border: 3px solid #2e2e2e;
   border-radius: 10px;
@@ -20,6 +20,33 @@ form {
   justify-content: center;
 }
 label {
-  font-size: 20px;
+  font-size: 30px;
   color: #fff;
+}
+.form-input {
+  width: 70%;
+  border-radius: 10px;
+  padding: 2%;
+  font-size: 25px;
+}
+.form-input:invalid {
+  border: 3px solid red;
+  border-color: red;
+}
+form button {
+  color: #fff;
+  display: block;
+  padding: 3%;
+  border-radius: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  background-color: #474747;
+  transition: 0.2s linear;
+}
+form button:hover {
+  background-color: #c77700;
+}
+.title {
+  color: #fff;
+  font-size: 40px;
 }
