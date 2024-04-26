@@ -50,3 +50,10 @@ form button:hover {
   color: #fff;
   font-size: 40px;
 }
+.error {
+  margin-top: -30px;
+  font-size: 25px;
+  transition: all 0.2s;
+  text-align: center;
+  color: rgb(255, 138, 8);
+}
