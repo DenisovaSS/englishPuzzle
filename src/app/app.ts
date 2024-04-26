@@ -13,7 +13,7 @@ export default class App {
     const headerView = new HeaderView();
     const mainView = new MainView();
     // mainView.setContent(new LoginView());
-    mainView.setContent(new WelcomeView());
+    mainView.setContent(new WelcomeView(mainView));
     const footerView = new FooterView();
 
     document.body.append(

@@ -2,6 +2,7 @@ import './login_view.css';
 import View from '../../view';
 import { ElementParams, ElementCreator } from '../../../utils/element-creator';
 import { FormParams, FormCreator } from '../../../utils/form-creator';
+import MainView from '../main';
 
 const cssClasses = {
   LOGIN: 'login',
@@ -10,7 +11,7 @@ const cssClasses = {
 const CARD_TEXT_MORE = 'Sign in';
 
 export default class LoginView extends View {
-  constructor() {
+  constructor(private mainView: MainView) {
     const params: ElementParams = {
       tag: 'section',
       classNames: [cssClasses.LOGIN],

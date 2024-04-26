@@ -2,6 +2,8 @@ import './welcome.css';
 import View from '../../view';
 import { ElementParams, ElementCreator } from '../../../utils/element-creator';
 import { myKeySaveLocalStorage } from '../../../utils/consts';
+import MainView from '../main';
+import LoginView from '../login/login_view';
 
 const cssClasses = {
   START: 'start-page',
@@ -19,7 +21,7 @@ const TEXT_GAME_DESCRIPTION =
   'RSS Puzzle is a fun platform for learning English where you will have to make sentences out of words.';
 
 export default class WelcomeView extends View {
-  constructor() {
+  constructor(private mainView: MainView) {
     const params: ElementParams = {
       tag: 'section',
       classNames: [cssClasses.START],
@@ -75,7 +77,9 @@ export default class WelcomeView extends View {
       textContent: 'Logout',
     };
     const BtnLogOutCreator = new ElementCreator(BtnLogOutParam);
-    BtnLogOutCreator.setEventHandler('click', this.beforePage);
+    BtnLogOutCreator.setEventHandler('click', () => {
+      this.mainView.setContent(new LoginView(this.mainView));
+    });
     ContBtnCreator.addInnerElement(BtnLogOutCreator.getElement());
   }
 
@@ -96,7 +100,7 @@ export default class WelcomeView extends View {
     console.log('here change to Page Game');
   }
 
-  beforePage() {
-    console.log('here change to Login page');
-  }
+  //   beforePage() {
+
+  //   }
 }
