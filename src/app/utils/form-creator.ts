@@ -3,6 +3,7 @@ import { InputCreator, InputParams } from './input-element-creator';
 export interface FormParams {
   inputs: InputParams[];
   buttonText: string;
+  onSubmit: (event: Event) => void;
 }
 
 export class FormCreator {
@@ -12,6 +13,7 @@ export class FormCreator {
     this.formElement = document.createElement('form') as HTMLFormElement;
     this.createInputs(params.inputs);
     this.createButton(params.buttonText);
+    this.setFormSubmitListener(params.onSubmit);
   }
 
   private createInputs(inputs: InputParams[]) {
@@ -40,6 +42,73 @@ export class FormCreator {
     buttonElement.textContent = buttonText;
 
     this.formElement.appendChild(buttonElement);
+  }
+
+  private setFormSubmitListener(submitHandler: (event: Event) => void) {
+    this.formElement.addEventListener('submit', (event: Event) => {
+      event.preventDefault();
+      const errors = this.formElement.querySelectorAll('.error');
+      errors.forEach((err) => err.remove());
+      const inputsValid = this.validateInputs();
+      if (inputsValid) {
+        this.saveFormDataToLocalStorage();
+        submitHandler(event);
+      } else {
+        console.log('Form validation failed');
+      }
+    });
+  }
+
+  validateInputs(): boolean {
+    let allInputsValid = true;
+
+    this.formElement.querySelectorAll('input').forEach((inputElement) => {
+      const messages: string[] = [];
+      if (inputElement.value === '' || inputElement.value == null) {
+        messages.push('Name cannot be blank');
+      } else {
+        const re = /^[A-Za-z-]+$/;
+        if (!re.test(inputElement.value)) {
+          messages.push('Please use English alphabet and the hyphen symbol');
+        }
+        const firstLetter: string = inputElement.value.charAt(0);
+        if (firstLetter !== firstLetter.toUpperCase()) {
+          messages.push('First letter is in uppercase');
+        }
+        if (inputElement.name === 'firstName') {
+          if (inputElement.value.length < 3) {
+            messages.push('Please set a minimum length of 3 characters');
+          }
+        }
+        if (inputElement.name === 'lastName') {
+          if (inputElement.value.length < 4) {
+            messages.push('Please set a minimum length of 4 characters');
+          }
+        }
+      }
+      if (messages.length > 0) {
+        allInputsValid = false;
+        this.displayValidationError(inputElement, messages);
+      }
+    });
+
+    return allInputsValid;
+  }
+
+  displayValidationError(input: HTMLInputElement, messages: string[]) {
+    const error: HTMLElement = document.createElement('div');
+    error.classList.add('error');
+    input.after(error);
+    error.innerHTML = messages.join(', ');
+  }
+
+  saveFormDataToLocalStorage() {
+    const formData: { [key: string]: string } = {};
+    this.formElement.querySelectorAll('input').forEach((inputElement) => {
+      formData[inputElement.name] = (inputElement as HTMLInputElement).value;
+    });
+    const myKeySaveLocalStorage = 'formData';
+    localStorage.setItem(myKeySaveLocalStorage, JSON.stringify(formData));
   }
 
   getElement(): HTMLFormElement {

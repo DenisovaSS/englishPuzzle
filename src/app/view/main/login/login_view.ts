@@ -8,33 +8,7 @@ const cssClasses = {
   H: 'title',
 };
 const CARD_TEXT_MORE = 'Sign in';
-const formParams: FormParams = {
-  inputs: [
-    {
-      tag: 'input',
-      classNames: ['form-input'],
-      textContent: 'Enter your Name:',
-      inputAttributes: {
-        type: 'text',
-        name: 'firstName',
-        id: 'firstName',
-        placeholder: 'Name',
-      },
-    },
-    {
-      tag: 'input',
-      classNames: ['form-input'],
-      textContent: 'Enter your Surname:',
-      inputAttributes: {
-        type: 'text',
-        name: 'lastName',
-        id: 'lastName',
-        placeholder: 'Surname',
-      },
-    },
-  ],
-  buttonText: 'Submit',
-};
+
 export default class LoginView extends View {
   constructor() {
     const params: ElementParams = {
@@ -56,7 +30,42 @@ export default class LoginView extends View {
     const HCreator = new ElementCreator(paramsH);
 
     this.elementCreator.addInnerElement(HCreator.getElement());
+    const formParams: FormParams = {
+      inputs: [
+        {
+          tag: 'input',
+          classNames: ['form-input'],
+          textContent: 'Enter your Name:',
+          inputAttributes: {
+            type: 'text',
+            name: 'firstName',
+            id: 'firstName',
+            placeholder: 'Name',
+          },
+        },
+        {
+          tag: 'input',
+          classNames: ['form-input'],
+          textContent: 'Enter your Surname:',
+          inputAttributes: {
+            type: 'text',
+            name: 'lastName',
+            id: 'lastName',
+            placeholder: 'Surname',
+          },
+        },
+      ],
+      buttonText: 'Submit',
+      onSubmit: this.handleFormSubmit.bind(this),
+    };
     const formCreator = new FormCreator(formParams);
+
     this.elementCreator.addInnerElement(formCreator.getElement());
+  }
+
+  private handleFormSubmit(event: Event) {
+    event.preventDefault();
+
+    console.log('Form submitted');
   }
 }
