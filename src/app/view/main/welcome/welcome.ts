@@ -10,6 +10,7 @@ const cssClasses = {
   GAMENAME: 'title_start',
   GAMEDESCRIPTION: 'description',
   WELCOMENAME: 'greeting',
+  ANIMATION: 'fancy',
   BTNCONTAINER: 'btns-container',
   BUTTON: 'button',
   BUTTONSTART: 'start-button',
@@ -51,7 +52,7 @@ export default class WelcomeView extends View {
 
     const welcParam = {
       tag: 'h2',
-      classNames: [cssClasses.WELCOMENAME],
+      classNames: [cssClasses.WELCOMENAME, cssClasses.ANIMATION],
       textContent: this.greetingCustomer(),
     };
     const welcCreator = new ElementCreator(welcParam);
