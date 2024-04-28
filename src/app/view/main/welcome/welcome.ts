@@ -3,7 +3,9 @@ import View from '../../view';
 import { ElementParams, ElementCreator } from '../../../utils/element-creator';
 import { myKeySaveLocalStorage } from '../../../utils/consts';
 import MainView from '../main';
+// eslint-disable-next-line import/no-cycle
 import LoginView from '../login/login_view';
+import GameView from '../game/game';
 
 const cssClasses = {
   START: 'start-page',
@@ -65,15 +67,17 @@ export default class WelcomeView extends View {
     const ContBtnCreator = new ElementCreator(ContBtnParam);
     this.elementCreator.addInnerElement(ContBtnCreator.getElement());
     const BtnStartParam = {
-      tag: 'div',
+      tag: 'button',
       classNames: [cssClasses.BUTTON, cssClasses.BUTTONSTART],
       textContent: 'Start',
     };
     const BtnStartCreator = new ElementCreator(BtnStartParam);
-    BtnStartCreator.setEventHandler('click', this.nextPage);
+    BtnStartCreator.setEventHandler('click', () => {
+      this.mainView.setContent(new GameView(this.mainView));
+    });
     ContBtnCreator.addInnerElement(BtnStartCreator.getElement());
     const BtnLogOutParam = {
-      tag: 'div',
+      tag: 'button',
       classNames: [cssClasses.BUTTON, cssClasses.BUTTONLOGOOUT],
       textContent: 'Logout',
     };
