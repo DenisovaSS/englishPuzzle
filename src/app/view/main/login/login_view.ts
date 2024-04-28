@@ -1,8 +1,10 @@
+/* eslint-disable import/no-cycle */
 import './login_view.css';
 import View from '../../view';
 import { ElementParams, ElementCreator } from '../../../utils/element-creator';
 import { FormParams, FormCreator } from '../../../utils/form-creator';
 import MainView from '../main';
+import WelcomeView from '../welcome/welcome';
 
 const cssClasses = {
   LOGIN: 'login',
@@ -66,7 +68,7 @@ export default class LoginView extends View {
 
   private handleFormSubmit(event: Event) {
     event.preventDefault();
-
+    this.mainView.setContent(new WelcomeView(this.mainView));
     console.log('Form submitted');
   }
 }
