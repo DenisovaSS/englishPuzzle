@@ -4,7 +4,8 @@ import FooterView from './view/footer/footer';
 import { myKeySaveLocalStorage } from './utils/consts';
 import LoginView from './view/main/login/login_view';
 import WelcomeView from './view/main/welcome/welcome';
-// import GameView from './view/main/game/game';
+import GameView from './view/main/game/game';
+import EventEmitter from './utils/EventEmit';
 
 export default class App {
   constructor() {
@@ -30,6 +31,13 @@ export default class App {
     const customerDataString = localStorage.getItem(myKeySaveLocalStorage);
     if (customerDataString !== null) {
       mainView.setContent(new WelcomeView(mainView));
+      const eventEmitter = EventEmitter.getInstance();
+      eventEmitter.on('logout', () => {
+        mainView.setContent(new LoginView(mainView));
+      });
+      eventEmitter.on('startGame', () => {
+        mainView.setContent(new GameView(mainView));
+      });
     } else {
       mainView.setContent(new LoginView(mainView));
     }
