@@ -14,7 +14,7 @@
   border: 3px solid #2e2e2e;
   border-radius: 10px;
   background-color: rgba(126, 126, 126, 0.4);
-
+  padding: 20px;
   backdrop-filter: blur(9px);
   transition: opacity 0.3s;
   opacity: 1;

@@ -8,7 +8,6 @@ import WelcomeView from './view/main/welcome/welcome';
 import GameView from './view/main/game/game';
 import EventEmitter from './utils/EventEmit';
 
-
 export default class App {
   constructor() {
     this.createView();
@@ -17,8 +16,8 @@ export default class App {
   createView() {
     const headerView = new HeaderView();
     const mainView = new MainView();
-    // mainView.setContent(new LoginView());
-    this.renderNewPage(mainView);
+    mainView.setContent(new GameView(mainView));
+    // this.renderNewPage(mainView);
     const footerView = new FooterView();
 
     document.body.append(
@@ -40,6 +39,6 @@ export default class App {
       eventEmitter.on('startGame', () => {
         mainView.setContent(new GameView(mainView));
       });
-
+    }
   }
 }

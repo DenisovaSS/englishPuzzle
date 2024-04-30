@@ -3,6 +3,8 @@ import View from '../../view';
 import { ElementParams, ElementCreator } from '../../../utils/element-creator';
 import HeaderGameView from './header-game/headerGameView';
 import MainView from '../main';
+import ContainerPieceGameView from './container-piece-game/containerPieceGameView';
+import ResultGameView from './result-game/resultGameView';
 
 const cssClasses = {
   SECTIONG: 'game-page',
@@ -36,5 +38,9 @@ export default class GameView extends View {
 
     const headerCreator = new HeaderGameView(this.mainView);
     containerCreator.addInnerElement(headerCreator.getHtmlElement());
+    const resultContainer = new ResultGameView();
+    containerCreator.addInnerElement(resultContainer.getHtmlElement());
+    const peaceContainer = new ContainerPieceGameView();
+    containerCreator.addInnerElement(peaceContainer.getHtmlElement());
   }
 }
