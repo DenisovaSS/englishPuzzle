@@ -13,6 +13,7 @@ export default class EventEmitter {
     return EventEmitter.instance;
   }
 
+  // Method to subscribe to an event(Способ подписки на событие)
   on(eventName: string, callback: EventListener) {
     if (!this.events[eventName]) {
       this.events[eventName] = [];
@@ -20,6 +21,7 @@ export default class EventEmitter {
     this.events[eventName].push(callback);
   }
 
+  // Method to emit an event(Метод генерации события)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   emit(eventName: string, ...args: any[]) {
     const eventCallbacks = this.events[eventName] || [];
