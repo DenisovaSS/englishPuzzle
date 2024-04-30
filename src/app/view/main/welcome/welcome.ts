@@ -3,6 +3,7 @@ import View from '../../view';
 import { ElementParams, ElementCreator } from '../../../utils/element-creator';
 import { myKeySaveLocalStorage } from '../../../utils/consts';
 import MainView from '../main';
+
 // import LoginView from '../login/login_view';
 // import GameView from '../game/game';
 import EventEmitter from '../../../utils/EventEmit';
@@ -74,8 +75,10 @@ export default class WelcomeView extends View {
     };
     const BtnStartCreator = new ElementCreator(BtnStartParam);
     BtnStartCreator.setEventHandler('click', () => {
+
       // this.mainView.setContent(new GameView(this.mainView));
       eventEmitter.emit('startGame');
+
     });
     ContBtnCreator.addInnerElement(BtnStartCreator.getElement());
     const BtnLogOutParam = {

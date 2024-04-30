@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import './login_view.css';
 import View from '../../view';
 import { ElementParams, ElementCreator } from '../../../utils/element-creator';
