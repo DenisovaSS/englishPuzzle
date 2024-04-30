@@ -3,9 +3,10 @@ import View from '../../view';
 import { ElementParams, ElementCreator } from '../../../utils/element-creator';
 import { myKeySaveLocalStorage } from '../../../utils/consts';
 import MainView from '../main';
-// eslint-disable-next-line import/no-cycle
-import LoginView from '../login/login_view';
-import GameView from '../game/game';
+
+// import LoginView from '../login/login_view';
+// import GameView from '../game/game';
+import EventEmitter from '../../../utils/EventEmit';
 
 const cssClasses = {
   START: 'start-page',
@@ -36,6 +37,7 @@ export default class WelcomeView extends View {
   }
 
   configureView() {
+    const eventEmitter = EventEmitter.getInstance();
     const titleParam = {
       tag: 'h1',
       classNames: [cssClasses.GAMENAME],
@@ -73,7 +75,10 @@ export default class WelcomeView extends View {
     };
     const BtnStartCreator = new ElementCreator(BtnStartParam);
     BtnStartCreator.setEventHandler('click', () => {
-      this.mainView.setContent(new GameView(this.mainView));
+
+      // this.mainView.setContent(new GameView(this.mainView));
+      eventEmitter.emit('startGame');
+
     });
     ContBtnCreator.addInnerElement(BtnStartCreator.getElement());
     const BtnLogOutParam = {
@@ -83,7 +88,9 @@ export default class WelcomeView extends View {
     };
     const BtnLogOutCreator = new ElementCreator(BtnLogOutParam);
     BtnLogOutCreator.setEventHandler('click', () => {
-      this.mainView.setContent(new LoginView(this.mainView));
+      // this.mainView.setContent(new LoginView(this.mainView));
+      eventEmitter.emit('logout');
+      console.log('Blin');
     });
     ContBtnCreator.addInnerElement(BtnLogOutCreator.getElement());
   }
