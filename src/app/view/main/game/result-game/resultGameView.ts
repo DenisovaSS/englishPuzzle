@@ -4,10 +4,12 @@ import {
   ElementParams,
   ElementCreator,
 } from '../../../../utils/element-creator';
+import EventEmitter from '../../../../utils/EventEmit';
 
 const cssClasses = {
   RESULT: 'game-result-container',
   PARTRESULT: 'game-result-container-part',
+  BLOCKPIECE: 'item-piece',
 };
 
 export default class ResultGameView extends View {
@@ -30,5 +32,13 @@ export default class ResultGameView extends View {
     };
     const containerCreator = new ElementCreator(containerParam);
     this.elementCreator.addInnerElement(containerCreator.getElement());
+
+    const eventEmitter = EventEmitter.getInstance();
+    eventEmitter.on('piece', (clickedElement: HTMLElement) => {
+      const newElement = document.createElement('div');
+      newElement.classList.add(cssClasses.BLOCKPIECE);
+      newElement.textContent = clickedElement.textContent;
+      containerCreator.getElement().appendChild(newElement);
+    });
   }
 }

@@ -5,6 +5,7 @@ import {
   ElementCreator,
 } from '../../../../utils/element-creator';
 import wordCollectionLevel1 from '../../../../../data/wordCollectionLevel1.json';
+import EventEmitter from '../../../../utils/EventEmit';
 
 const cssClasses = {
   PARTCONTAINER: 'game-container-pieces',
@@ -24,17 +25,31 @@ export default class ContainerPieceGameView extends View {
   }
 
   configureView() {
-    const sentence = wordCollectionLevel1.rounds[0].words[0].textExample;
-    const arraysent = sentence.split(' ');
-    const ass = this.randomArray(arraysent);
-    console.log(ass);
-    ass.forEach((word) => {
+    const eventEmitter = EventEmitter.getInstance();
+    const sentence = wordCollectionLevel1.rounds[0].words[1].textExample;
+    const arrayNew = sentence.split(' ');
+    const arraysent = this.randomArray(arrayNew);
+    console.log(arraysent);
+    arraysent.forEach((word) => {
       const containerParam = {
         tag: 'div',
         classNames: [cssClasses.BLOCKPIECE],
         textContent: word,
       };
       const containerCreator = new ElementCreator(containerParam);
+      containerCreator.setEventHandler('click', (event) => {
+        const clickedElement = event.target as HTMLElement;
+        const currentElement = this.elementCreator.getElement();
+        for (let i = 0; i < currentElement.children.length; i++) {
+          const child = currentElement.children[i] as HTMLElement;
+          if (child === clickedElement) {
+            eventEmitter.emit('piece', clickedElement);
+            currentElement.removeChild(child);
+
+            break;
+          }
+        }
+      });
       this.elementCreator.addInnerElement(containerCreator.getElement());
     });
   }

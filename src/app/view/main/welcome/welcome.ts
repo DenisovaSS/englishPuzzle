@@ -75,10 +75,7 @@ export default class WelcomeView extends View {
     };
     const BtnStartCreator = new ElementCreator(BtnStartParam);
     BtnStartCreator.setEventHandler('click', () => {
-
-      // this.mainView.setContent(new GameView(this.mainView));
       eventEmitter.emit('startGame');
-
     });
     ContBtnCreator.addInnerElement(BtnStartCreator.getElement());
     const BtnLogOutParam = {
@@ -88,7 +85,6 @@ export default class WelcomeView extends View {
     };
     const BtnLogOutCreator = new ElementCreator(BtnLogOutParam);
     BtnLogOutCreator.setEventHandler('click', () => {
-      // this.mainView.setContent(new LoginView(this.mainView));
       eventEmitter.emit('logout');
       console.log('Blin');
     });
@@ -107,12 +103,4 @@ export default class WelcomeView extends View {
 
     return welcome;
   }
-
-  nextPage() {
-    console.log('here change to Page Game');
-  }
-
-  //   beforePage() {
-
-  //   }
 }

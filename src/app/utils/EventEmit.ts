@@ -21,6 +21,14 @@ export default class EventEmitter {
     this.events[eventName].push(callback);
   }
 
+  // для удаления “подписки” на событие
+  unsubscribe(eventName: string, callback: EventListener) {
+    this.events[eventName] = this.events[eventName].filter(
+      // eslint-disable-next-line @typescript-eslint/comma-dangle
+      (eventCallback) => callback !== eventCallback
+    );
+  }
+
   // Method to emit an event(Метод генерации события)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   emit(eventName: string, ...args: any[]) {
