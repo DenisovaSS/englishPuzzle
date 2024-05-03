@@ -77,6 +77,9 @@
     -1px -1px 14px #000;
   animation: moveCard 1s ease;
 }
+.item-piece:hover {
+  border: 3px solid #c2770f8a;
+}
 @keyframes moveCard {
   from {
     transform: translateY(500px);

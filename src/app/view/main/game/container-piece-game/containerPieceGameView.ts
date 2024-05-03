@@ -7,8 +7,10 @@ import {
 import wordCollectionLevel1 from '../../../../../data/wordCollectionLevel1.json';
 import EventEmitter from '../../../../utils/EventEmit';
 
+const wordCollection = wordCollectionLevel1.rounds[0].words[5].textExample;
 const cssClasses = {
   PARTCONTAINER: 'game-container-pieces',
+  PARTPIECECONTAINER: 'game-container-part-pieces',
   BLOCKPIECE: 'item-piece',
 };
 
@@ -26,10 +28,11 @@ export default class ContainerPieceGameView extends View {
 
   configureView() {
     const eventEmitter = EventEmitter.getInstance();
-    const sentence = wordCollectionLevel1.rounds[0].words[1].textExample;
+    const sentence = wordCollection;
     const arrayNew = sentence.split(' ');
+
     const arraysent = this.randomArray(arrayNew);
-    console.log(arraysent);
+    // console.log(arraysent);
     arraysent.forEach((word) => {
       const containerParam = {
         tag: 'div',
