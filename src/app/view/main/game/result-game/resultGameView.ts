@@ -45,14 +45,25 @@ export default class ResultGameView extends View {
     }
 
     const eventEmitter = EventEmitter.getInstance();
-    eventEmitter.on('piece', (clickedElement: HTMLElement) => {
+    const pieceEventListener = (clickedElement: HTMLElement) => {
       const currentContainerCreator = containerCreator.getElement();
-      // console.log(currentContainerCreator.firstChild?.hasChildNodes());
       const newElement = document.createElement('div');
       newElement.classList.add(cssClasses.BLOCKPIECE);
       newElement.textContent = clickedElement.textContent;
       const allChildren = currentContainerCreator.children;
       let childIndex = 0;
+      newElement.addEventListener('click', (event) => {
+        const clickedPiece = event.target as HTMLElement;
+        for (let i = 0; i < allChildren.length; i++) {
+          const child = allChildren[i] as HTMLElement;
+          if (child.contains(clickedPiece)) {
+            eventEmitter.emit('pushInPiece', clickedPiece);
+            child.removeChild(clickedPiece);
+            break;
+          }
+        }
+      });
+
       while (
         // eslint-disable-next-line operator-linebreak
         childIndex < allChildren.length &&
@@ -63,6 +74,7 @@ export default class ResultGameView extends View {
       if (childIndex < allChildren.length) {
         allChildren[childIndex].append(newElement);
       }
-    });
+    };
+    eventEmitter.on('piece', pieceEventListener);
   }
 }

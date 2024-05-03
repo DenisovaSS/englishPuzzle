@@ -49,13 +49,34 @@ export default class ContainerPieceGameView extends View {
           if (child === clickedElement) {
             eventEmitter.emit('piece', clickedElement);
             currentElement.removeChild(child);
-
             break;
           }
         }
       });
       this.elementCreator.addInnerElement(containerCreator.getElement());
     });
+    const pieceEventListener = (clickedElement: HTMLElement) => {
+      const containerParamNew = {
+        tag: 'div',
+        classNames: [cssClasses.BLOCKPIECE],
+        textContent: clickedElement.textContent || '',
+      };
+      const containerCreator = new ElementCreator(containerParamNew);
+      containerCreator.setEventHandler('click', (event) => {
+        const clickedElementAgain = event.target as HTMLElement;
+        const currentElement = this.elementCreator.getElement();
+        for (let i = 0; i < currentElement.children.length; i++) {
+          const child = currentElement.children[i] as HTMLElement;
+          if (child === clickedElementAgain) {
+            eventEmitter.emit('piece', clickedElementAgain);
+            currentElement.removeChild(child);
+            break;
+          }
+        }
+      });
+      this.elementCreator.addInnerElement(containerCreator.getElement());
+    };
+    eventEmitter.on('pushInPiece', pieceEventListener);
   }
 
   randomArray(array: string[]): string[] {
