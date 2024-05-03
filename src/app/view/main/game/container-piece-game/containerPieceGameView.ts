@@ -7,7 +7,8 @@ import {
 import wordCollectionLevel1 from '../../../../../data/wordCollectionLevel1.json';
 import EventEmitter from '../../../../utils/EventEmit';
 
-const wordCollection = wordCollectionLevel1.rounds[0].words[5].textExample;
+const wordCollection = wordCollectionLevel1.rounds[0].words[7].textExample;
+console.log(wordCollectionLevel1.rounds[0].words);
 const cssClasses = {
   PARTCONTAINER: 'game-container-pieces',
   PARTPIECECONTAINER: 'game-container-part-pieces',
