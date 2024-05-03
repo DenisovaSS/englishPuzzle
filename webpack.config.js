@@ -48,7 +48,11 @@ module.exports = {
         loader: 'ts-loader',
         exclude: /node_modules/,
       },
-
+      {
+        test: /\.json$/,
+        loader: 'json-loader', // or 'file-loader' if you prefer
+        type: 'javascript/auto', // This line is needed for webpack 5 to avoid an error
+      },
       {
         test: /\.(c|sa|sc)ss$/i,
         use: [

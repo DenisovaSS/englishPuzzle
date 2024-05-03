@@ -1,0 +1,28 @@
+.game-result-container {
+  display: flex;
+  min-width: 700px;
+  min-height: 490px;
+  flex-direction: column;
+  gap: 1px;
+  margin-bottom: 20px;
+  transition: all 0.3s linear;
+}
+.game-result-container-part {
+  display: flex;
+  justify-content: space-between;
+  width: 700px;
+  min-height: 49px;
+  gap: 1px;
+  padding: 0;
+  background-color: rgba(126, 145, 159, 0.0196078431);
+  border-radius: 4px;
+  transition: all 0.3s linear;
+}
+.game-result-container-part-piece {
+  width: 49px;
+  min-height: 49px;
+  background-color: #e7e7e7;
+  border: 1px solid #c8ccd1;
+  transition: all 0.2s linear;
+  flex-grow: 1;
+}
