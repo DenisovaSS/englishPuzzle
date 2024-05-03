@@ -12,7 +12,7 @@ const cssClasses = {
   PARTPIECE: 'game-result-container-part-piece',
   BLOCKPIECE: 'item-piece',
 };
-const countWordSentanc: number = 6;
+const countWordSentanc: number = 9;
 export default class ResultGameView extends View {
   constructor() {
     const params: ElementParams = {

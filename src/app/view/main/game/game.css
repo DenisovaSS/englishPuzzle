@@ -31,15 +31,7 @@
   align-items: center;
   justify-content: center;
 }
-.game-result-container {
-  display: flex;
-  min-width: var(--width);
-  min-height: 490px;
-  flex-direction: column;
-  gap: 1px;
-  margin-bottom: 20px;
-  transition: all 0.3s linear;
-}
+
 .game-container-pieces {
   display: flex;
   justify-content: space-between;
