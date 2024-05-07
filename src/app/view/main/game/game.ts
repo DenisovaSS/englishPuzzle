@@ -5,6 +5,8 @@ import HeaderGameView from './header-game/headerGameView';
 import MainView from '../main';
 import ContainerPieceGameView from './container-piece-game/containerPieceGameView';
 import ResultGameView from './result-game/resultGameView';
+import ContainerBtnGameView from './container-btn-game/btn-game';
+import EventEmitter from '../../../utils/EventEmit';
 
 const cssClasses = {
   SECTIONG: 'game-page',
@@ -33,6 +35,7 @@ export default class GameView extends View {
       classNames: [cssClasses.CONTAINER],
       textContent: '',
     };
+    const eventEmitter = EventEmitter.getInstance();
     const containerCreator = new ElementCreator(containerParam);
     this.elementCreator.addInnerElement(containerCreator.getElement());
 
@@ -42,5 +45,10 @@ export default class GameView extends View {
     containerCreator.addInnerElement(resultContainer.getHtmlElement());
     const peaceContainer = new ContainerPieceGameView();
     containerCreator.addInnerElement(peaceContainer.getHtmlElement());
+    const BTNContainer = new ContainerBtnGameView();
+    containerCreator.addInnerElement(BTNContainer.getHtmlElement());
+    eventEmitter.on('continue', () => {
+      BTNContainer.createBTN(['button', 'continue-button'], 'continue');
+    });
   }
 }
