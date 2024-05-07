@@ -31,10 +31,19 @@ export default class ContainerPieceGameView extends View {
     const eventEmitter = EventEmitter.getInstance();
     const sentence = wordCollection;
     const arrayNew = sentence.split(' ');
-
     const arraysent = this.randomArray(arrayNew);
-    // console.log(arraysent);
-    arraysent.forEach((word) => {
+    const handlePieceClick = (clickedElement: HTMLElement) => {
+      const currentElement = this.elementCreator.getElement();
+      for (let i = 0; i < currentElement.children.length; i++) {
+        const child = currentElement.children[i] as HTMLElement;
+        if (child === clickedElement) {
+          eventEmitter.emit('piece', clickedElement);
+          currentElement.removeChild(child);
+          break;
+        }
+      }
+    };
+    const createContainerWithClickHandler = (word: string) => {
       const containerParam = {
         tag: 'div',
         classNames: [cssClasses.BLOCKPIECE],
@@ -43,19 +52,19 @@ export default class ContainerPieceGameView extends View {
       const containerCreator = new ElementCreator(containerParam);
       containerCreator.setEventHandler('click', (event) => {
         const clickedElement = event.target as HTMLElement;
-        const currentElement = this.elementCreator.getElement();
-        for (let i = 0; i < currentElement.children.length; i++) {
-          const child = currentElement.children[i] as HTMLElement;
-          if (child === clickedElement) {
-            eventEmitter.emit('piece', clickedElement);
-            currentElement.removeChild(child);
-
-            break;
-          }
-        }
+        handlePieceClick(clickedElement);
       });
       this.elementCreator.addInnerElement(containerCreator.getElement());
+    };
+    arraysent.forEach((word) => {
+      createContainerWithClickHandler(word);
     });
+    // Function to handle 'pushInPiece' event
+    const handlePushInPiece = (clickedElement: HTMLElement) => {
+      createContainerWithClickHandler(clickedElement.textContent || '');
+    };
+
+    eventEmitter.on('pushInPiece', handlePushInPiece);
   }
 
   randomArray(array: string[]): string[] {
