@@ -5,7 +5,9 @@ import {
   ElementCreator,
 } from '../../../../utils/element-creator';
 import EventEmitter from '../../../../utils/EventEmit';
+import wordCollectionLevel1 from '../../../../../data/wordCollectionLevel1.json';
 
+const wordCollection = wordCollectionLevel1.rounds[0].words[7].textExample;
 const cssClasses = {
   RESULT: 'game-result-container',
   PARTRESULT: 'game-result-container-part',
@@ -22,7 +24,8 @@ export default class ResultGameView extends View {
     };
     super(params);
 
-    this.configureView();
+    const containerCreator = this.configureView();
+    this.fillField(containerCreator);
   }
 
   configureView() {
@@ -43,7 +46,10 @@ export default class ResultGameView extends View {
       // containerPieceCreator.setId(String(i));
       containerCreator.addInnerElement(containerPieceCreator.getElement());
     }
+    return containerCreator;
+  }
 
+  fillField(containerCreator: ElementCreator) {
     const eventEmitter = EventEmitter.getInstance();
     const pieceEventListener = (clickedElement: HTMLElement) => {
       const currentContainerCreator = containerCreator.getElement();
@@ -51,6 +57,7 @@ export default class ResultGameView extends View {
       newElement.classList.add(cssClasses.BLOCKPIECE);
       newElement.textContent = clickedElement.textContent;
       const allChildren = currentContainerCreator.children;
+      // console.log(allChildren);
       let childIndex = 0;
       newElement.addEventListener('click', (event) => {
         const clickedPiece = event.target as HTMLElement;
@@ -73,6 +80,20 @@ export default class ResultGameView extends View {
       }
       if (childIndex < allChildren.length) {
         allChildren[childIndex].append(newElement);
+      }
+      if (childIndex === allChildren.length - 1) {
+        const finalSrt: string[] = [];
+        for (let i = 0; i < allChildren.length; i++) {
+          const child = allChildren[i] as HTMLElement;
+          if (child.textContent) {
+            finalSrt.push(child.textContent);
+          }
+        }
+        // console.log(finalSrt);
+        // console.log(finalSrt.join(' ') === wordCollection);
+        if (finalSrt.join(' ') === wordCollection) {
+          eventEmitter.emit('continue');
+        }
       }
     };
     eventEmitter.on('piece', pieceEventListener);
