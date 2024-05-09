@@ -33,6 +33,14 @@ export default class ContainerBtnGameView extends View {
     };
     const BtnBtnAUTOCreator = new ElementCreator(BtnAUTOParam);
     this.elementCreator.addInnerElement(BtnBtnAUTOCreator.getElement());
+    const BtnCheckParam = {
+      tag: 'button',
+      classNames: [cssClasses.BUTTON, cssClasses.BTNCHECK],
+      textContent: 'Check',
+    };
+    const BtnCheckCreator = new ElementCreator(BtnCheckParam);
+    BtnCheckCreator.setDisabled(true);
+    this.elementCreator.addInnerElement(BtnCheckCreator.getElement());
   }
 
   createBTN(classNames: Array<string>, textContent: string) {
