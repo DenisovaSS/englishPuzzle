@@ -44,6 +44,8 @@ export default class ContainerPieceGameView extends View {
       }
     };
     const createContainerWithClickHandler = (word: string) => {
+      eventEmitter.emit('check-disabled');
+
       const containerParam = {
         tag: 'div',
         classNames: [cssClasses.BLOCKPIECE],

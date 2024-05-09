@@ -4,6 +4,7 @@ import {
   ElementParams,
   ElementCreator,
 } from '../../../../utils/element-creator';
+import EventEmitter from '../../../../utils/EventEmit';
 
 const cssClasses = {
   BTNCONTAINER: 'game-btns-container',
@@ -26,6 +27,7 @@ export default class ContainerBtnGameView extends View {
   }
 
   configureView() {
+    const eventEmitter = EventEmitter.getInstance();
     const BtnAUTOParam = {
       tag: 'button',
       classNames: [cssClasses.BUTTON, cssClasses.BTNAUTOCOMPLETE],
@@ -40,6 +42,12 @@ export default class ContainerBtnGameView extends View {
     };
     const BtnCheckCreator = new ElementCreator(BtnCheckParam);
     BtnCheckCreator.setDisabled(true);
+    eventEmitter.on('check', () => {
+      BtnCheckCreator.setDisabled(false);
+    });
+    eventEmitter.on('check-disabled', () => {
+      BtnCheckCreator.setDisabled(true);
+    });
     this.elementCreator.addInnerElement(BtnCheckCreator.getElement());
   }
 
@@ -51,6 +59,7 @@ export default class ContainerBtnGameView extends View {
     };
     const BtnCreator = new ElementCreator(BtnAUTOParam);
     this.elementCreator.addInnerElement(BtnCreator.getElement());
+    return BtnCreator;
   }
 
   removeBTN(btn: HTMLButtonElement) {

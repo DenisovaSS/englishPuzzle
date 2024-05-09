@@ -71,7 +71,7 @@
 }
 @keyframes moveCard {
   from {
-    transform: translateY(500px);
+    transform: translateY(100px);
   }
   to {
     transform: translateY(0px);
