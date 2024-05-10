@@ -30,3 +30,6 @@
   transition: all 0.2s linear;
   flex-grow: 1;
 }
+.incorrect {
+  border: 1px solid #c20f0f8a;
+}

@@ -70,4 +70,8 @@ export class ElementCreator {
   setEventHandler(eventType: string, eventHandler: EventHandler) {
     this.element.addEventListener(eventType, eventHandler);
   }
+
+  removeEventHandler(eventType: string, eventHandler: EventHandler) {
+    this.element.removeEventListener(eventType, eventHandler);
+  }
 }

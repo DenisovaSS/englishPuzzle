@@ -44,11 +44,21 @@ export default class ContainerBtnGameView extends View {
     BtnCheckCreator.setDisabled(true);
     eventEmitter.on('check', () => {
       BtnCheckCreator.setDisabled(false);
+      BtnCheckCreator.setEventHandler('click', this.checknewSentances);
     });
     eventEmitter.on('check-disabled', () => {
       BtnCheckCreator.setDisabled(true);
+      BtnCheckCreator.removeEventHandler('click', this.checknewSentances);
+    });
+    eventEmitter.on('check-remove', () => {
+      BtnCheckCreator.setCssClasses(['invisible']);
     });
     this.elementCreator.addInnerElement(BtnCheckCreator.getElement());
+  }
+
+  checknewSentances() {
+    const eventEmitter = EventEmitter.getInstance();
+    eventEmitter.emit('check-sentences');
   }
 
   createBTN(classNames: Array<string>, textContent: string) {

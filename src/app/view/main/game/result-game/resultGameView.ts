@@ -94,8 +94,27 @@ export default class ResultGameView extends View {
           }
         }
         if (finalSrt.join(' ') === wordCollection) {
+          for (let i = 0; i < allChildren.length; i++) {
+            const child = allChildren[i] as HTMLElement;
+            child.style.pointerEvents = 'none';
+          }
+          eventEmitter.emit('check-remove');
           eventEmitter.emit('continue');
         }
+        eventEmitter.on('check-sentences', () => {
+          for (let j = 0; j < allChildren.length; j++) {
+            const partchild = allChildren[j] as HTMLElement;
+            const word = wordCollection.split(' ')[j];
+            if (partchild.textContent) {
+              if (partchild.textContent !== word) {
+                partchild.classList.add('incorrect');
+              }
+              if (partchild.textContent === word) {
+                partchild.classList.remove('incorrect');
+              }
+            }
+          }
+        });
       }
     };
     eventEmitter.on('piece', pieceEventListener);
