@@ -64,6 +64,7 @@ export default class ResultGameView extends View {
         const clickedPiece = event.target as HTMLElement;
         for (let i = 0; i < allChildren.length; i++) {
           const child = allChildren[i] as HTMLElement;
+          child.classList.remove('incorrect');
           if (child.contains(clickedPiece)) {
             eventEmitter.emit('pushInPiece', clickedPiece);
             child.removeChild(clickedPiece);
@@ -108,9 +109,6 @@ export default class ResultGameView extends View {
             if (partchild.textContent) {
               if (partchild.textContent !== word) {
                 partchild.classList.add('incorrect');
-              }
-              if (partchild.textContent === word) {
-                partchild.classList.remove('incorrect');
               }
             }
           }
