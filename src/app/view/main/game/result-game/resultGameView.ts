@@ -52,18 +52,41 @@ export default class ResultGameView extends View {
   fillField(containerCreator: ElementCreator) {
     const eventEmitter = EventEmitter.getInstance();
     let countChild = 0;
+    const currentContainerCreator = containerCreator.getElement();
+    const allChildren = currentContainerCreator.children;
+    eventEmitter.on('autoCompleteSentence', () => {
+      for (let i = 0; i < allChildren.length; i++) {
+        const child = allChildren[i] as HTMLElement;
+        while (child.firstElementChild) {
+          eventEmitter.emit('pushInPiece', child.firstElementChild);
+          child.firstElementChild.remove();
+        }
+        countChild--;
+      }
+      const arrayAnswer = wordCollection.split(' ');
+      for (let j = 0; j < arrayAnswer.length; j++) {
+        const word = arrayAnswer[j];
+        const newElement = document.createElement('div');
+        newElement.classList.add(cssClasses.BLOCKPIECE);
+        newElement.textContent = word;
+        allChildren[j].append(newElement);
+      }
+      eventEmitter.emit('clearPeaceContainer');
+      eventEmitter.emit('check-remove');
+      eventEmitter.emit('continue');
+    });
     const pieceEventListener = (clickedElement: HTMLElement) => {
-      const currentContainerCreator = containerCreator.getElement();
       const newElement = document.createElement('div');
       newElement.classList.add(cssClasses.BLOCKPIECE);
       newElement.textContent = clickedElement.textContent;
-      const allChildren = currentContainerCreator.children;
+
       // console.log(allChildren);
       let childIndex = 0;
       newElement.addEventListener('click', (event) => {
         const clickedPiece = event.target as HTMLElement;
         for (let i = 0; i < allChildren.length; i++) {
           const child = allChildren[i] as HTMLElement;
+          child.classList.remove('incorrect');
           if (child.contains(clickedPiece)) {
             eventEmitter.emit('pushInPiece', clickedPiece);
             child.removeChild(clickedPiece);
@@ -72,7 +95,6 @@ export default class ResultGameView extends View {
           }
         }
       });
-
       while (
         // eslint-disable-next-line operator-linebreak
         childIndex < allChildren.length &&
@@ -108,9 +130,6 @@ export default class ResultGameView extends View {
             if (partchild.textContent) {
               if (partchild.textContent !== word) {
                 partchild.classList.add('incorrect');
-              }
-              if (partchild.textContent === word) {
-                partchild.classList.remove('incorrect');
               }
             }
           }

@@ -33,8 +33,16 @@ export default class ContainerBtnGameView extends View {
       classNames: [cssClasses.BUTTON, cssClasses.BTNAUTOCOMPLETE],
       textContent: 'Auto-complete',
     };
-    const BtnBtnAUTOCreator = new ElementCreator(BtnAUTOParam);
-    this.elementCreator.addInnerElement(BtnBtnAUTOCreator.getElement());
+    const BtnAUTOCreator = new ElementCreator(BtnAUTOParam);
+    const eventAuto = () => {
+      eventEmitter.emit('autoCompleteSentence');
+      BtnAUTOCreator.setDisabled(true);
+      BtnAUTOCreator.removeEventHandler('click', eventAuto);
+    };
+
+    BtnAUTOCreator.setEventHandler('click', eventAuto);
+    //
+    this.elementCreator.addInnerElement(BtnAUTOCreator.getElement());
     const BtnCheckParam = {
       tag: 'button',
       classNames: [cssClasses.BUTTON, cssClasses.BTNCHECK],
