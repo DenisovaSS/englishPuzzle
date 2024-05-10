@@ -5,7 +5,3 @@
   margin-top: 10px;
   border: none;
 }
-.check-button[disabled]:hover {
-  background: rgba(111, 111, 111, 0.7098039216);
-  transition: all 0.2s linear;
-}

@@ -82,6 +82,11 @@ button:disabled {
   background: rgba(111, 111, 111, 0.7098039216);
   transition: all 0.2s linear;
 }
+button[disabled]:hover {
+  cursor: default;
+  background: rgba(111, 111, 111, 0.7098039216);
+  transition: all 0.2s linear;
+}
 .button:hover {
   background: rgba(0, 0, 0, 0.8588235294);
   transition: all 0.2s linear;

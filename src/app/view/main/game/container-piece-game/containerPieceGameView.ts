@@ -32,8 +32,13 @@ export default class ContainerPieceGameView extends View {
     const sentence = wordCollection;
     const arrayNew = sentence.split(' ');
     const arraysent = this.randomArray(arrayNew);
+    const currentElement = this.elementCreator.getElement();
+    eventEmitter.on('clearPeaceContainer', () => {
+      while (currentElement.firstElementChild) {
+        currentElement.firstElementChild.remove();
+      }
+    });
     const handlePieceClick = (clickedElement: HTMLElement) => {
-      const currentElement = this.elementCreator.getElement();
       for (let i = 0; i < currentElement.children.length; i++) {
         const child = currentElement.children[i] as HTMLElement;
         if (child === clickedElement) {
