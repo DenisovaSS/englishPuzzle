@@ -51,6 +51,7 @@ export default class ResultGameView extends View {
 
   fillField(containerCreator: ElementCreator) {
     const eventEmitter = EventEmitter.getInstance();
+    let countChild = 0;
     const pieceEventListener = (clickedElement: HTMLElement) => {
       const currentContainerCreator = containerCreator.getElement();
       const newElement = document.createElement('div');
@@ -66,6 +67,7 @@ export default class ResultGameView extends View {
           if (child.contains(clickedPiece)) {
             eventEmitter.emit('pushInPiece', clickedPiece);
             child.removeChild(clickedPiece);
+            countChild--;
             break;
           }
         }
@@ -80,8 +82,10 @@ export default class ResultGameView extends View {
       }
       if (childIndex < allChildren.length) {
         allChildren[childIndex].append(newElement);
+        countChild++;
       }
-      if (childIndex === allChildren.length - 1) {
+      if (countWordSentanc === countChild) {
+        eventEmitter.emit('check');
         const finalSrt: string[] = [];
         for (let i = 0; i < allChildren.length; i++) {
           const child = allChildren[i] as HTMLElement;
@@ -89,11 +93,28 @@ export default class ResultGameView extends View {
             finalSrt.push(child.textContent);
           }
         }
-        // console.log(finalSrt);
-        // console.log(finalSrt.join(' ') === wordCollection);
         if (finalSrt.join(' ') === wordCollection) {
+          for (let i = 0; i < allChildren.length; i++) {
+            const child = allChildren[i] as HTMLElement;
+            child.style.pointerEvents = 'none';
+          }
+          eventEmitter.emit('check-remove');
           eventEmitter.emit('continue');
         }
+        eventEmitter.on('check-sentences', () => {
+          for (let j = 0; j < allChildren.length; j++) {
+            const partchild = allChildren[j] as HTMLElement;
+            const word = wordCollection.split(' ')[j];
+            if (partchild.textContent) {
+              if (partchild.textContent !== word) {
+                partchild.classList.add('incorrect');
+              }
+              if (partchild.textContent === word) {
+                partchild.classList.remove('incorrect');
+              }
+            }
+          }
+        });
       }
     };
     eventEmitter.on('piece', pieceEventListener);

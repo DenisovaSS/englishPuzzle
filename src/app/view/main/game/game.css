@@ -69,9 +69,15 @@
 .item-piece:hover {
   border: 3px solid #c2770f8a;
 }
+.incorrect {
+  border: 3px solid #c20f0f8a;
+}
+.invisible {
+  display: none;
+}
 @keyframes moveCard {
   from {
-    transform: translateY(500px);
+    transform: translateY(100px);
   }
   to {
     transform: translateY(0px);

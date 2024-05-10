@@ -4,6 +4,7 @@ import {
   ElementParams,
   ElementCreator,
 } from '../../../../utils/element-creator';
+import EventEmitter from '../../../../utils/EventEmit';
 
 const cssClasses = {
   BTNCONTAINER: 'game-btns-container',
@@ -26,6 +27,7 @@ export default class ContainerBtnGameView extends View {
   }
 
   configureView() {
+    const eventEmitter = EventEmitter.getInstance();
     const BtnAUTOParam = {
       tag: 'button',
       classNames: [cssClasses.BUTTON, cssClasses.BTNAUTOCOMPLETE],
@@ -33,6 +35,30 @@ export default class ContainerBtnGameView extends View {
     };
     const BtnBtnAUTOCreator = new ElementCreator(BtnAUTOParam);
     this.elementCreator.addInnerElement(BtnBtnAUTOCreator.getElement());
+    const BtnCheckParam = {
+      tag: 'button',
+      classNames: [cssClasses.BUTTON, cssClasses.BTNCHECK],
+      textContent: 'Check',
+    };
+    const BtnCheckCreator = new ElementCreator(BtnCheckParam);
+    BtnCheckCreator.setDisabled(true);
+    eventEmitter.on('check', () => {
+      BtnCheckCreator.setDisabled(false);
+      BtnCheckCreator.setEventHandler('click', this.checknewSentances);
+    });
+    eventEmitter.on('check-disabled', () => {
+      BtnCheckCreator.setDisabled(true);
+      BtnCheckCreator.removeEventHandler('click', this.checknewSentances);
+    });
+    eventEmitter.on('check-remove', () => {
+      BtnCheckCreator.setCssClasses(['invisible']);
+    });
+    this.elementCreator.addInnerElement(BtnCheckCreator.getElement());
+  }
+
+  checknewSentances() {
+    const eventEmitter = EventEmitter.getInstance();
+    eventEmitter.emit('check-sentences');
   }
 
   createBTN(classNames: Array<string>, textContent: string) {
@@ -43,6 +69,7 @@ export default class ContainerBtnGameView extends View {
     };
     const BtnCreator = new ElementCreator(BtnAUTOParam);
     this.elementCreator.addInnerElement(BtnCreator.getElement());
+    return BtnCreator;
   }
 
   removeBTN(btn: HTMLButtonElement) {
