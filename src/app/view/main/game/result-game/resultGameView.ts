@@ -41,8 +41,19 @@ export default class ResultGameView extends View {
       classNames: [cssClasses.PARTPIECE],
       textContent: '',
     };
+    function dragOver(e: Event) {
+      // console.log('Event: ', 'dragover');
+      e.preventDefault();
+    }
+    function dragDrop() {
+      console.log('Event: ', 'drop');
+      // const dragEndIndex = +this.getAttribute('data-index');
+      // swapItems(dragStartIndex, dragEndIndex);
+    }
     for (let i = 0; i < countWordSentanc; i++) {
       const containerPieceCreator = new ElementCreator(containerPieceParam);
+      containerPieceCreator.setEventHandler('dragover', dragOver);
+      containerPieceCreator.setEventHandler('drop', dragDrop);
       // containerPieceCreator.setId(String(i));
       containerCreator.addInnerElement(containerPieceCreator.getElement());
     }
@@ -69,6 +80,7 @@ export default class ResultGameView extends View {
         const newElement = document.createElement('div');
         newElement.classList.add(cssClasses.BLOCKPIECE);
         newElement.textContent = word;
+
         allChildren[j].append(newElement);
       }
       eventEmitter.emit('clearPeaceContainer');
@@ -79,7 +91,8 @@ export default class ResultGameView extends View {
       const newElement = document.createElement('div');
       newElement.classList.add(cssClasses.BLOCKPIECE);
       newElement.textContent = clickedElement.textContent;
-
+      newElement.draggable = true;
+      newElement.dataset.index = clickedElement.dataset.index;
       // console.log(allChildren);
       let childIndex = 0;
       newElement.addEventListener('click', (event) => {
@@ -95,6 +108,10 @@ export default class ResultGameView extends View {
           }
         }
       });
+      function dragStart() {
+        console.log('Event: ', 'dragstart');
+      }
+      newElement.addEventListener('dragstart', dragStart);
       while (
         // eslint-disable-next-line operator-linebreak
         childIndex < allChildren.length &&

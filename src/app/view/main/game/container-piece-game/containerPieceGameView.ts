@@ -30,8 +30,8 @@ export default class ContainerPieceGameView extends View {
   configureView() {
     const eventEmitter = EventEmitter.getInstance();
     const sentence = wordCollection;
-    const arrayNew = sentence.split(' ');
-    const arraysent = this.randomArray(arrayNew);
+    const wordArray = sentence.split(' ');
+    const shuffledArray = this.randomArray(wordArray);
     const currentElement = this.elementCreator.getElement();
     eventEmitter.on('clearPeaceContainer', () => {
       while (currentElement.firstElementChild) {
@@ -48,7 +48,7 @@ export default class ContainerPieceGameView extends View {
         }
       }
     };
-    const createContainerWithClickHandler = (word: string) => {
+    const createContainerWithClickHandler = (word: string, index: string) => {
       eventEmitter.emit('check-disabled');
 
       const containerParam = {
@@ -57,18 +57,21 @@ export default class ContainerPieceGameView extends View {
         textContent: word,
       };
       const containerCreator = new ElementCreator(containerParam);
+      const element = containerCreator.getElement();
+      element.dataset.index = index;
       containerCreator.setEventHandler('click', (event) => {
         const clickedElement = event.target as HTMLElement;
         handlePieceClick(clickedElement);
       });
-      this.elementCreator.addInnerElement(containerCreator.getElement());
+      this.elementCreator.addInnerElement(element);
     };
-    arraysent.forEach((word) => {
-      createContainerWithClickHandler(word);
+    shuffledArray.forEach((word: string, index: number) => {
+      const newIndex = String(index);
+      createContainerWithClickHandler(word, newIndex);
     });
     // Function to handle 'pushInPiece' event
     const handlePushInPiece = (clickedElement: HTMLElement) => {
-      createContainerWithClickHandler(clickedElement.textContent || '');
+      createContainerWithClickHandler(clickedElement.textContent || '', '0');
     };
 
     eventEmitter.on('pushInPiece', handlePushInPiece);
