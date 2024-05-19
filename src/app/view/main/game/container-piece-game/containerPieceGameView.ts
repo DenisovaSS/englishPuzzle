@@ -31,6 +31,10 @@ export default class ContainerPieceGameView extends View {
     const eventEmitter = EventEmitter.getInstance();
     const sentence = wordCollection;
     const wordArray = sentence.split(' ');
+    const wordToIndexMap = new Map();
+    wordArray.forEach((word: string, index: number) => {
+      wordToIndexMap.set(word, index);
+    });
     const shuffledArray = this.randomArray(wordArray);
     const currentElement = this.elementCreator.getElement();
     eventEmitter.on('clearPeaceContainer', () => {
@@ -48,9 +52,9 @@ export default class ContainerPieceGameView extends View {
         }
       }
     };
-    const createContainerWithClickHandler = (word: string, index: string) => {
+    const createContainerWithClickHandler = (word: string) => {
       eventEmitter.emit('check-disabled');
-
+      const originalIndex = wordToIndexMap.get(word);
       const containerParam = {
         tag: 'div',
         classNames: [cssClasses.BLOCKPIECE],
@@ -58,20 +62,19 @@ export default class ContainerPieceGameView extends View {
       };
       const containerCreator = new ElementCreator(containerParam);
       const element = containerCreator.getElement();
-      element.dataset.index = index;
+      element.dataset.index = String(originalIndex);
       containerCreator.setEventHandler('click', (event) => {
         const clickedElement = event.target as HTMLElement;
         handlePieceClick(clickedElement);
       });
       this.elementCreator.addInnerElement(element);
     };
-    shuffledArray.forEach((word: string, index: number) => {
-      const newIndex = String(index);
-      createContainerWithClickHandler(word, newIndex);
+    shuffledArray.forEach((word: string) => {
+      createContainerWithClickHandler(word);
     });
     // Function to handle 'pushInPiece' event
     const handlePushInPiece = (clickedElement: HTMLElement) => {
-      createContainerWithClickHandler(clickedElement.textContent || '', '0');
+      createContainerWithClickHandler(clickedElement.textContent || '');
     };
 
     eventEmitter.on('pushInPiece', handlePushInPiece);
