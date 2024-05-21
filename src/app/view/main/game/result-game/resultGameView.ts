@@ -44,18 +44,36 @@ export default class ResultGameView extends View {
     function dragOver(e: Event) {
       // console.log('Event: ', 'dragover');
       e.preventDefault();
+      // const target = e.target as HTMLElement;
+      // while (target.firstChild) {
+      //   target.removeChild(target.firstChild);
+      // }
     }
-    function dragDrop() {
-      console.log('Event: ', 'drop');
-      // const dragEndIndex = +this.getAttribute('data-index');
-      // swapItems(dragStartIndex, dragEndIndex);
+    function dragDrop(e: DragEvent) {
+      const target = e.target as HTMLElement;
+
+      const article = document.querySelector(
+        // eslint-disable-next-line @typescript-eslint/comma-dangle
+        `[data-index='${e.dataTransfer?.getData('text')}']`
+      );
+      if (article) {
+        if (target.classList.contains(cssClasses.PARTPIECE)) {
+          target.appendChild(article);
+        }
+        if (target.classList.contains(cssClasses.BLOCKPIECE)) {
+          const oldParent = article.parentElement;
+          target.parentElement?.appendChild(article);
+          oldParent?.appendChild(target);
+        }
+      }
     }
     for (let i = 0; i < countWordSentanc; i++) {
       const containerPieceCreator = new ElementCreator(containerPieceParam);
-      containerPieceCreator.setEventHandler('dragover', dragOver);
-      containerPieceCreator.setEventHandler('drop', dragDrop);
+      const currentPieceCreator = containerPieceCreator.getElement();
+      currentPieceCreator.addEventListener('dragover', dragOver);
+      currentPieceCreator.addEventListener('drop', dragDrop);
       // containerPieceCreator.setId(String(i));
-      containerCreator.addInnerElement(containerPieceCreator.getElement());
+      containerCreator.addInnerElement(currentPieceCreator);
     }
     return containerCreator;
   }
@@ -108,8 +126,13 @@ export default class ResultGameView extends View {
           }
         }
       });
-      function dragStart() {
-        console.log('Event: ', 'dragstart');
+      function dragStart(event: DragEvent) {
+        const target = event.target as HTMLElement;
+        if (target && target.dataset.index) {
+          event.dataTransfer?.setData('text', target.dataset.index);
+        } else {
+          console.error('Drag target does not have an id');
+        }
       }
       newElement.addEventListener('dragstart', dragStart);
       while (
