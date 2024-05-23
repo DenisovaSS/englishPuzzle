@@ -37,6 +37,18 @@ export default class ContainerPieceGameView extends View {
     });
     const shuffledArray = this.randomArray(wordArray);
     const currentElement = this.elementCreator.getElement();
+    currentElement.addEventListener('dragover', this.handleDragOver);
+    currentElement.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const article = document.querySelector(`[data-index='${e.dataTransfer?.getData('text')}']`);
+      if (article) {
+        currentElement.append(article);
+      }
+    });
+    eventEmitter.on('DropInPiece', (article: HTMLElement) => {
+      currentElement.append(article);
+    });
+
     eventEmitter.on('clearPeaceContainer', () => {
       while (currentElement.firstElementChild) {
         currentElement.firstElementChild.remove();
@@ -63,6 +75,8 @@ export default class ContainerPieceGameView extends View {
       const containerCreator = new ElementCreator(containerParam);
       const element = containerCreator.getElement();
       element.dataset.index = String(originalIndex);
+      element.draggable = true;
+      element.addEventListener('dragstart', this.dragStart);
       containerCreator.setEventHandler('click', (event) => {
         const clickedElement = event.target as HTMLElement;
         handlePieceClick(clickedElement);
@@ -88,5 +102,18 @@ export default class ContainerPieceGameView extends View {
     }
 
     return arrayCur;
+  }
+
+  handleDragOver(e: Event) {
+    e.preventDefault();
+  }
+
+  dragStart(event: DragEvent) {
+    const target = event.target as HTMLElement;
+    if (target && target.dataset.index) {
+      event.dataTransfer?.setData('text', target.dataset.index);
+    } else {
+      console.error('Drag target does not have an id');
+    }
   }
 }
