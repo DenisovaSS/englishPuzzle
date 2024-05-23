@@ -50,6 +50,9 @@ export default class ResultGameView extends View {
       // }
     }
     function dragDrop(e: DragEvent) {
+      const currentContainerCreator = containerCreator.getElement();
+      const allChildren = currentContainerCreator.children;
+      console.log(allChildren);
       const target = e.target as HTMLElement;
 
       const article = document.querySelector(
@@ -117,7 +120,7 @@ export default class ResultGameView extends View {
         const clickedPiece = event.target as HTMLElement;
         for (let i = 0; i < allChildren.length; i++) {
           const child = allChildren[i] as HTMLElement;
-          child.classList.remove('incorrect');
+          // child.classList.remove('incorrect');
           if (child.contains(clickedPiece)) {
             eventEmitter.emit('pushInPiece', clickedPiece);
             child.removeChild(clickedPiece);
@@ -164,8 +167,11 @@ export default class ResultGameView extends View {
           eventEmitter.emit('continue');
         }
         eventEmitter.on('check-sentences', () => {
-          for (let j = 0; j < allChildren.length; j++) {
-            const partchild = allChildren[j] as HTMLElement;
+          const currentChildren = allChildren;
+
+          for (let j = 0; j < currentChildren.length; j++) {
+            const partchild = currentChildren[j] as HTMLElement;
+            partchild.classList.remove('incorrect');
             const word = wordCollection.split(' ')[j];
             if (partchild.textContent) {
               if (partchild.textContent !== word) {
