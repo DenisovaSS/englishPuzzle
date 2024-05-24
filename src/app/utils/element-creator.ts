@@ -49,7 +49,29 @@ export class ElementCreator {
     }
   }
 
+  setStyleElement(typeStyle: string, dataStyle: string) {
+    if (typeStyle in this.element.style) {
+      const styleProperty = typeStyle as keyof CSSStyleDeclaration;
+      // Asserting the type of the value to string
+      (this.element.style[styleProperty] as string) = dataStyle;
+    } else {
+      console.error(`Style property '${typeStyle}' is not valid.`);
+    }
+  }
+
+  setDisabled(disabled: boolean) {
+    if (this.element instanceof HTMLButtonElement) {
+      this.element.disabled = disabled;
+    } else {
+      console.error('only for button elements');
+    }
+  }
+
   setEventHandler(eventType: string, eventHandler: EventHandler) {
     this.element.addEventListener(eventType, eventHandler);
+  }
+
+  removeEventHandler(eventType: string, eventHandler: EventHandler) {
+    this.element.removeEventListener(eventType, eventHandler);
   }
 }
