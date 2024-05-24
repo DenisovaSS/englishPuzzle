@@ -30,9 +30,25 @@ export default class ContainerPieceGameView extends View {
   configureView() {
     const eventEmitter = EventEmitter.getInstance();
     const sentence = wordCollection;
-    const arrayNew = sentence.split(' ');
-    const arraysent = this.randomArray(arrayNew);
+    const wordArray = sentence.split(' ');
+    const wordToIndexMap = new Map();
+    wordArray.forEach((word: string, index: number) => {
+      wordToIndexMap.set(word, index);
+    });
+    const shuffledArray = this.randomArray(wordArray);
     const currentElement = this.elementCreator.getElement();
+    currentElement.addEventListener('dragover', this.handleDragOver);
+    currentElement.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const article = document.querySelector(`[data-index='${e.dataTransfer?.getData('text')}']`);
+      if (article) {
+        currentElement.append(article);
+      }
+    });
+    eventEmitter.on('DropInPiece', (article: HTMLElement) => {
+      currentElement.append(article);
+    });
+
     eventEmitter.on('clearPeaceContainer', () => {
       while (currentElement.firstElementChild) {
         currentElement.firstElementChild.remove();
@@ -50,20 +66,24 @@ export default class ContainerPieceGameView extends View {
     };
     const createContainerWithClickHandler = (word: string) => {
       eventEmitter.emit('check-disabled');
-
+      const originalIndex = wordToIndexMap.get(word);
       const containerParam = {
         tag: 'div',
         classNames: [cssClasses.BLOCKPIECE],
         textContent: word,
       };
       const containerCreator = new ElementCreator(containerParam);
+      const element = containerCreator.getElement();
+      element.dataset.index = String(originalIndex);
+      element.draggable = true;
+      element.addEventListener('dragstart', this.dragStart);
       containerCreator.setEventHandler('click', (event) => {
         const clickedElement = event.target as HTMLElement;
         handlePieceClick(clickedElement);
       });
-      this.elementCreator.addInnerElement(containerCreator.getElement());
+      this.elementCreator.addInnerElement(element);
     };
-    arraysent.forEach((word) => {
+    shuffledArray.forEach((word: string) => {
       createContainerWithClickHandler(word);
     });
     // Function to handle 'pushInPiece' event
@@ -82,5 +102,18 @@ export default class ContainerPieceGameView extends View {
     }
 
     return arrayCur;
+  }
+
+  handleDragOver(e: Event) {
+    e.preventDefault();
+  }
+
+  dragStart(event: DragEvent) {
+    const target = event.target as HTMLElement;
+    if (target && target.dataset.index) {
+      event.dataTransfer?.setData('text', target.dataset.index);
+    } else {
+      console.error('Drag target does not have an id');
+    }
   }
 }
