@@ -36,6 +36,7 @@ export default class ResultGameView extends View {
       const containerPieceCreator = this.containerDivCreator(cssClasses.PARTPIECE);
       const currentPieceCreator = containerPieceCreator.getElement();
       currentPieceCreator.addEventListener('dragover', this.handleDragOver);
+      // currentPieceCreator.addEventListener('dragleave', this.handleDragLeave);
       currentPieceCreator.addEventListener('drop', this.handleDragDrop.bind(this));
       // containerPieceCreator.setId(String(i));
       containerCreator.addInnerElement(currentPieceCreator);
@@ -59,6 +60,7 @@ export default class ResultGameView extends View {
   handleDragDrop(e: DragEvent) {
     const eventEmitter = EventEmitter.getInstance();
     const target = e.target as HTMLElement;
+
     const article = document.querySelector(`[data-index='${e.dataTransfer?.getData('text')}']`);
     if (article) {
       if (target.classList.contains(cssClasses.PARTPIECE)) {
@@ -90,6 +92,7 @@ export default class ResultGameView extends View {
     // delete all pieces in result container
     for (let i = 0; i < allChildren.length; i++) {
       const child = allChildren[i] as HTMLElement;
+      child.classList.remove('incorrect');
       while (child.firstElementChild) {
         eventEmitter.emit('pushInPiece', child.firstElementChild);
         child.firstElementChild.remove();
@@ -129,11 +132,11 @@ export default class ResultGameView extends View {
   }
 
   createPieceElement(clickedElement: HTMLElement): HTMLElement {
-    const newElement = document.createElement('div');
-    newElement.classList.add(cssClasses.BLOCKPIECE);
-    newElement.textContent = clickedElement.textContent;
-    newElement.draggable = true;
-    newElement.dataset.index = clickedElement.dataset.index;
+    const newElement = clickedElement;
+    // newElement.classList.add(cssClasses.BLOCKPIECE);
+    // newElement.textContent = clickedElement.textContent;
+    // newElement.draggable = true;
+    // newElement.dataset.index = clickedElement.dataset.index;
     newElement.addEventListener('click', (event) => this.handlePieceClick(event));
     newElement.addEventListener('dragstart', this.dragStart);
     return newElement;

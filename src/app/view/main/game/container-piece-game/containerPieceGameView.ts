@@ -8,11 +8,15 @@ import wordCollectionLevel1 from '../../../../../data/wordCollectionLevel1.json'
 import EventEmitter from '../../../../utils/EventEmit';
 
 const wordCollection = wordCollectionLevel1.rounds[0].words[7].textExample;
+const sentence = wordCollection;
+const wordArray = sentence.split(' ');
 // console.log(wordCollectionLevel1.rounds[0].words);
 const cssClasses = {
   PARTCONTAINER: 'game-container-pieces',
   PARTPIECECONTAINER: 'game-container-part-pieces',
   BLOCKPIECE: 'item-piece',
+  SPANPIECEBEFORE: 'before',
+  SPANPIECEAFTER: 'after',
 };
 
 export default class ContainerPieceGameView extends View {
@@ -29,8 +33,6 @@ export default class ContainerPieceGameView extends View {
 
   configureView() {
     const eventEmitter = EventEmitter.getInstance();
-    const sentence = wordCollection;
-    const wordArray = sentence.split(' ');
     const wordToIndexMap = new Map();
     wordArray.forEach((word: string, index: number) => {
       wordToIndexMap.set(word, index);
@@ -59,7 +61,7 @@ export default class ContainerPieceGameView extends View {
         const child = currentElement.children[i] as HTMLElement;
         if (child === clickedElement) {
           eventEmitter.emit('piece', clickedElement);
-          currentElement.removeChild(child);
+          // currentElement.removeChild(child);
           break;
         }
       }
@@ -67,17 +69,9 @@ export default class ContainerPieceGameView extends View {
     const createContainerWithClickHandler = (word: string) => {
       eventEmitter.emit('check-disabled');
       const originalIndex = wordToIndexMap.get(word);
-      const containerParam = {
-        tag: 'div',
-        classNames: [cssClasses.BLOCKPIECE],
-        textContent: word,
-      };
-      const containerCreator = new ElementCreator(containerParam);
-      const element = containerCreator.getElement();
-      element.dataset.index = String(originalIndex);
-      element.draggable = true;
+      const element = this.createPuzzlePiece(word, originalIndex);
       element.addEventListener('dragstart', this.dragStart);
-      containerCreator.setEventHandler('click', (event) => {
+      element.addEventListener('click', (event) => {
         const clickedElement = event.target as HTMLElement;
         handlePieceClick(clickedElement);
       });
@@ -102,6 +96,41 @@ export default class ContainerPieceGameView extends View {
     }
 
     return arrayCur;
+  }
+
+  createPuzzlePiece(word:string, originalIndex: string) {
+    const containerParam = {
+      tag: 'div',
+      classNames: [cssClasses.BLOCKPIECE],
+      textContent: word,
+    };
+    const beforeParam = {
+      tag: 'span',
+      classNames: [cssClasses.SPANPIECEBEFORE],
+      textContent: '',
+    };
+    const afterParam = {
+      tag: 'span',
+      classNames: [cssClasses.SPANPIECEAFTER],
+      textContent: '',
+    };
+    const containerCreator = new ElementCreator(containerParam);
+    const element = containerCreator.getElement();
+    if (+originalIndex === 0) {
+      const spanCreator = new ElementCreator(afterParam);
+      element.append(spanCreator.getElement());
+    } else if (+originalIndex === wordArray.length - 1) {
+      const spanCreator = new ElementCreator(beforeParam);
+      element.append(spanCreator.getElement());
+    } else {
+      let spanCreator = new ElementCreator(beforeParam);
+      element.append(spanCreator.getElement());
+      spanCreator = new ElementCreator(afterParam);
+      element.append(spanCreator.getElement());
+    }
+    element.dataset.index = String(originalIndex);
+    element.draggable = true;
+    return element;
   }
 
   handleDragOver(e: Event) {
