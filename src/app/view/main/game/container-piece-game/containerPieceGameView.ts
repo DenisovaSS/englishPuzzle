@@ -9,7 +9,7 @@ import EventEmitter from '../../../../utils/EventEmit';
 
 const wordCollection = wordCollectionLevel1.rounds[0].words[7].textExample;
 const sentence = wordCollection;
-const wordArray = sentence.split(' ');
+const arrayAnswer = sentence.split(' ');
 // console.log(wordCollectionLevel1.rounds[0].words);
 const cssClasses = {
   PARTCONTAINER: 'game-container-pieces',
@@ -34,10 +34,10 @@ export default class ContainerPieceGameView extends View {
   configureView() {
     const eventEmitter = EventEmitter.getInstance();
     const wordToIndexMap = new Map();
-    wordArray.forEach((word: string, index: number) => {
+    arrayAnswer.forEach((word: string, index: number) => {
       wordToIndexMap.set(word, index);
     });
-    const shuffledArray = this.randomArray(wordArray);
+    const shuffledArray = this.randomArray(arrayAnswer);
     const currentElement = this.elementCreator.getElement();
     currentElement.addEventListener('dragover', this.handleDragOver);
     currentElement.addEventListener('drop', (e) => {
@@ -119,7 +119,7 @@ export default class ContainerPieceGameView extends View {
     if (+originalIndex === 0) {
       const spanCreator = new ElementCreator(afterParam);
       element.append(spanCreator.getElement());
-    } else if (+originalIndex === wordArray.length - 1) {
+    } else if (+originalIndex === arrayAnswer.length - 1) {
       const spanCreator = new ElementCreator(beforeParam);
       element.append(spanCreator.getElement());
     } else {
