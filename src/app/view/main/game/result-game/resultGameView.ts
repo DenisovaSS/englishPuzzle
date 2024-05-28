@@ -14,6 +14,8 @@ const cssClasses = {
   PARTRESULT: 'game-result-container-part',
   PARTPIECE: 'game-result-container-part-piece',
   BLOCKPIECE: 'item-piece',
+  SPANPIECEBEFORE: 'before',
+  SPANPIECEAFTER: 'after',
 };
 const countWordSentence: number = 9;
 export default class ResultGameView extends View {
@@ -36,6 +38,7 @@ export default class ResultGameView extends View {
       const containerPieceCreator = this.containerDivCreator(cssClasses.PARTPIECE);
       const currentPieceCreator = containerPieceCreator.getElement();
       currentPieceCreator.addEventListener('dragover', this.handleDragOver);
+      // currentPieceCreator.addEventListener('dragleave', this.handleDragLeave);
       currentPieceCreator.addEventListener('drop', this.handleDragDrop.bind(this));
       // containerPieceCreator.setId(String(i));
       containerCreator.addInnerElement(currentPieceCreator);
@@ -59,6 +62,8 @@ export default class ResultGameView extends View {
   handleDragDrop(e: DragEvent) {
     const eventEmitter = EventEmitter.getInstance();
     const target = e.target as HTMLElement;
+    const currentTarget = e.currentTarget as HTMLElement;
+
     const article = document.querySelector(`[data-index='${e.dataTransfer?.getData('text')}']`);
     if (article) {
       if (target.classList.contains(cssClasses.PARTPIECE)) {
@@ -71,8 +76,12 @@ export default class ResultGameView extends View {
         eventEmitter.emit('DropInPiece', article);
       }
     }
-    if (target.parentElement?.parentElement) {
-      this.checkSentence(target.parentElement.parentElement.children, eventEmitter);
+    const container = currentTarget.parentElement?.children;
+    if (container) {
+      const countAllchildrenCurent = Array.from(container).filter((child) => (child as HTMLElement).childElementCount > 0).length;
+      if (countAllchildrenCurent === countWordSentence) {
+        this.checkSentence(container, eventEmitter);
+      }
     }
   }
 
@@ -90,19 +99,16 @@ export default class ResultGameView extends View {
     // delete all pieces in result container
     for (let i = 0; i < allChildren.length; i++) {
       const child = allChildren[i] as HTMLElement;
+      child.classList.remove('incorrect');
       while (child.firstElementChild) {
         eventEmitter.emit('pushInPiece', child.firstElementChild);
         child.firstElementChild.remove();
       }
     }
-    // add rigth variant in result container
-    for (let j = 0; j < arrayAnswer.length; j++) {
-      const word = arrayAnswer[j];
-      const newElement = document.createElement('div');
-      newElement.classList.add(cssClasses.BLOCKPIECE);
-      newElement.textContent = word;
-      allChildren[j].append(newElement);
-    }
+    arrayAnswer.forEach((word, index) => {
+      const newElement = this.createPuzzlePiece(word, index);
+      allChildren[index].append(newElement);
+    });
     eventEmitter.emit('clearPeaceContainer');
     eventEmitter.emit('check-remove');
     eventEmitter.emit('continue');
@@ -122,18 +128,18 @@ export default class ResultGameView extends View {
       allChildren[childIndex].append(newElement);
     }
     const countAllchildrenCurent = Array.from(allChildren).filter((child) => (child as HTMLElement).childElementCount > 0).length;
-    // console.log(countAllchildrenCurent);
+    console.log(countWordSentence === countAllchildrenCurent);
     if (countWordSentence === countAllchildrenCurent) {
       this.checkSentence(allChildren, eventEmitter);
     }
   }
 
   createPieceElement(clickedElement: HTMLElement): HTMLElement {
-    const newElement = document.createElement('div');
-    newElement.classList.add(cssClasses.BLOCKPIECE);
-    newElement.textContent = clickedElement.textContent;
-    newElement.draggable = true;
-    newElement.dataset.index = clickedElement.dataset.index;
+    const newElement = clickedElement;
+    // newElement.classList.add(cssClasses.BLOCKPIECE);
+    // newElement.textContent = clickedElement.textContent;
+    // newElement.draggable = true;
+    // newElement.dataset.index = clickedElement.dataset.index;
     newElement.addEventListener('click', (event) => this.handlePieceClick(event));
     newElement.addEventListener('dragstart', this.dragStart);
     return newElement;
@@ -196,5 +202,38 @@ export default class ResultGameView extends View {
         }
       }
     }
+  }
+
+  createPuzzlePiece(word:string, originalIndex: number) {
+    const containerParam = {
+      tag: 'div',
+      classNames: [cssClasses.BLOCKPIECE],
+      textContent: word,
+    };
+    const beforeParam = {
+      tag: 'span',
+      classNames: [cssClasses.SPANPIECEBEFORE],
+      textContent: '',
+    };
+    const afterParam = {
+      tag: 'span',
+      classNames: [cssClasses.SPANPIECEAFTER],
+      textContent: '',
+    };
+    const containerCreator = new ElementCreator(containerParam);
+    const element = containerCreator.getElement();
+    if (+originalIndex === 0) {
+      const spanCreator = new ElementCreator(afterParam);
+      element.append(spanCreator.getElement());
+    } else if (+originalIndex === arrayAnswer.length - 1) {
+      const spanCreator = new ElementCreator(beforeParam);
+      element.append(spanCreator.getElement());
+    } else {
+      let spanCreator = new ElementCreator(beforeParam);
+      element.append(spanCreator.getElement());
+      spanCreator = new ElementCreator(afterParam);
+      element.append(spanCreator.getElement());
+    }
+    return element;
   }
 }
