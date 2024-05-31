@@ -4,7 +4,7 @@
     gap: 10px;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
   }
   .setting-block{
@@ -91,3 +91,33 @@
     background-image: url(../../../../../img/hint-hide.png);
     transition: all .2s linear;
  }
+.audio-hint-play-button{
+    width: 45px;
+    height: 45px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background: inherit;
+       border: none;
+    cursor: pointer;
+    transition: all .2s linear;
+
+}
+
+.audio-hint-play-button.play>svg{
+    stroke: #9FA8DA;
+    scale: 1.2;
+    transition: all .2s linear;
+}
+.hints-block{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 90%;
+}
+.text-hint{
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: .6px;
+    opacity: 1;
+}
+
