@@ -1,0 +1,125 @@
+.header-game {
+    width: 100%;
+    padding: 5px 10%;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .setting-block{
+    display: flex;
+    justify-content: space-between;
+    height: 49px;
+    width: 100%;
+
+  }
+  .setting-level{
+    display: flex;   
+    gap: 20px;    
+  }
+  .select_container{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    position: relative;
+  }  
+  .select__label::first-letter{
+    text-transform: capitalize;
+
+  }
+  .select__list{
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #9FA8DA;
+    border-color: #18193F;
+    width: 50px;
+    position: relative; /* Ensure the select element is also relatively positioned */
+    /* margin-top: 10px; */
+    z-index: 1;
+    scrollbar-width: thin; /* Options: auto, thin, none */
+    scrollbar-color: #888 #f1f1f1; /* thumb color and track color */
+  }
+  .select__list::-webkit-scrollbar {
+    width: 5px; /* Adjust the width to make the scrollbar narrower */
+  }
+  .select__list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  .select__list::-webkit-scrollbar-thumb {
+    background-color: #888; 
+    border-radius: 10px; /* Optional: Makes the thumb rounded */
+  }
+  .setting-hints{
+    display: flex;
+    justify-content: end;
+    gap: 10px;
+  }
+ .audio-hint-button, .image-button, .text-hint-button {
+    width: 45px;
+    height: 45px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background: inherit;
+       border: none;
+    cursor: pointer;
+    transition: all .2s linear;
+    transition: transform .2s, background .3s;
+ }
+ .audio-hint-button{
+    background-image: url(../../../../../img/sound.png);
+ }
+ .image-button{
+   
+    background-image: url(../../../../../img/img.png);
+    }
+ .text-hint-button{
+    background-image: url(../../../../../img/hint.png);
+ }
+ .audio-hint-button:hover, .image-button:hover, .text-hint-button:hover{
+    transform: scale(1.05);
+ }
+ .audio-hint-play-button.click{
+    background-image: url(../../../../../img/sound-empty.png);
+    transition: all .2s linear;
+ }
+ .image-button.click{
+    background-image: url(../../../../../img/img-empty.png);
+    transition: all .2s linear;
+ }
+ .text-hint-button.click{
+    background-image: url(../../../../../img/hint-hide.png);
+    transition: all .2s linear;
+ }
+.audio-hint-play-button{
+    width: 45px;
+    height: 45px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background: inherit;
+       border: none;
+    cursor: pointer;
+    transition: all .2s linear;
+
+}
+
+.audio-hint-play-button.play>svg{
+    stroke: #9FA8DA;
+    scale: 1.2;
+    transition: all .2s linear;
+}
+.hints-block{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 90%;
+}
+.text-hint{
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: .6px;
+    opacity: 1;
+}
+.text-hint.hidden{
+    opacity: 0;
+}
