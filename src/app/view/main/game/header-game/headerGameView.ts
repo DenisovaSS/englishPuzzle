@@ -104,6 +104,7 @@ export default class HeaderGameView extends View {
     const buttonAudio = this.containerCreator('button', cssClasses.BUTTONAUDIO);
     const buttonImg = this.containerCreator('button', cssClasses.BUTTONIMG);
     const buttonText = this.containerCreator('button', cssClasses.BUTTONTEXT);
+    buttonText.setEventHandler('click', (e) => this.clickButtonText(e));
     currentContainer.append(buttonAudio.getElement(), buttonImg.getElement(), buttonText.getElement());
   }
 
@@ -148,5 +149,12 @@ export default class HeaderGameView extends View {
     iconSvg.appendChild(iconPathNext);
 
     return iconSvg;
+  }
+
+  clickButtonText(e:Event) {
+    const currentTarget = e.currentTarget as HTMLElement;
+    const textHint = currentTarget.parentElement?.parentElement?.nextElementSibling?.lastElementChild;
+    currentTarget.classList.toggle('click');
+    textHint?.classList.toggle('hidden');
   }
 }

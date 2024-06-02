@@ -120,4 +120,6 @@
     letter-spacing: .6px;
     opacity: 1;
 }
-
+.text-hint.hidden{
+    opacity: 0;
+}
