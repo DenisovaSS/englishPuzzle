@@ -7,7 +7,8 @@ import {
 } from '../../../../utils/element-creator';
 import MainView from '../../main';
 import LoginView from '../../login/login_view';
-import wordCollectionLevel1 from '../../../../../data/wordCollectionLevel1.json';
+import LevelInfo from '../../../../utils/levelRound';
+import EventEmitter from '../../../../utils/EventEmit';
 
 const cssClasses = {
   HEADERG: 'header-game',
@@ -26,10 +27,9 @@ const cssClasses = {
   SELECTLABEL: 'select__label',
   SELECTLIST: 'select__list',
 };
-const COUNTLEVEL = 6;
-const wordCollectionRounds = wordCollectionLevel1.rounds.length;
-const wordCollection = wordCollectionLevel1.rounds[0].words[7];
-
+const COUNTLEVEL = LevelInfo.levels;
+const wordCollectionRounds = LevelInfo.currentLevelRounds;
+const currentEpisodePartNow = LevelInfo.currentEpisodePart;
 export default class HeaderGameView extends View {
   constructor(public mainView: MainView) {
     const params: ElementParams = {
@@ -63,8 +63,8 @@ export default class HeaderGameView extends View {
   fillContainerSetting(container: ElementCreator) {
     const currentContainer = container.getElement();
     const settingLevel = this.containerCreator('div', cssClasses.SETTINGLEVEL);
-    settingLevel.addInnerElement(this.createSelect('level', COUNTLEVEL));
-    settingLevel.addInnerElement(this.createSelect('round', wordCollectionRounds));
+    settingLevel.addInnerElement(this.createSelect('level', COUNTLEVEL, true));
+    settingLevel.addInnerElement(this.createSelect('round', wordCollectionRounds, false));
     const BtnLogOutParam = {
       tag: 'button',
       classNames: [cssClasses.BUTTON, cssClasses.BUTTONLOGOOUT],
@@ -79,16 +79,23 @@ export default class HeaderGameView extends View {
     currentContainer.append(settingLevel.getElement(), BtnLogOutCreator.getElement(), settingHints.getElement());
   }
 
-  createSelect(id:string, count:number) {
+  createSelect(id:string, count:number, attachEvent: boolean = true) {
     const selectContainer = document.createElement('div');
     selectContainer.classList.add(cssClasses.SELECTCONTAINER);
+
     const label = document.createElement('label');
     label.textContent = id;
     label.classList.add(cssClasses.SELECTLABEL);
     label.htmlFor = id;
+
     const select = document.createElement('select');
     select.classList.add(cssClasses.SELECTLIST);
     select.id = id;
+
+    if (attachEvent) {
+      select.addEventListener('change', (e) => this.createRoundsForLevel(e));
+    }
+
     for (let i = 1; i < count + 1; i++) {
       const option = document.createElement('option') as HTMLOptionElement;
       option.value = String(i);
@@ -96,6 +103,7 @@ export default class HeaderGameView extends View {
       select.append(option);
     }
     selectContainer.append(label, select);
+
     return selectContainer;
   }
 
@@ -115,7 +123,7 @@ export default class HeaderGameView extends View {
     buttonPlay.getElement().append(img);
     const textHint = document.createElement('div');
     textHint.classList.add(cssClasses.TEXTHINT);
-    textHint.textContent = wordCollection.textExampleTranslate;
+    textHint.textContent = currentEpisodePartNow.textExampleTranslate;
     currentContainer.append(buttonPlay.getElement(), textHint);
   }
 
@@ -156,5 +164,11 @@ export default class HeaderGameView extends View {
     const textHint = currentTarget.parentElement?.parentElement?.nextElementSibling?.lastElementChild;
     currentTarget.classList.toggle('click');
     textHint?.classList.toggle('hidden');
+  }
+
+  createRoundsForLevel(e: Event) {
+    const currentTarget = e.currentTarget as HTMLOptionElement;
+    const eventEmitter = EventEmitter.getInstance();
+    eventEmitter.emit('changeRounds', currentTarget.value);
   }
 }

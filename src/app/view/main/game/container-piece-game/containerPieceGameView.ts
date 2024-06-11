@@ -4,13 +4,12 @@ import {
   ElementParams,
   ElementCreator,
 } from '../../../../utils/element-creator';
-import wordCollectionLevel1 from '../../../../../data/wordCollectionLevel1.json';
 import EventEmitter from '../../../../utils/EventEmit';
+import LevelInfo from '../../../../utils/levelRound';
 
-const wordCollection = wordCollectionLevel1.rounds[0].words[7].textExample;
+const wordCollection = LevelInfo.currentEpisodePart.textExample;
 const sentence = wordCollection;
 const arrayAnswer = sentence.split(' ');
-// console.log(wordCollectionLevel1.rounds[0].words);
 const cssClasses = {
   PARTCONTAINER: 'game-container-pieces',
   PARTPIECECONTAINER: 'game-container-part-pieces',
