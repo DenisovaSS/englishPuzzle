@@ -79,7 +79,7 @@
  .audio-hint-button:hover, .image-button:hover, .text-hint-button:hover{
     transform: scale(1.05);
  }
- .audio-hint-play-button.click{
+ .audio-hint-button.click{
     background-image: url(../../../../../img/sound-empty.png);
     transition: all .2s linear;
  }
@@ -102,7 +102,11 @@
     transition: all .2s linear;
 
 }
-
+.audio-hint-play-button.hidden{
+   opacity: 0;
+   pointer-events: none; 
+  
+}
 .audio-hint-play-button.play>svg{
     stroke: #9FA8DA;
     scale: 1.2;

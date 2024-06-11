@@ -110,6 +110,7 @@ export default class HeaderGameView extends View {
   fillSettingHints(container: ElementCreator) {
     const currentContainer = container.getElement();
     const buttonAudio = this.containerCreator('button', cssClasses.BUTTONAUDIO);
+    buttonAudio.setEventHandler('click', (e) => this.clickButtonAudio(e));
     const buttonImg = this.containerCreator('button', cssClasses.BUTTONIMG);
     const buttonText = this.containerCreator('button', cssClasses.BUTTONTEXT);
     buttonText.setEventHandler('click', (e) => this.clickButtonText(e));
@@ -119,6 +120,7 @@ export default class HeaderGameView extends View {
   fillContainerHints(container: ElementCreator) {
     const currentContainer = container.getElement();
     const buttonPlay = this.containerCreator('button', cssClasses.BUTTONPLAYAUDIO);
+    buttonPlay.setEventHandler('click', (e) => this.clickButtonPlay(e));
     const img = this.renderSVG();
     buttonPlay.getElement().append(img);
     const textHint = document.createElement('div');
@@ -159,6 +161,12 @@ export default class HeaderGameView extends View {
     return iconSvg;
   }
 
+  createRoundsForLevel(e: Event) {
+    const currentTarget = e.currentTarget as HTMLOptionElement;
+    const eventEmitter = EventEmitter.getInstance();
+    eventEmitter.emit('changeRounds', currentTarget.value);
+  }
+
   clickButtonText(e:Event) {
     const currentTarget = e.currentTarget as HTMLElement;
     const textHint = currentTarget.parentElement?.parentElement?.nextElementSibling?.lastElementChild;
@@ -166,9 +174,22 @@ export default class HeaderGameView extends View {
     textHint?.classList.toggle('hidden');
   }
 
-  createRoundsForLevel(e: Event) {
-    const currentTarget = e.currentTarget as HTMLOptionElement;
-    const eventEmitter = EventEmitter.getInstance();
-    eventEmitter.emit('changeRounds', currentTarget.value);
+  clickButtonAudio(e:Event) {
+    const currentTarget = e.currentTarget as HTMLElement;
+    const buttonAudioPlay = currentTarget.parentElement?.parentElement?.nextElementSibling?.firstElementChild;
+    currentTarget.classList.toggle('click');
+    buttonAudioPlay?.classList.toggle('hidden');
+  }
+
+  clickButtonPlay(e:Event) {
+    const currentTarget = e.currentTarget as HTMLElement;
+    currentTarget.classList.toggle('play');
+    const audio = document.createElement('audio') as HTMLAudioElement;
+    audio.autoplay = true;
+    const source = document.createElement('source');
+    // source.src = audioFile;
+    this.elementCreator.addInnerElement(audio);
+    audio.append(source);
+    audio.play();
   }
 }
