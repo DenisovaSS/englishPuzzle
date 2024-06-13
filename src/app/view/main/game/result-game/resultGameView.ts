@@ -5,9 +5,11 @@ import {
   ElementCreator,
 } from '../../../../utils/element-creator';
 import EventEmitter from '../../../../utils/EventEmit';
-import wordCollectionLevel1 from '../../../../../data/wordCollectionLevel1.json';
+import LevelInfo from '../../../../utils/levelRound';
+// import wordCollectionLevel1 from '../../../../../data/wordCollectionLevel1.json';
 
-const wordCollection = wordCollectionLevel1.rounds[0].words[7].textExample;
+const wordCollection = LevelInfo.currentEpisodePart.textExample;
+console.log(wordCollection);
 const arrayAnswer = wordCollection.split(' ');
 const cssClasses = {
   RESULT: 'game-result-container',
@@ -17,7 +19,7 @@ const cssClasses = {
   SPANPIECEBEFORE: 'before',
   SPANPIECEAFTER: 'after',
 };
-const countWordSentence: number = 9;
+const countWordSentence: number = arrayAnswer.length;
 export default class ResultGameView extends View {
   constructor() {
     const params: ElementParams = {

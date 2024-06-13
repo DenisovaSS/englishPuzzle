@@ -48,6 +48,10 @@ module.exports = {
         loader: 'ts-loader',
         exclude: /node_modules/,
       },
+        {
+        test: /\.(mp3|wav|ogg)$/,
+        use: 'file-loader',
+      },
       {
         test: /\.json$/,
         loader: 'json-loader', // or 'file-loader' if you prefer
