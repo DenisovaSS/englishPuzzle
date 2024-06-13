@@ -13,7 +13,7 @@ let currentLevel = 1;
 const wordCollections = [wordCollectionLevel1, wordCollectionLevel2, wordCollectionLevel3, wordCollectionLevel4, wordCollectionLevel5, wordCollectionLevel6];
 const wordCollection = wordCollections[currentLevel - 1];
 const currentRound = 1;
-const currentEpisode = 0;
+const currentEpisode = 3;
 const currentEpisodePart = wordCollection.rounds[currentRound - 1].words[currentEpisode];
 function getRoundsCount(level:number):number {
   return level ? wordCollections[level - 1].roundsCount : 0;
