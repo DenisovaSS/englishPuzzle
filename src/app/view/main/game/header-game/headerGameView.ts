@@ -9,6 +9,7 @@ import MainView from '../../main';
 import LoginView from '../../login/login_view';
 import LevelInfo from '../../../../utils/levelRound';
 import EventEmitter from '../../../../utils/EventEmit';
+import audioFile from '../../../../../files/01_0001_example.mp3';
 
 const cssClasses = {
   HEADERG: 'header-game',
@@ -187,7 +188,7 @@ export default class HeaderGameView extends View {
     const audio = document.createElement('audio') as HTMLAudioElement;
     audio.autoplay = true;
     const source = document.createElement('source');
-    // source.src = audioFile;
+    source.src = audioFile;
     this.elementCreator.addInnerElement(audio);
     audio.append(source);
     audio.play();
