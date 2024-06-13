@@ -9,7 +9,8 @@ import MainView from '../../main';
 import LoginView from '../../login/login_view';
 import LevelInfo from '../../../../utils/levelRound';
 import EventEmitter from '../../../../utils/EventEmit';
-import audioFile from '../../../../../files/01_0001_example.mp3';
+import getAudioFileURL from '../../../../utils/audioLoader';
+// import audioFile from '../../../../../files/01_0001_example.mp3';
 
 const cssClasses = {
   HEADERG: 'header-game',
@@ -31,6 +32,7 @@ const cssClasses = {
 const COUNTLEVEL = LevelInfo.levels;
 const wordCollectionRounds = LevelInfo.currentLevelRounds;
 const currentEpisodePartNow = LevelInfo.currentEpisodePart;
+
 export default class HeaderGameView extends View {
   constructor(public mainView: MainView) {
     const params: ElementParams = {
@@ -184,13 +186,19 @@ export default class HeaderGameView extends View {
 
   clickButtonPlay(e:Event) {
     const currentTarget = e.currentTarget as HTMLElement;
-    currentTarget.classList.toggle('play');
     const audio = document.createElement('audio') as HTMLAudioElement;
     audio.autoplay = true;
     const source = document.createElement('source');
-    source.src = audioFile;
+    source.src = getAudioFileURL(currentEpisodePartNow.audioExample);
     this.elementCreator.addInnerElement(audio);
     audio.append(source);
     audio.play();
+    audio.addEventListener('play', () => {
+      currentTarget.classList.add('play');
+    });
+    audio.addEventListener('ended', () => {
+      currentTarget.classList.remove('play');
+      audio.remove();
+    });
   }
 }
