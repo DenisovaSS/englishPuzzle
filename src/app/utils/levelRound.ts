@@ -13,8 +13,9 @@ let currentLevel = 1;
 const wordCollections = [wordCollectionLevel1, wordCollectionLevel2, wordCollectionLevel3, wordCollectionLevel4, wordCollectionLevel5, wordCollectionLevel6];
 const wordCollection = wordCollections[currentLevel - 1];
 const currentRound = 1;
-const currentEpisode = 3;
+const currentEpisode = 0;
 const currentEpisodePart = wordCollection.rounds[currentRound - 1].words[currentEpisode];
+console.log(currentEpisodePart);
 function getRoundsCount(level:number):number {
   return level ? wordCollections[level - 1].roundsCount : 0;
 }
@@ -38,6 +39,6 @@ function changeCurentlevel(curentElement:number) {
 eventEmitter.on('changeRounds', (curentElement) => changeCurentlevel(curentElement));
 
 const LevelInfo = {
-  levels, currentLevel, currentLevelRounds, currentRound, currentEpisodePart, wordCollection,
+  levels, currentLevel, currentLevelRounds, currentRound, currentEpisodePart, wordCollection, currentEpisode,
 };
 export default LevelInfo;

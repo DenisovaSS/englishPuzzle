@@ -9,7 +9,7 @@ import MainView from '../../main';
 import LoginView from '../../login/login_view';
 import LevelInfo from '../../../../utils/levelRound';
 import EventEmitter from '../../../../utils/EventEmit';
-import getAudioFileURL from '../../../../utils/audioLoader';
+import { getAudioFileURL } from '../../../../utils/fileLoader';
 // import audioFile from '../../../../../files/01_0001_example.mp3';
 
 const cssClasses = {

@@ -6,9 +6,10 @@ import {
 } from '../../../../utils/element-creator';
 import EventEmitter from '../../../../utils/EventEmit';
 import LevelInfo from '../../../../utils/levelRound';
-// import wordCollectionLevel1 from '../../../../../data/wordCollectionLevel1.json';
+import { getImgURL } from '../../../../utils/fileLoader';
 
 const wordCollection = LevelInfo.currentEpisodePart.textExample;
+const roundWordCollection = LevelInfo.wordCollection.rounds[LevelInfo.currentRound - 1].levelData;
 console.log(wordCollection);
 const arrayAnswer = wordCollection.split(' ');
 const cssClasses = {
@@ -35,10 +36,17 @@ export default class ResultGameView extends View {
 
   configureView() {
     const containerCreator = this.containerDivCreator(cssClasses.PARTRESULT);
+    // containerCreator.getElement().dataset.index = '0';
+    const gameResultContainer = this.elementCreator.getElement();
+    // console.log(getImgURL(roundWordCollection.imageSrc));
+    gameResultContainer.style.background = `url(${getImgURL(roundWordCollection.imageSrc)})`;
+
     this.elementCreator.addInnerElement(containerCreator.getElement());
+
     for (let i = 0; i < countWordSentence; i++) {
       const containerPieceCreator = this.containerDivCreator(cssClasses.PARTPIECE);
       const currentPieceCreator = containerPieceCreator.getElement();
+      currentPieceCreator.style.width = `${702 / countWordSentence}px`;
       currentPieceCreator.addEventListener('dragover', this.handleDragOver);
       // currentPieceCreator.addEventListener('dragleave', this.handleDragLeave);
       currentPieceCreator.addEventListener('drop', this.handleDragDrop.bind(this));
