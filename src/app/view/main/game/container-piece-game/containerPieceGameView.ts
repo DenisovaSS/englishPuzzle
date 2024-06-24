@@ -1,4 +1,3 @@
-import './containerPieceGameView.css';
 import View from '../../../view';
 import {
   ElementParams,

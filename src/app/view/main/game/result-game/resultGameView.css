@@ -17,14 +17,13 @@
     gap: 2px;
     transition: all .5s;
 }
-/* .game-result-container-part-piece {
+.game-result-container-part-piece {
   min-width: 49px;
-  min-height: 49px;
-  background-color: #e7e7e7;
-  border: 1px solid #c8ccd1;
+  min-height: 40px;
+  background-color: #e7e7e7;  
   transition: all 0.2s linear;
   flex-grow: 1;
-} */
+}
 .incorrect {
   border: 1px solid #c20f0f8a;
 }
