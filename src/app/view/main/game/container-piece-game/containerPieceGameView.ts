@@ -58,9 +58,21 @@ export default class ContainerPieceGameView extends View {
     });
 
     eventEmitter.on('clearPeaceContainer', () => {
+      // console.log(currentElement.children);
+      const itemsArray = Array.from(currentElement.children);
+      if (itemsArray) {
+        itemsArray.sort((a, b) => {
+          const indexA = parseInt(a.getAttribute('data-index') || '0', 10);
+          const indexB = parseInt(b.getAttribute('data-index') || '0', 10);
+          return indexA - indexB;
+        });
+      }
       while (currentElement.firstElementChild) {
         currentElement.firstElementChild.remove();
       }
+      itemsArray.forEach((item) => {
+        eventEmitter.emit('piece', item);
+      });
     });
     const handlePieceClick = (clickedElement: HTMLElement) => {
       for (let i = 0; i < currentElement.children.length; i++) {

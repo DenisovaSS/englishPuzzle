@@ -115,13 +115,13 @@ export default class ResultGameView extends View {
         child.firstElementChild.remove();
       }
     }
-    arrayAnswer.forEach((word, index) => {
-      const newElement = this.createPuzzlePiece(word, index);
-      allChildren[index].append(newElement);
-    });
+    // arrayAnswer.forEach((word, index) => {
+    //   const newElement = this.createPuzzlePiece(word, index);
+    //   allChildren[index].append(newElement);
+    // });
     eventEmitter.emit('clearPeaceContainer');
     eventEmitter.emit('check-remove');
-    eventEmitter.emit('continue');
+    // eventEmitter.emit('continue');
   }
 
   pieceEventListener(clickedElement: HTMLElement, allChildren: HTMLCollection, eventEmitter: EventEmitter) {
@@ -138,7 +138,7 @@ export default class ResultGameView extends View {
       allChildren[childIndex].append(newElement);
     }
     const countAllchildrenCurent = Array.from(allChildren).filter((child) => (child as HTMLElement).childElementCount > 0).length;
-    console.log(countWordSentence === countAllchildrenCurent);
+    // console.log(countWordSentence === countAllchildrenCurent);
     if (countWordSentence === countAllchildrenCurent) {
       this.checkSentence(allChildren, eventEmitter);
     }
