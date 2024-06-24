@@ -9,7 +9,7 @@ import MainView from '../../main';
 import LoginView from '../../login/login_view';
 import LevelInfo from '../../../../utils/levelRound';
 import EventEmitter from '../../../../utils/EventEmit';
-import getAudioFileURL from '../../../../utils/audioLoader';
+import { getAudioFileURL } from '../../../../utils/fileLoader';
 // import audioFile from '../../../../../files/01_0001_example.mp3';
 
 const cssClasses = {
@@ -115,6 +115,7 @@ export default class HeaderGameView extends View {
     const buttonAudio = this.containerCreator('button', cssClasses.BUTTONAUDIO);
     buttonAudio.setEventHandler('click', (e) => this.clickButtonAudio(e));
     const buttonImg = this.containerCreator('button', cssClasses.BUTTONIMG);
+    buttonImg.setEventHandler('click', (e) => this.clickButtonImg(e));
     const buttonText = this.containerCreator('button', cssClasses.BUTTONTEXT);
     buttonText.setEventHandler('click', (e) => this.clickButtonText(e));
     currentContainer.append(buttonAudio.getElement(), buttonImg.getElement(), buttonText.getElement());
@@ -168,6 +169,13 @@ export default class HeaderGameView extends View {
     const currentTarget = e.currentTarget as HTMLOptionElement;
     const eventEmitter = EventEmitter.getInstance();
     eventEmitter.emit('changeRounds', currentTarget.value);
+  }
+
+  clickButtonImg(e:Event) {
+    const currentTarget = e.currentTarget as HTMLElement;
+    currentTarget.classList.toggle('click');
+    const bodyElement = document.body;
+    bodyElement.classList.toggle('back-off');
   }
 
   clickButtonText(e:Event) {

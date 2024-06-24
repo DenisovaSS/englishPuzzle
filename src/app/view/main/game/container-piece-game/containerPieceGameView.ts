@@ -1,4 +1,3 @@
-import './containerPieceGameView.css';
 import View from '../../../view';
 import {
   ElementParams,
@@ -6,8 +5,10 @@ import {
 } from '../../../../utils/element-creator';
 import EventEmitter from '../../../../utils/EventEmit';
 import LevelInfo from '../../../../utils/levelRound';
+import { getImgURL } from '../../../../utils/fileLoader';
 
 const wordCollection = LevelInfo.currentEpisodePart.textExample;
+const roundWordCollection = LevelInfo.wordCollection.rounds[LevelInfo.currentRound - 1].levelData;
 const sentence = wordCollection;
 const arrayAnswer = sentence.split(' ');
 const cssClasses = {
@@ -17,6 +18,12 @@ const cssClasses = {
   SPANPIECEBEFORE: 'before',
   SPANPIECEAFTER: 'after',
 };
+// const gameResultContainer = document.querySelector('.game-result-container');
+// console.log(gameResultContainer);
+const containerW = 702;
+const containerH = 400;
+
+const maxLines = 10;
 
 export default class ContainerPieceGameView extends View {
   constructor() {
@@ -115,20 +122,57 @@ export default class ContainerPieceGameView extends View {
     };
     const containerCreator = new ElementCreator(containerParam);
     const element = containerCreator.getElement();
+    const createSpan = (param:ElementParams, index:string): ElementCreator => {
+      let spanCreator = new ElementCreator(param);
+      if (param === afterParam) {
+        spanCreator = new ElementCreator(param);
+        const itemAfter = spanCreator.getElement();
+        const lineIndex = LevelInfo.currentEpisode;
+        const puzzleIndex = Number(index);
+        let backgroundPositionX = -containerW / arrayAnswer.length + 2;
+        let backgroundPositionY = -9;
+        if (puzzleIndex > 0) {
+          backgroundPositionX = -(puzzleIndex * (containerW / arrayAnswer.length) - backgroundPositionX);
+        }
+        if (lineIndex > 0) {
+          backgroundPositionY = -(lineIndex * (containerH / maxLines) - backgroundPositionY);
+        }
+        itemAfter.style.backgroundImage = `url(${getImgURL(roundWordCollection.imageSrc)})`;
+        itemAfter.style.backgroundSize = `${containerW}px ${containerH}px`;
+        itemAfter.style.backgroundPosition = `${backgroundPositionX}px ${backgroundPositionY}px`;
+      }
+
+      return spanCreator;
+    };
+    element.dataset.index = String(originalIndex);
     if (+originalIndex === 0) {
-      const spanCreator = new ElementCreator(afterParam);
+      const spanCreator = createSpan(afterParam, element.dataset.index);
       element.append(spanCreator.getElement());
     } else if (+originalIndex === arrayAnswer.length - 1) {
-      const spanCreator = new ElementCreator(beforeParam);
+      const spanCreator = createSpan(beforeParam, element.dataset.index);
       element.append(spanCreator.getElement());
     } else {
-      let spanCreator = new ElementCreator(beforeParam);
+      let spanCreator = createSpan(beforeParam, element.dataset.index);
       element.append(spanCreator.getElement());
-      spanCreator = new ElementCreator(afterParam);
+      spanCreator = createSpan(afterParam, element.dataset.index);
       element.append(spanCreator.getElement());
     }
-    element.dataset.index = String(originalIndex);
+
     element.draggable = true;
+    const lineIndex = LevelInfo.currentEpisode;
+    let backgroundPositionX = 0;
+    let backgroundPositionY = 0;
+    const puzzleIndex = Number(element.dataset.index);
+    if (puzzleIndex > 0 && containerW) {
+      backgroundPositionX = -(puzzleIndex * (containerW / arrayAnswer.length));
+    }
+    if (lineIndex > 0 && containerH) {
+      backgroundPositionY = -(lineIndex * (containerH / maxLines));
+    }
+    if (containerW) { element.style.width = `${containerW / arrayAnswer.length - 40 - 2}px`; }
+    element.style.backgroundImage = `url(${getImgURL(roundWordCollection.imageSrc)})`;
+    element.style.backgroundSize = `${containerW}px ${containerH}px`;
+    element.style.backgroundPosition = `${backgroundPositionX}px ${backgroundPositionY}px`;
     return element;
   }
 
