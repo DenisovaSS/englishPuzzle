@@ -9,19 +9,23 @@ import EventEmitter from './EventEmit';
 
 const eventEmitter = EventEmitter.getInstance();
 const levels = 6;
-let currentLevel = 1;
 const wordCollections = [wordCollectionLevel1, wordCollectionLevel2, wordCollectionLevel3, wordCollectionLevel4, wordCollectionLevel5, wordCollectionLevel6];
-const wordCollection = wordCollections[currentLevel - 1];
+// default
+let currentLevel = 1;
 const currentRound = 1;
 const currentEpisode = 0;
+
+const wordCollection = wordCollections[currentLevel - 1];
 const currentEpisodePart = wordCollection.rounds[currentRound - 1].words[currentEpisode];
-console.log(currentEpisodePart);
+// console.log(currentEpisodePart);
 function getRoundsCount(level:number):number {
   return level ? wordCollections[level - 1].roundsCount : 0;
 }
 let currentLevelRounds = getRoundsCount(currentLevel);
 function changeCurentlevel(curentElement:number) {
   currentLevel = curentElement;
+  eventEmitter.emit('changeCurrentLevel', currentLevel);
+  console.log(currentLevel);
   currentLevelRounds = getRoundsCount(currentLevel);
   const selectList = document.getElementById('round') as HTMLSelectElement;
   console.log(currentLevelRounds);

@@ -62,6 +62,9 @@ export default class ContainerBtnGameView extends View {
       BtnCheckCreator.setCssClasses(['invisible']);
     });
     this.elementCreator.addInnerElement(BtnCheckCreator.getElement());
+    eventEmitter.on('continue', () => {
+      this.createBTN(['button', 'continue-button'], 'continue');
+    });
   }
 
   checknewSentances() {

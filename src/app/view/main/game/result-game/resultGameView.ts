@@ -21,6 +21,12 @@ const cssClasses = {
   SPANPIECEAFTER: 'after',
 };
 const countWordSentence: number = arrayAnswer.length;
+// const eventEmitterLevel = EventEmitter.getInstance();
+// eventEmitterLevel.on('changeCurrentLevel', (currentLevel:number) => {
+//   // wordCollection = wordCollections[currentLevel - 1];
+//   // wordCollection = LevelInfo.currentEpisodePart.textExample;
+//   // roundWordCollection = LevelInfo.wordCollection.rounds[LevelInfo.currentRound - 1].levelData;
+// });
 export default class ResultGameView extends View {
   constructor() {
     const params: ElementParams = {

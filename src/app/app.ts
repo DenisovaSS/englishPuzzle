@@ -16,8 +16,8 @@ export default class App {
   createView() {
     const headerView = new HeaderView();
     const mainView = new MainView();
-    mainView.setContent(new GameView(mainView));
-    // this.renderNewPage(mainView);
+    // mainView.setContent(new GameView(mainView));
+    this.renderNewPage(mainView);
     const footerView = new FooterView();
 
     document.body.append(
@@ -32,13 +32,16 @@ export default class App {
     const customerDataString = localStorage.getItem(myKeySaveLocalStorage);
     if (customerDataString !== null) {
       mainView.setContent(new WelcomeView(mainView));
-      const eventEmitter = EventEmitter.getInstance();
-      eventEmitter.on('logout', () => {
-        mainView.setContent(new LoginView(mainView));
-      });
-      eventEmitter.on('startGame', () => {
-        mainView.setContent(new GameView(mainView));
-      });
+    } else {
+      mainView.setContent(new LoginView(mainView));
     }
+    const eventEmitter = EventEmitter.getInstance();
+    eventEmitter.on('logout', () => {
+      localStorage.clear();
+      mainView.setContent(new LoginView(mainView));
+    });
+    eventEmitter.on('startGame', () => {
+      mainView.setContent(new GameView(mainView));
+    });
   }
 }

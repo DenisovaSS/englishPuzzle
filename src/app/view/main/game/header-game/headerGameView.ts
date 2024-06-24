@@ -6,7 +6,7 @@ import {
   ElementCreator,
 } from '../../../../utils/element-creator';
 import MainView from '../../main';
-import LoginView from '../../login/login_view';
+// import LoginView from '../../login/login_view';
 import LevelInfo from '../../../../utils/levelRound';
 import EventEmitter from '../../../../utils/EventEmit';
 import { getAudioFileURL } from '../../../../utils/fileLoader';
@@ -75,7 +75,9 @@ export default class HeaderGameView extends View {
     };
     const BtnLogOutCreator = new ElementCreator(BtnLogOutParam);
     BtnLogOutCreator.setEventHandler('click', () => {
-      this.mainView.setContent(new LoginView(this.mainView));
+      const eventEmitter = EventEmitter.getInstance();
+      eventEmitter.emit('logout');
+      // this.mainView.setContent(new LoginView(this.mainView));
     });
     const settingHints = this.containerCreator('div', cssClasses.SETINGHINTS);
     this.fillSettingHints(settingHints);
