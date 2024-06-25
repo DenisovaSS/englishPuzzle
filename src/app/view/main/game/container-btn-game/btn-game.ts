@@ -63,7 +63,8 @@ export default class ContainerBtnGameView extends View {
     });
     this.elementCreator.addInnerElement(BtnCheckCreator.getElement());
     eventEmitter.on('continue', () => {
-      this.createBTN(['button', 'continue-button'], 'continue');
+      const continueBTN = this.createBTN(['button', 'continue-button'], 'continue');
+      continueBTN.setEventHandler('click', this.clickContinueBtn);
     });
   }
 
@@ -85,5 +86,11 @@ export default class ContainerBtnGameView extends View {
 
   removeBTN(btn: HTMLButtonElement) {
     btn.remove();
+  }
+
+  clickContinueBtn() {
+    console.log('click');
+    const eventEmitter = EventEmitter.getInstance();
+    eventEmitter.emit('newEpisode');
   }
 }

@@ -2,16 +2,16 @@ import './resultGameView.css';
 import View from '../../../view';
 import {
   ElementParams,
-  ElementCreator,
+  ElementCreator, WordCollection,
 } from '../../../../utils/element-creator';
 import EventEmitter from '../../../../utils/EventEmit';
 import LevelInfo from '../../../../utils/levelRound';
 import { getImgURL } from '../../../../utils/fileLoader';
 
-const wordCollection = LevelInfo.currentEpisodePart.textExample;
-const roundWordCollection = LevelInfo.wordCollection.rounds[LevelInfo.currentRound - 1].levelData;
-console.log(wordCollection);
-const arrayAnswer = wordCollection.split(' ');
+// const wordCollection = LevelInfo.currentEpisodePart.textExample;
+// const roundWordCollection = LevelInfo.wordCollection.rounds[LevelInfo.currentRound - 1].levelData;
+// console.log(wordCollection);
+// const arrayAnswer = wordCollection.split(' ');
 const cssClasses = {
   RESULT: 'game-result-container',
   PARTRESULT: 'game-result-container-part',
@@ -20,24 +20,38 @@ const cssClasses = {
   SPANPIECEBEFORE: 'before',
   SPANPIECEAFTER: 'after',
 };
-const countWordSentence: number = arrayAnswer.length;
-// const eventEmitterLevel = EventEmitter.getInstance();
-// eventEmitterLevel.on('changeCurrentLevel', (currentLevel:number) => {
-//   // wordCollection = wordCollections[currentLevel - 1];
-//   // wordCollection = LevelInfo.currentEpisodePart.textExample;
-//   // roundWordCollection = LevelInfo.wordCollection.rounds[LevelInfo.currentRound - 1].levelData;
-// });
+// const countWordSentence: number = arrayAnswer.length;
 export default class ResultGameView extends View {
-  constructor() {
+  private wordCollection: WordCollection;
+
+  private round: number;
+
+  private countWordSentence: number = 0;
+
+  private textSentances: string = '';
+
+  constructor(wordCollection: WordCollection, round: number) {
     const params: ElementParams = {
       tag: 'div',
       classNames: [cssClasses.RESULT],
       textContent: '',
     };
     super(params);
-
+    this.wordCollection = wordCollection;
+    this.round = round;
+    this.initialize();
     const containerCreator = this.configureView();
     this.fillField(containerCreator);
+  }
+
+  initialize() {
+    // const currentWordCollection = this.wordCollection;
+    // const currentRound = this.round;
+    const { currentEpisode } = LevelInfo;
+    const currentEpisodePart = this.wordCollection.rounds[this.round - 1].words[currentEpisode];
+    this.textSentances = currentEpisodePart.textExample;
+    // const roundWordCollection =this.wordCollection.rounds[LevelInfo.currentRound - 1].levelData;
+    this.countWordSentence = this.textSentances.split(' ').length;
   }
 
   configureView() {
@@ -45,14 +59,14 @@ export default class ResultGameView extends View {
     // containerCreator.getElement().dataset.index = '0';
     const gameResultContainer = this.elementCreator.getElement();
     // console.log(getImgURL(roundWordCollection.imageSrc));
+    const roundWordCollection = this.wordCollection.rounds[this.round - 1].levelData;
     gameResultContainer.style.background = `url(${getImgURL(roundWordCollection.imageSrc)})`;
 
     this.elementCreator.addInnerElement(containerCreator.getElement());
-
-    for (let i = 0; i < countWordSentence; i++) {
+    for (let i = 0; i < this.countWordSentence; i++) {
       const containerPieceCreator = this.containerDivCreator(cssClasses.PARTPIECE);
       const currentPieceCreator = containerPieceCreator.getElement();
-      currentPieceCreator.style.width = `${702 / countWordSentence}px`;
+      currentPieceCreator.style.width = `${702 / this.countWordSentence}px`;
       currentPieceCreator.addEventListener('dragover', this.handleDragOver);
       // currentPieceCreator.addEventListener('dragleave', this.handleDragLeave);
       currentPieceCreator.addEventListener('drop', this.handleDragDrop.bind(this));
@@ -95,7 +109,7 @@ export default class ResultGameView extends View {
     const container = currentTarget.parentElement?.children;
     if (container) {
       const countAllchildrenCurent = Array.from(container).filter((child) => (child as HTMLElement).childElementCount > 0).length;
-      if (countAllchildrenCurent === countWordSentence) {
+      if (countAllchildrenCurent === this.countWordSentence) {
         this.checkSentence(container, eventEmitter);
       }
     }
@@ -145,7 +159,7 @@ export default class ResultGameView extends View {
     }
     const countAllchildrenCurent = Array.from(allChildren).filter((child) => (child as HTMLElement).childElementCount > 0).length;
     // console.log(countWordSentence === countAllchildrenCurent);
-    if (countWordSentence === countAllchildrenCurent) {
+    if (this.countWordSentence === countAllchildrenCurent) {
       this.checkSentence(allChildren, eventEmitter);
     }
   }
@@ -194,7 +208,7 @@ export default class ResultGameView extends View {
         finalSrt.push(child.textContent);
       }
     }
-    if (finalSrt.join(' ') === wordCollection) {
+    if (finalSrt.join(' ') === this.textSentances) {
       for (let i = 0; i < allChildren.length; i++) {
         const child = allChildren[i] as HTMLElement;
         child.classList.remove('incorrect');
@@ -211,7 +225,7 @@ export default class ResultGameView extends View {
     for (let j = 0; j < currentChildren.length; j++) {
       const partchild = currentChildren[j] as HTMLElement;
       partchild.classList.remove('incorrect');
-      const word = wordCollection.split(' ')[j];
+      const word = this.textSentances.split(' ')[j];
       if (partchild.textContent) {
         if (partchild.textContent !== word) {
           partchild.classList.add('incorrect');
@@ -241,7 +255,7 @@ export default class ResultGameView extends View {
     if (+originalIndex === 0) {
       const spanCreator = new ElementCreator(afterParam);
       element.append(spanCreator.getElement());
-    } else if (+originalIndex === arrayAnswer.length - 1) {
+    } else if (+originalIndex === this.countWordSentence - 1) {
       const spanCreator = new ElementCreator(beforeParam);
       element.append(spanCreator.getElement());
     } else {
@@ -251,5 +265,12 @@ export default class ResultGameView extends View {
       element.append(spanCreator.getElement());
     }
     return element;
+  }
+
+  updateView() {
+    this.initialize();
+    // Reconfigure view with new data
+    const containerCreator = this.configureView();
+    this.fillField(containerCreator);
   }
 }

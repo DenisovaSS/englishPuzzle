@@ -170,7 +170,7 @@ export default class HeaderGameView extends View {
   createRoundsForLevel(e: Event) {
     const currentTarget = e.currentTarget as HTMLOptionElement;
     const eventEmitter = EventEmitter.getInstance();
-    eventEmitter.emit('changeRounds', currentTarget.value);
+    eventEmitter.emit('getRounds', currentTarget.value);
   }
 
   clickButtonImg(e:Event) {

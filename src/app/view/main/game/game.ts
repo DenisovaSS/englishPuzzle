@@ -1,12 +1,13 @@
 import './game.css';
 import View from '../../view';
-import { ElementParams, ElementCreator } from '../../../utils/element-creator';
+import { ElementParams, WordCollection } from '../../../utils/element-creator';
 import HeaderGameView from './header-game/headerGameView';
 import MainView from '../main';
 import ContainerPieceGameView from './container-piece-game/containerPieceGameView';
 import ResultGameView from './result-game/resultGameView';
 import ContainerBtnGameView from './container-btn-game/btn-game';
-// import EventEmitter from '../../../utils/EventEmit';
+import LevelInfo from '../../../utils/levelRound';
+import EventEmitter from '../../../utils/EventEmit';
 
 const cssClasses = {
   SECTIONG: 'game-page',
@@ -18,6 +19,8 @@ const cssClasses = {
 };
 
 export default class GameView extends View {
+  private resultContainer!: ResultGameView;
+
   constructor(private mainView: MainView) {
     const params: ElementParams = {
       tag: 'section',
@@ -27,24 +30,48 @@ export default class GameView extends View {
     super(params);
 
     this.configureView();
+    this.setupEventListeners();
   }
 
   configureView() {
-    const containerParam = {
-      tag: 'div',
-      classNames: [cssClasses.CONTAINER],
-      textContent: '',
-    };
+    // const containerParam = {
+    //   tag: 'div',
+    //   classNames: [cssClasses.CONTAINER],
+    //   textContent: '',
+    // };
 
-    const containerCreator = new ElementCreator(containerParam);
-    this.elementCreator.addInnerElement(containerCreator.getElement());
+    // const containerCreator = new ElementCreator(containerParam);
+    // this.elementCreator.addInnerElement(containerCreator.getElement());
+    const eventEmitter = EventEmitter.getInstance();
     const headerCreator = new HeaderGameView(this.mainView);
-    containerCreator.addInnerElement(headerCreator.getHtmlElement());
-    const resultContainer = new ResultGameView();
-    containerCreator.addInnerElement(resultContainer.getHtmlElement());
+    this.elementCreator.addInnerElement(headerCreator.getHtmlElement());
+    this.resultContainer = new ResultGameView(LevelInfo.wordCollection, LevelInfo.currentRound);
+    eventEmitter.on('newEpisode', () => {
+      this.resultContainer.updateView();
+    });
+    this.elementCreator.addInnerElement(this.resultContainer.getHtmlElement());
     const peaceContainer = new ContainerPieceGameView();
-    containerCreator.addInnerElement(peaceContainer.getHtmlElement());
+    this.elementCreator.addInnerElement(peaceContainer.getHtmlElement());
     const BTNContainer = new ContainerBtnGameView();
-    containerCreator.addInnerElement(BTNContainer.getHtmlElement());
+    this.elementCreator.addInnerElement(BTNContainer.getHtmlElement());
+  }
+
+  setupEventListeners() {
+    const eventEmitter = EventEmitter.getInstance();
+    eventEmitter.on('changeLevel', (wordCollection, currentRound) => this.updateView(wordCollection, currentRound));
+  }
+
+  updateView(wordCollection: WordCollection, round: number) {
+    console.log(wordCollection);
+    const containerCreator = this.elementCreator.getElement();
+    const oldResultContainer = this.resultContainer.getHtmlElement();
+    const { nextSibling } = oldResultContainer;
+    containerCreator.removeChild(oldResultContainer);
+    this.resultContainer = new ResultGameView(wordCollection, round);
+    if (nextSibling) {
+      containerCreator.insertBefore(this.resultContainer.getHtmlElement(), nextSibling);
+    } else {
+      containerCreator.appendChild(this.resultContainer.getHtmlElement());
+    }
   }
 }
