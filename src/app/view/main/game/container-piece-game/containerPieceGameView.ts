@@ -52,15 +52,16 @@ export default class ContainerPieceGameView extends View {
     });
     const shuffledArray = this.randomArray(this.arrayAnswer);
     const currentElement = this.elementCreator.getElement();
-    console.log(currentElement);
-    currentElement.addEventListener('dragover', this.handleDragOver);
-    currentElement.addEventListener('drop', (e) => {
-      e.preventDefault();
-      const article = document.querySelector(`[data-index='${e.dataTransfer?.getData('text')}']`);
-      if (article) {
-        currentElement.append(article);
-      }
-    });
+
+    currentElement.addEventListener('dragover', this.handleDragOver.bind(this));
+    currentElement.addEventListener('drop', this.handleDrop.bind(this));
+    //   currentElement.addEventListener('drop', (e) => {
+    //   e.preventDefault();
+    //   const article = document.querySelector(`[data-index='${e.dataTransfer?.getData('text')}']`);
+    //   if (article) {
+    //     currentElement.append(article);
+    //   }
+    // });
     eventEmitter.on('DropInPiece', (article: HTMLElement) => {
       currentElement.append(article);
     });
@@ -96,7 +97,8 @@ export default class ContainerPieceGameView extends View {
       eventEmitter.emit('check-disabled');
       const originalIndex = wordToIndexMap.get(word);
       const element = this.createPuzzlePiece(word, originalIndex);
-      element.addEventListener('dragstart', this.dragStart);
+      element.addEventListener('dragstart', this.dragStart.bind(this));
+      // element.addEventListener('dragstart', this.dragStart);
       element.addEventListener('click', (event) => {
         const clickedElement = event.target as HTMLElement;
         handlePieceClick(clickedElement);
@@ -199,6 +201,15 @@ export default class ContainerPieceGameView extends View {
 
   handleDragOver(e: Event) {
     e.preventDefault();
+  }
+
+  handleDrop(e: DragEvent) {
+    e.preventDefault();
+    const article = document.querySelector(`[data-index='${e.dataTransfer?.getData('text')}']`);
+    const target = e.target as HTMLElement;
+    if (article) {
+      target.append(article);
+    }
   }
 
   dragStart(event: DragEvent) {

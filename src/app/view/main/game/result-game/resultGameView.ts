@@ -81,7 +81,7 @@ export default class ResultGameView extends View {
       const containerPieceCreator = this.containerDivCreator(cssClasses.PARTPIECE);
       const currentPieceCreator = containerPieceCreator.getElement();
       currentPieceCreator.style.width = `${702 / this.countWordSentence}px`;
-      currentPieceCreator.addEventListener('dragover', this.handleDragOver);
+      currentPieceCreator.addEventListener('dragover', this.handleDragOver.bind(this));
       // currentPieceCreator.addEventListener('dragleave', this.handleDragLeave);
       currentPieceCreator.addEventListener('drop', this.handleDragDrop.bind(this));
       // containerPieceCreator.setId(String(i));
