@@ -66,8 +66,10 @@ export default class HeaderGameView extends View {
   fillContainerSetting(container: ElementCreator) {
     const currentContainer = container.getElement();
     const settingLevel = this.containerCreator('div', cssClasses.SETTINGLEVEL);
-    settingLevel.addInnerElement(this.createSelect('level', COUNTLEVEL, true));
-    settingLevel.addInnerElement(this.createSelect('round', wordCollectionRounds, false));
+    const levels = this.createSelect('level', COUNTLEVEL, true);
+    const rounds = this.createSelect('round', wordCollectionRounds, false);
+    settingLevel.addInnerElement(levels);
+    settingLevel.addInnerElement(rounds);
     const BtnLogOutParam = {
       tag: 'button',
       classNames: [cssClasses.BUTTON, cssClasses.BUTTONLOGOOUT],
@@ -84,7 +86,7 @@ export default class HeaderGameView extends View {
     currentContainer.append(settingLevel.getElement(), BtnLogOutCreator.getElement(), settingHints.getElement());
   }
 
-  createSelect(id:string, count:number, attachEvent: boolean = true) {
+  createSelect(id:string, count:number, isLevel: boolean = true) {
     const selectContainer = document.createElement('div');
     selectContainer.classList.add(cssClasses.SELECTCONTAINER);
 
@@ -97,8 +99,10 @@ export default class HeaderGameView extends View {
     select.classList.add(cssClasses.SELECTLIST);
     select.id = id;
 
-    if (attachEvent) {
+    if (isLevel) {
       select.addEventListener('change', (e) => this.createRoundsForLevel(e));
+    } else {
+      select.addEventListener('change', (e) => this.setRound(e));
     }
 
     for (let i = 1; i < count + 1; i++) {
@@ -170,7 +174,13 @@ export default class HeaderGameView extends View {
   createRoundsForLevel(e: Event) {
     const currentTarget = e.currentTarget as HTMLOptionElement;
     const eventEmitter = EventEmitter.getInstance();
-    eventEmitter.emit('getRounds', currentTarget.value);
+    eventEmitter.emit('getRounds', +currentTarget.value);
+  }
+
+  setRound(e: Event) {
+    const currentTarget = e.currentTarget as HTMLOptionElement;
+    const eventEmitter = EventEmitter.getInstance();
+    eventEmitter.emit('setRounds', +currentTarget.value);
   }
 
   clickButtonImg(e:Event) {

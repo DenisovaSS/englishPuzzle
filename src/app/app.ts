@@ -16,8 +16,8 @@ export default class App {
   createView() {
     const headerView = new HeaderView();
     const mainView = new MainView();
-    // mainView.setContent(new GameView(mainView));
-    this.renderNewPage(mainView);
+    mainView.setContent(new GameView(mainView));
+    // this.renderNewPage(mainView);
     const footerView = new FooterView();
 
     document.body.append(

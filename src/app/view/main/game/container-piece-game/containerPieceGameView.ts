@@ -1,16 +1,12 @@
 import View from '../../../view';
 import {
   ElementParams,
-  ElementCreator,
+  ElementCreator, WordCollection,
 } from '../../../../utils/element-creator';
 import EventEmitter from '../../../../utils/EventEmit';
 import LevelInfo from '../../../../utils/levelRound';
 import { getImgURL } from '../../../../utils/fileLoader';
 
-const wordCollection = LevelInfo.currentEpisodePart.textExample;
-const roundWordCollection = LevelInfo.wordCollection.rounds[LevelInfo.currentRound - 1].levelData;
-const sentence = wordCollection;
-const arrayAnswer = sentence.split(' ');
 const cssClasses = {
   PARTCONTAINER: 'game-container-pieces',
   PARTPIECECONTAINER: 'game-container-part-pieces',
@@ -20,30 +16,41 @@ const cssClasses = {
 };
 // const gameResultContainer = document.querySelector('.game-result-container');
 // console.log(gameResultContainer);
-const containerW = 702;
-const containerH = 400;
-
-const maxLines = 10;
+const GAMERESULTCONTAINERWIDTH = 702;
+const GAMERESULTCONTAINERHEIGHT = 400;
+const MAXLINES = 10;
 
 export default class ContainerPieceGameView extends View {
-  constructor() {
+  private wordCollection: WordCollection;
+
+  private round: number;
+
+  private currentEpisode: number;
+
+  private arrayAnswer: Array<string>;
+
+  constructor(wordCollection: WordCollection, round: number, currentEpisode: number) {
     const params: ElementParams = {
       tag: 'div',
       classNames: [cssClasses.PARTCONTAINER],
       textContent: '',
     };
     super(params);
-
+    this.wordCollection = wordCollection;
+    this.round = round;
+    this.currentEpisode = currentEpisode;
+    const currentEpisodePart = this.wordCollection.rounds[this.round - 1].words[this.currentEpisode];
+    this.arrayAnswer = currentEpisodePart.textExample.split(' ');
     this.configureView();
   }
 
   configureView() {
     const eventEmitter = EventEmitter.getInstance();
     const wordToIndexMap = new Map();
-    arrayAnswer.forEach((word: string, index: number) => {
+    this.arrayAnswer.forEach((word: string, index: number) => {
       wordToIndexMap.set(word, index);
     });
-    const shuffledArray = this.randomArray(arrayAnswer);
+    const shuffledArray = this.randomArray(this.arrayAnswer);
     const currentElement = this.elementCreator.getElement();
     currentElement.addEventListener('dragover', this.handleDragOver);
     currentElement.addEventListener('drop', (e) => {
@@ -117,6 +124,7 @@ export default class ContainerPieceGameView extends View {
   }
 
   createPuzzlePiece(word:string, originalIndex: string) {
+    const backgroundImg = this.wordCollection.rounds[this.round - 1].levelData.imageSrc;
     const containerParam = {
       tag: 'div',
       classNames: [cssClasses.BLOCKPIECE],
@@ -141,16 +149,16 @@ export default class ContainerPieceGameView extends View {
         const itemAfter = spanCreator.getElement();
         const lineIndex = LevelInfo.currentEpisode;
         const puzzleIndex = Number(index);
-        let backgroundPositionX = -containerW / arrayAnswer.length + 2;
+        let backgroundPositionX = -GAMERESULTCONTAINERWIDTH / this.arrayAnswer.length + 2;
         let backgroundPositionY = -9;
         if (puzzleIndex > 0) {
-          backgroundPositionX = -(puzzleIndex * (containerW / arrayAnswer.length) - backgroundPositionX);
+          backgroundPositionX = -(puzzleIndex * (GAMERESULTCONTAINERWIDTH / this.arrayAnswer.length) - backgroundPositionX);
         }
         if (lineIndex > 0) {
-          backgroundPositionY = -(lineIndex * (containerH / maxLines) - backgroundPositionY);
+          backgroundPositionY = -(lineIndex * (GAMERESULTCONTAINERHEIGHT / MAXLINES) - backgroundPositionY);
         }
-        itemAfter.style.backgroundImage = `url(${getImgURL(roundWordCollection.imageSrc)})`;
-        itemAfter.style.backgroundSize = `${containerW}px ${containerH}px`;
+        itemAfter.style.backgroundImage = `url(${getImgURL(backgroundImg)})`;
+        itemAfter.style.backgroundSize = `${GAMERESULTCONTAINERWIDTH}px ${GAMERESULTCONTAINERHEIGHT}px`;
         itemAfter.style.backgroundPosition = `${backgroundPositionX}px ${backgroundPositionY}px`;
       }
 
@@ -160,7 +168,7 @@ export default class ContainerPieceGameView extends View {
     if (+originalIndex === 0) {
       const spanCreator = createSpan(afterParam, element.dataset.index);
       element.append(spanCreator.getElement());
-    } else if (+originalIndex === arrayAnswer.length - 1) {
+    } else if (+originalIndex === this.arrayAnswer.length - 1) {
       const spanCreator = createSpan(beforeParam, element.dataset.index);
       element.append(spanCreator.getElement());
     } else {
@@ -175,15 +183,15 @@ export default class ContainerPieceGameView extends View {
     let backgroundPositionX = 0;
     let backgroundPositionY = 0;
     const puzzleIndex = Number(element.dataset.index);
-    if (puzzleIndex > 0 && containerW) {
-      backgroundPositionX = -(puzzleIndex * (containerW / arrayAnswer.length));
+    if (puzzleIndex > 0 && GAMERESULTCONTAINERWIDTH) {
+      backgroundPositionX = -(puzzleIndex * (GAMERESULTCONTAINERWIDTH / this.arrayAnswer.length));
     }
-    if (lineIndex > 0 && containerH) {
-      backgroundPositionY = -(lineIndex * (containerH / maxLines));
+    if (lineIndex > 0 && GAMERESULTCONTAINERHEIGHT) {
+      backgroundPositionY = -(lineIndex * (GAMERESULTCONTAINERHEIGHT / MAXLINES));
     }
-    if (containerW) { element.style.width = `${containerW / arrayAnswer.length - 40 - 2}px`; }
-    element.style.backgroundImage = `url(${getImgURL(roundWordCollection.imageSrc)})`;
-    element.style.backgroundSize = `${containerW}px ${containerH}px`;
+    if (GAMERESULTCONTAINERWIDTH) { element.style.width = `${GAMERESULTCONTAINERWIDTH / this.arrayAnswer.length - 40 - 2}px`; }
+    element.style.backgroundImage = `url(${getImgURL(backgroundImg)})`;
+    element.style.backgroundSize = `${GAMERESULTCONTAINERWIDTH}px ${GAMERESULTCONTAINERHEIGHT}px`;
     element.style.backgroundPosition = `${backgroundPositionX}px ${backgroundPositionY}px`;
     return element;
   }

@@ -21,6 +21,8 @@ const cssClasses = {
 export default class GameView extends View {
   private resultContainer!: ResultGameView;
 
+  private peaceContainer!: ContainerPieceGameView;
+
   constructor(private mainView: MainView) {
     const params: ElementParams = {
       tag: 'section',
@@ -50,8 +52,8 @@ export default class GameView extends View {
       this.resultContainer.updateView();
     });
     this.elementCreator.addInnerElement(this.resultContainer.getHtmlElement());
-    const peaceContainer = new ContainerPieceGameView();
-    this.elementCreator.addInnerElement(peaceContainer.getHtmlElement());
+    this.peaceContainer = new ContainerPieceGameView(LevelInfo.wordCollection, LevelInfo.currentRound, LevelInfo.currentEpisode);
+    this.elementCreator.addInnerElement(this.peaceContainer.getHtmlElement());
     const BTNContainer = new ContainerBtnGameView();
     this.elementCreator.addInnerElement(BTNContainer.getHtmlElement());
   }
@@ -59,17 +61,22 @@ export default class GameView extends View {
   setupEventListeners() {
     const eventEmitter = EventEmitter.getInstance();
     eventEmitter.on('changeLevel', (wordCollection, currentRound) => this.updateView(wordCollection, currentRound));
+    eventEmitter.on('changeRound', (wordCollection, currentRound) => this.updateView(wordCollection, currentRound));
   }
 
   updateView(wordCollection: WordCollection, round: number) {
-    console.log(wordCollection);
+    // console.log(wordCollection);
     const containerCreator = this.elementCreator.getElement();
     const oldResultContainer = this.resultContainer.getHtmlElement();
-    const { nextSibling } = oldResultContainer;
+    const oldpeaceContainer = this.peaceContainer.getHtmlElement();
+    const { nextSibling } = oldpeaceContainer;
+    containerCreator.removeChild(oldpeaceContainer);
     containerCreator.removeChild(oldResultContainer);
+    this.peaceContainer = new ContainerPieceGameView(wordCollection, round, 0);
     this.resultContainer = new ResultGameView(wordCollection, round);
     if (nextSibling) {
       containerCreator.insertBefore(this.resultContainer.getHtmlElement(), nextSibling);
+      containerCreator.insertBefore(this.peaceContainer.getHtmlElement(), nextSibling);
     } else {
       containerCreator.appendChild(this.resultContainer.getHtmlElement());
     }

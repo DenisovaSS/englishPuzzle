@@ -13,7 +13,7 @@ const levels = 6;
 const wordCollections: WordCollection[] = [wordCollectionLevel1, wordCollectionLevel2, wordCollectionLevel3, wordCollectionLevel4, wordCollectionLevel5, wordCollectionLevel6];
 // default
 let currentLevel = 1;
-const currentRound = 1;
+let currentRound = 1;
 const currentEpisode = 0;
 let wordCollection: WordCollection = wordCollections[currentLevel - 1];
 
@@ -37,12 +37,18 @@ function getCurrentRounds(currentElement:number) {
     selectList.append(option);
   }
   currentLevel = currentElement;
-  console.log(currentLevel);
+  currentRound = 1;
   wordCollection = wordCollections[currentLevel - 1];
-  console.log(wordCollection);
+  // console.log(currentLevel, currentRound);
   eventEmitter.emit('changeLevel', wordCollection, currentRound);
 }
+function setCurrentRounds(round:number) {
+  currentRound = round;
+  // console.log(currentLevel, currentRound);
+  eventEmitter.emit('changeRound', wordCollection, currentRound);
+}
 eventEmitter.on('getRounds', (currentElement) => getCurrentRounds(currentElement));
+eventEmitter.on('setRounds', (round:number) => setCurrentRounds(round));
 
 const LevelInfo = {
   levels, currentLevel, currentLevelRounds, currentRound, currentEpisodePart, wordCollection, currentEpisode,
