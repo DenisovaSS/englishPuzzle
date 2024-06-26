@@ -3,7 +3,7 @@ import View from '../../view';
 import { ElementParams, WordCollection } from '../../../utils/element-creator';
 import HeaderGameView from './header-game/headerGameView';
 import MainView from '../main';
-import ContainerPieceGameView from './container-piece-game/containerPieceGameView';
+// import ContainerPieceGameView from './container-piece-game/containerPieceGameView';
 import ResultGameView from './result-game/resultGameView';
 import ContainerBtnGameView from './container-btn-game/btn-game';
 import LevelInfo from '../../../utils/levelRound';
@@ -20,8 +20,6 @@ const cssClasses = {
 
 export default class GameView extends View {
   private resultContainer!: ResultGameView;
-
-  private peaceContainer!: ContainerPieceGameView;
 
   constructor(private mainView: MainView) {
     const params: ElementParams = {
@@ -52,8 +50,8 @@ export default class GameView extends View {
       this.resultContainer.updateView();
     });
     this.elementCreator.addInnerElement(this.resultContainer.getHtmlElement());
-    this.peaceContainer = new ContainerPieceGameView(LevelInfo.wordCollection, LevelInfo.currentRound, LevelInfo.currentEpisode);
-    this.elementCreator.addInnerElement(this.peaceContainer.getHtmlElement());
+    // const peaceContainer = new ContainerPieceGameView(LevelInfo.wordCollection, LevelInfo.currentRound, LevelInfo.currentEpisode);
+    // this.elementCreator.addInnerElement(peaceContainer.getHtmlElement());
     const BTNContainer = new ContainerBtnGameView();
     this.elementCreator.addInnerElement(BTNContainer.getHtmlElement());
   }
@@ -68,15 +66,11 @@ export default class GameView extends View {
     // console.log(wordCollection);
     const containerCreator = this.elementCreator.getElement();
     const oldResultContainer = this.resultContainer.getHtmlElement();
-    const oldpeaceContainer = this.peaceContainer.getHtmlElement();
-    const { nextSibling } = oldpeaceContainer;
-    containerCreator.removeChild(oldpeaceContainer);
+    const { nextSibling } = oldResultContainer;
     containerCreator.removeChild(oldResultContainer);
-    this.peaceContainer = new ContainerPieceGameView(wordCollection, round, 0);
     this.resultContainer = new ResultGameView(wordCollection, round);
     if (nextSibling) {
       containerCreator.insertBefore(this.resultContainer.getHtmlElement(), nextSibling);
-      containerCreator.insertBefore(this.peaceContainer.getHtmlElement(), nextSibling);
     } else {
       containerCreator.appendChild(this.resultContainer.getHtmlElement());
     }

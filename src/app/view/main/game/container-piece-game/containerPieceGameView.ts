@@ -52,6 +52,7 @@ export default class ContainerPieceGameView extends View {
     });
     const shuffledArray = this.randomArray(this.arrayAnswer);
     const currentElement = this.elementCreator.getElement();
+    console.log(currentElement);
     currentElement.addEventListener('dragover', this.handleDragOver);
     currentElement.addEventListener('drop', (e) => {
       e.preventDefault();

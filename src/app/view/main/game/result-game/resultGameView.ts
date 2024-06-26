@@ -7,12 +7,14 @@ import {
 import EventEmitter from '../../../../utils/EventEmit';
 import LevelInfo from '../../../../utils/levelRound';
 import { getImgURL } from '../../../../utils/fileLoader';
+import ContainerPieceGameView from '../container-piece-game/containerPieceGameView';
 
 // const wordCollection = LevelInfo.currentEpisodePart.textExample;
 // const roundWordCollection = LevelInfo.wordCollection.rounds[LevelInfo.currentRound - 1].levelData;
 // console.log(wordCollection);
 // const arrayAnswer = wordCollection.split(' ');
 const cssClasses = {
+  RESULTWRAPPER: 'game-wrapper',
   RESULT: 'game-result-container',
   PARTRESULT: 'game-result-container-part',
   PARTPIECE: 'game-result-container-part-piece',
@@ -30,39 +32,51 @@ export default class ResultGameView extends View {
 
   private textSentances: string = '';
 
+  private gameResultContainer!: ElementCreator;
+
+  private peaceContainer!: ContainerPieceGameView;
+
   constructor(wordCollection: WordCollection, round: number) {
     const params: ElementParams = {
       tag: 'div',
-      classNames: [cssClasses.RESULT],
+      classNames: [cssClasses.RESULTWRAPPER],
       textContent: '',
     };
     super(params);
     this.wordCollection = wordCollection;
     this.round = round;
+    this.gameResultContainer = this.createResultContainer();
     this.initialize();
-    const containerCreator = this.configureView();
+    const containerCreator = this.configureView(this.gameResultContainer);
     this.fillField(containerCreator);
   }
 
+  createResultContainer() {
+    const resultContainer = this.containerDivCreator(cssClasses.RESULT);
+    this.elementCreator.addInnerElement(resultContainer.getElement());
+    return resultContainer;
+  }
+
   initialize() {
-    // const currentWordCollection = this.wordCollection;
-    // const currentRound = this.round;
     const { currentEpisode } = LevelInfo;
     const currentEpisodePart = this.wordCollection.rounds[this.round - 1].words[currentEpisode];
     this.textSentances = currentEpisodePart.textExample;
-    // const roundWordCollection =this.wordCollection.rounds[LevelInfo.currentRound - 1].levelData;
     this.countWordSentence = this.textSentances.split(' ').length;
+    if (this.peaceContainer) {
+      this.peaceContainer.getHtmlElement().remove();
+    }
+    this.peaceContainer = new ContainerPieceGameView(this.wordCollection, this.round, currentEpisode);
+    this.elementCreator.addInnerElement(this.peaceContainer.getHtmlElement());
   }
 
-  configureView() {
+  configureView(resultContainer: ElementCreator) {
     const containerCreator = this.containerDivCreator(cssClasses.PARTRESULT);
-    // containerCreator.getElement().dataset.index = '0';
-    const gameResultContainer = this.elementCreator.getElement();
-    // console.log(getImgURL(roundWordCollection.imageSrc));
+    const gameResultContainer = resultContainer.getElement();
+
     const roundWordCollection = this.wordCollection.rounds[this.round - 1].levelData;
     gameResultContainer.style.background = `url(${getImgURL(roundWordCollection.imageSrc)})`;
 
-    this.elementCreator.addInnerElement(containerCreator.getElement());
+    resultContainer.addInnerElement(containerCreator.getElement());
     for (let i = 0; i < this.countWordSentence; i++) {
       const containerPieceCreator = this.containerDivCreator(cssClasses.PARTPIECE);
       const currentPieceCreator = containerPieceCreator.getElement();
@@ -86,7 +100,9 @@ export default class ResultGameView extends View {
   }
 
   handleDragOver(e: Event) {
+    const target = e.target as HTMLElement;
     e.preventDefault();
+    target.style.backgroundColor = 'red';
   }
 
   handleDragDrop(e: DragEvent) {
@@ -270,7 +286,7 @@ export default class ResultGameView extends View {
   updateView() {
     this.initialize();
     // Reconfigure view with new data
-    const containerCreator = this.configureView();
+    const containerCreator = this.configureView(this.gameResultContainer);
     this.fillField(containerCreator);
   }
 }
