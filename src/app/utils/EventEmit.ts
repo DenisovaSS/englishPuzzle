@@ -35,4 +35,8 @@ export default class EventEmitter {
     const eventCallbacks = this.events[eventName] || [];
     eventCallbacks.forEach((callback) => callback(...args));
   }
+
+  clearAllListeners() {
+    this.events = {};
+  }
 }
