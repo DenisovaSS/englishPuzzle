@@ -39,4 +39,8 @@ export default class EventEmitter {
   clearAllListeners() {
     this.events = {};
   }
+
+  getEventNames(): string[] {
+    return Object.keys(this.events);
+  }
 }

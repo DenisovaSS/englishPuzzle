@@ -95,7 +95,8 @@ export default class ContainerBtnGameView extends View {
     this.removeBTN(target);
     eventEmitter.emit('newEpisode');
     eventEmitter.emit('check-disabled');
-    eventEmitter.clearAllListeners();
+    const eventNames = eventEmitter.getEventNames();
+    console.log(eventNames);
   }
 
   eventAuto(e:Event) {

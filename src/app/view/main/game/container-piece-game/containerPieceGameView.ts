@@ -61,9 +61,10 @@ export default class ContainerPieceGameView extends View {
         currentElement.append(article);
       }
     });
-    eventEmitter.on('DropInPiece', (article: HTMLElement) => {
+    const dropInPieceCallback = (article: HTMLElement) => {
       currentElement.append(article);
-    });
+    };
+    eventEmitter.on('DropInPiece', dropInPieceCallback);
 
     eventEmitter.on('clearPeaceContainer', () => {
       // console.log(currentElement.children);
