@@ -41,18 +41,18 @@ export default class ContainerPieceGameView extends View {
     this.currentEpisode = currentEpisode;
     const currentEpisodePart = this.wordCollection.rounds[this.round - 1].words[this.currentEpisode];
     this.arrayAnswer = currentEpisodePart.textExample.split(' ');
+    console.log(this.arrayAnswer);
     this.configureView();
   }
 
   configureView() {
     const eventEmitter = EventEmitter.getInstance();
-    const wordToIndexMap = new Map();
-    this.arrayAnswer.forEach((word: string, index: number) => {
-      wordToIndexMap.set(word, index);
-    });
-    const shuffledArray = this.randomArray(this.arrayAnswer);
+    function getUniqueIndices(arr: Array<string>) {
+      return arr.map((word, index) => ({ word, index }));
+    }
+    const uniqueIndices = getUniqueIndices(this.arrayAnswer);
+    const shuffledArray = this.randomArray(uniqueIndices);
     const currentElement = this.elementCreator.getElement();
-    console.log(currentElement);
     currentElement.addEventListener('dragover', this.handleDragOver);
     currentElement.addEventListener('drop', (e) => {
       e.preventDefault();
@@ -93,10 +93,10 @@ export default class ContainerPieceGameView extends View {
         }
       }
     };
-    const createContainerWithClickHandler = (word: string) => {
+    const createContainerWithClickHandler = ({ word, index }: { word: string, index: number }) => {
       eventEmitter.emit('check-disabled');
-      const originalIndex = wordToIndexMap.get(word);
-      const element = this.createPuzzlePiece(word, originalIndex);
+
+      const element = this.createPuzzlePiece(word, String(index));
       element.addEventListener('dragstart', this.dragStart);
       element.addEventListener('click', (event) => {
         const clickedElement = event.target as HTMLElement;
@@ -104,24 +104,33 @@ export default class ContainerPieceGameView extends View {
       });
       this.elementCreator.addInnerElement(element);
     };
-    shuffledArray.forEach((word: string) => {
-      createContainerWithClickHandler(word);
+    shuffledArray.forEach((elem) => {
+      createContainerWithClickHandler(elem);
     });
+
+    // shuffledArray.forEach((word: string) => {
+    //   createContainerWithClickHandler(word);
+    // });
     // Function to handle 'pushInPiece' event
     const handlePushInPiece = (clickedElement: HTMLElement) => {
-      createContainerWithClickHandler(clickedElement.textContent || '');
+      const word = clickedElement.textContent || '';
+      let index = 0;
+      if (clickedElement.dataset.index) { index = +clickedElement.dataset.index; }
+
+      createContainerWithClickHandler({ word, index });
     };
 
     eventEmitter.on('pushInPiece', handlePushInPiece);
   }
 
-  randomArray(array: string[]): string[] {
+  randomArray(array:{
+    word: string;
+    index: number; }[]) {
     const arrayCur = [...array];
-    for (let i = array.length - 1; i > 0; i--) {
+    for (let i = arrayCur.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [arrayCur[i], arrayCur[j]] = [arrayCur[j], arrayCur[i]];
     }
-
     return arrayCur;
   }
 

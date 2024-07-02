@@ -13,7 +13,7 @@ const levels = 6;
 const wordCollections: WordCollection[] = [wordCollectionLevel1, wordCollectionLevel2, wordCollectionLevel3, wordCollectionLevel4, wordCollectionLevel5, wordCollectionLevel6];
 // default
 let currentLevel = 1;
-let currentRound = 1;
+let currentRound = 2;
 const currentEpisode = 0;
 let wordCollection: WordCollection = wordCollections[currentLevel - 1];
 

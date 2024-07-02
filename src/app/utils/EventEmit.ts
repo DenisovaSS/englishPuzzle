@@ -43,4 +43,12 @@ export default class EventEmitter {
   getEventNames(): string[] {
     return Object.keys(this.events);
   }
+
+  removeAllListeners(eventName?: string) {
+    if (eventName) {
+      delete this.events[eventName];
+    } else {
+      this.events = {};
+    }
+  }
 }
