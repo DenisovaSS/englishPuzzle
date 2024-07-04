@@ -4,7 +4,7 @@ import {
   ElementCreator, WordCollection,
 } from '../../../../utils/element-creator';
 import EventEmitter from '../../../../utils/EventEmit';
-import LevelInfo from '../../../../utils/levelRound';
+// import LevelInfo from '../../../../utils/levelRound';
 import { getImgURL } from '../../../../utils/fileLoader';
 
 const cssClasses = {
@@ -56,7 +56,7 @@ export default class ContainerPieceGameView extends View {
     currentElement.addEventListener('dragover', this.handleDragOver);
     currentElement.addEventListener('drop', (e) => {
       e.preventDefault();
-      const article = document.querySelector(`[data-index='${e.dataTransfer?.getData('text')}']`);
+      const article = document.querySelector(`[data-drag-index='${e.dataTransfer?.getData('text')}']`);
       if (article) {
         currentElement.append(article);
       }
@@ -158,7 +158,7 @@ export default class ContainerPieceGameView extends View {
       if (param === afterParam) {
         spanCreator = new ElementCreator(param);
         const itemAfter = spanCreator.getElement();
-        const lineIndex = LevelInfo.currentEpisode;
+        const lineIndex = this.currentEpisode;
         const puzzleIndex = Number(index);
         let backgroundPositionX = -GAMERESULTCONTAINERWIDTH / this.arrayAnswer.length + 2;
         let backgroundPositionY = -9;
@@ -176,6 +176,7 @@ export default class ContainerPieceGameView extends View {
       return spanCreator;
     };
     element.dataset.index = String(originalIndex);
+    element.dataset.dragIndex = String(originalIndex) + String(this.round) + String(this.currentEpisode);
     if (+originalIndex === 0) {
       const spanCreator = createSpan(afterParam, element.dataset.index);
       element.append(spanCreator.getElement());
@@ -190,7 +191,7 @@ export default class ContainerPieceGameView extends View {
     }
 
     element.draggable = true;
-    const lineIndex = LevelInfo.currentEpisode;
+    const lineIndex = this.currentEpisode;
     let backgroundPositionX = 0;
     let backgroundPositionY = 0;
     const puzzleIndex = Number(element.dataset.index);
@@ -213,8 +214,8 @@ export default class ContainerPieceGameView extends View {
 
   dragStart(event: DragEvent) {
     const target = event.target as HTMLElement;
-    if (target && target.dataset.index) {
-      event.dataTransfer?.setData('text', target.dataset.index);
+    if (target && target.dataset.dragIndex) {
+      event.dataTransfer?.setData('text', target.dataset.dragIndex);
     } else {
       console.error('Drag target does not have an id');
     }

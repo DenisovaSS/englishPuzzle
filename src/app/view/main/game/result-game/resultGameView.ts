@@ -36,6 +36,8 @@ export default class ResultGameView extends View {
 
   private peaceContainer!: ContainerPieceGameView;
 
+  private setNextEpisodeHandler: (nextEpisode: number) => void;
+
   constructor(wordCollection: WordCollection, round: number) {
     const params: ElementParams = {
       tag: 'div',
@@ -46,9 +48,21 @@ export default class ResultGameView extends View {
     this.wordCollection = wordCollection;
     this.round = round;
     this.gameResultContainer = this.createResultContainer();
-    this.initialize();
+    const { currentEpisode } = LevelInfo;
+    this.initialize(currentEpisode);
     const containerCreator = this.configureView(this.gameResultContainer);
     this.fillField(containerCreator);
+    this.setNextEpisodeHandler = this.createSetNextEpisodeHandler();
+    const eventEmitter = EventEmitter.getInstance();
+    eventEmitter.on('setNextEpisode', this.setNextEpisodeHandler);
+  }
+
+  createSetNextEpisodeHandler() {
+    return (nextEpisode: number) => {
+      this.initialize(nextEpisode);
+      const containerCreator = this.configureView(this.gameResultContainer);
+      this.fillField(containerCreator);
+    };
   }
 
   createResultContainer() {
@@ -57,14 +71,14 @@ export default class ResultGameView extends View {
     return resultContainer;
   }
 
-  initialize() {
-    const { currentEpisode } = LevelInfo;
+  initialize(currentEpisode:number) {
     const currentEpisodePart = this.wordCollection.rounds[this.round - 1].words[currentEpisode];
     this.textSentances = currentEpisodePart.textExample;
     this.countWordSentence = this.textSentances.split(' ').length;
     if (this.peaceContainer) {
       this.peaceContainer.getHtmlElement().remove();
     }
+    console.log(this.wordCollection, this.round, currentEpisode);
     this.peaceContainer = new ContainerPieceGameView(this.wordCollection, this.round, currentEpisode);
     this.elementCreator.addInnerElement(this.peaceContainer.getHtmlElement());
   }
@@ -110,7 +124,7 @@ export default class ResultGameView extends View {
     const target = e.target as HTMLElement;
     const currentTarget = e.currentTarget as HTMLElement;
 
-    const article = document.querySelector(`[data-index='${e.dataTransfer?.getData('text')}']`);
+    const article = document.querySelector(`[data-drag-index='${e.dataTransfer?.getData('text')}']`);
     if (article) {
       if (target.classList.contains(cssClasses.PARTPIECE)) {
         target.appendChild(article);
@@ -123,8 +137,10 @@ export default class ResultGameView extends View {
       }
     }
     const container = currentTarget.parentElement?.children;
+    console.log(container);
     if (container) {
       const countAllchildrenCurent = Array.from(container).filter((child) => (child as HTMLElement).childElementCount > 0).length;
+      console.log(countAllchildrenCurent, this.countWordSentence);
       if (countAllchildrenCurent === this.countWordSentence) {
         this.checkSentence(container, eventEmitter);
       }
@@ -208,8 +224,8 @@ export default class ResultGameView extends View {
 
   dragStart(event: DragEvent) {
     const target = event.target as HTMLElement;
-    if (target && target.dataset.index) {
-      event.dataTransfer?.setData('text', target.dataset.index);
+    if (target && target.dataset.dragIndex) {
+      event.dataTransfer?.setData('text', target.dataset.dragIndex);
     } else {
       console.error('Drag target does not have an id');
     }
@@ -284,9 +300,7 @@ export default class ResultGameView extends View {
   }
 
   updateView() {
-    this.initialize();
-    // Reconfigure view with new data
-    const containerCreator = this.configureView(this.gameResultContainer);
-    this.fillField(containerCreator);
+    const eventEmitter = EventEmitter.getInstance();
+    eventEmitter.emit('nextEpisode');
   }
 }

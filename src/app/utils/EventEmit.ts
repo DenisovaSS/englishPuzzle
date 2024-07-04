@@ -23,10 +23,11 @@ export default class EventEmitter {
 
   // для удаления “подписки” на событие
   unsubscribe(eventName: string, callback: EventListener) {
-    this.events[eventName] = this.events[eventName].filter(
-      // eslint-disable-next-line @typescript-eslint/comma-dangle
-      (eventCallback) => callback !== eventCallback
-    );
+    if (this.events[eventName]) {
+      this.events[eventName] = this.events[eventName].filter(
+        (eventCallback) => callback !== eventCallback,
+      );
+    }
   }
 
   // Method to emit an event(Метод генерации события)
