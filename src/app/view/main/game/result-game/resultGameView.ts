@@ -88,7 +88,8 @@ export default class ResultGameView extends View {
     const gameResultContainer = resultContainer.getElement();
 
     const roundWordCollection = this.wordCollection.rounds[this.round - 1].levelData;
-    gameResultContainer.style.background = `url(${getImgURL(roundWordCollection.imageSrc)})`;
+    gameResultContainer.style.backgroundImage = `url(${getImgURL(roundWordCollection.imageSrc)})`;
+    // gameResultContainer.style.backgroundSize = '719px 490px';
 
     resultContainer.addInnerElement(containerCreator.getElement());
     for (let i = 0; i < this.countWordSentence; i++) {
@@ -137,7 +138,7 @@ export default class ResultGameView extends View {
       }
     }
     const container = currentTarget.parentElement?.children;
-    console.log(container);
+    // console.log(container);
     if (container) {
       const countAllchildrenCurent = Array.from(container).filter((child) => (child as HTMLElement).childElementCount > 0).length;
       console.log(countAllchildrenCurent, this.countWordSentence);
@@ -167,10 +168,6 @@ export default class ResultGameView extends View {
         child.firstElementChild.remove();
       }
     }
-    // arrayAnswer.forEach((word, index) => {
-    //   const newElement = this.createPuzzlePiece(word, index);
-    //   allChildren[index].append(newElement);
-    // });
     eventEmitter.emit('clearPeaceContainer');
     eventEmitter.emit('check-remove');
     // eventEmitter.emit('continue');
@@ -190,7 +187,6 @@ export default class ResultGameView extends View {
       allChildren[childIndex].append(newElement);
     }
     const countAllchildrenCurent = Array.from(allChildren).filter((child) => (child as HTMLElement).childElementCount > 0).length;
-    // console.log(countWordSentence === countAllchildrenCurent);
     if (this.countWordSentence === countAllchildrenCurent) {
       this.checkSentence(allChildren, eventEmitter);
     }
@@ -198,10 +194,6 @@ export default class ResultGameView extends View {
 
   createPieceElement(clickedElement: HTMLElement): HTMLElement {
     const newElement = clickedElement;
-    // newElement.classList.add(cssClasses.BLOCKPIECE);
-    // newElement.textContent = clickedElement.textContent;
-    // newElement.draggable = true;
-    // newElement.dataset.index = clickedElement.dataset.index;
     newElement.addEventListener('click', (event) => this.handlePieceClick(event));
     newElement.addEventListener('dragstart', this.dragStart);
     return newElement;
