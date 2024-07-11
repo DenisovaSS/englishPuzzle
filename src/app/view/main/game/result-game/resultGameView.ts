@@ -42,6 +42,8 @@ export default class ResultGameView extends View {
 
   private highlightIncorrectWords!: ()=>void;
 
+  private autoCompleteSentence!: ()=>void;
+
   constructor(wordCollection: WordCollection, round: number) {
     const params: ElementParams = {
       tag: 'div',
@@ -160,8 +162,26 @@ export default class ResultGameView extends View {
     const eventEmitter = EventEmitter.getInstance();
     const currentContainerCreator = containerCreator.getElement();
     const allChildren = currentContainerCreator.children;
-    eventEmitter.on('autoCompleteSentence', () => this.autoCompleteSentence(allChildren));
+    this.autoCompleteSentence = () => {
+      console.log('one');
+      // delete all pieces in result container
+      for (let i = 0; i < allChildren.length; i++) {
+        const child = allChildren[i] as HTMLElement;
+        child.classList.remove('incorrect');
+        while (child.firstElementChild) {
+          eventEmitter.emit('pushInPiece', child.firstElementChild);
+          child.firstElementChild.remove();
+        }
+      }
+      // теперь эелементы из game-container-pieces по одному переправляются в обратно после правильной сортировки
+      eventEmitter.emit('clearPeaceContainer');
+      eventEmitter.emit('check-remove');
+      // eventEmitter.emit('continue');
+    };
+    eventEmitter.on('autoCompleteSentence', this.autoCompleteSentence);
     this.pieceEventListener = (clickedElement: HTMLElement) => {
+      const eventNames = eventEmitter.getAllListeners();
+      console.log(eventNames);
       console.log('send piece to result');
       const newElement = this.createPieceElement(clickedElement);
       let childIndex = 0;
@@ -195,24 +215,6 @@ export default class ResultGameView extends View {
       }
     };
     eventEmitter.on('check-sentences', this.highlightIncorrectWords);
-  }
-
-  autoCompleteSentence(allChildren: HTMLCollection) {
-    console.log('one');
-    const eventEmitter = EventEmitter.getInstance();
-    // delete all pieces in result container
-    for (let i = 0; i < allChildren.length; i++) {
-      const child = allChildren[i] as HTMLElement;
-      child.classList.remove('incorrect');
-      while (child.firstElementChild) {
-        eventEmitter.emit('pushInPiece', child.firstElementChild);
-        child.firstElementChild.remove();
-      }
-    }
-    // теперь эелементы из game-container-pieces по одному переправляются в обратно после правильной сортировки
-    eventEmitter.emit('clearPeaceContainer');
-    eventEmitter.emit('check-remove');
-    // eventEmitter.emit('continue');
   }
 
   createPieceElement(clickedElement: HTMLElement): HTMLElement {
@@ -307,8 +309,8 @@ export default class ResultGameView extends View {
   unsubscribe() {
     const eventEmitter = EventEmitter.getInstance();
     eventEmitter.unsubscribe('piece', this.pieceEventListener);
-    // eventEmitter.on('autoCompleteSentence', () => this.autoCompleteSentence(allChildren));
-    // eventEmitter.on('check-sentences', this.highlightIncorrectWords);
+    eventEmitter.unsubscribe('autoCompleteSentence', this.autoCompleteSentence);
+    eventEmitter.unsubscribe('check-sentences', this.highlightIncorrectWords);
   }
 
   unsubscribePiece() {
