@@ -21,6 +21,12 @@ const cssClasses = {
 export default class GameView extends View {
   private resultContainer!: ResultGameView;
 
+  private changeLevelHandler!: (wordCollection: WordCollection, currentRound: number) => void;
+
+  private changeRoundHandler!: (wordCollection: WordCollection, currentRound: number) => void;
+
+  private newEpisodeHandler!: () => void;
+
   constructor(private mainView: MainView) {
     const params: ElementParams = {
       tag: 'section',
@@ -34,44 +40,36 @@ export default class GameView extends View {
   }
 
   configureView() {
-    // const containerParam = {
-    //   tag: 'div',
-    //   classNames: [cssClasses.CONTAINER],
-    //   textContent: '',
-    // };
-
-    // const containerCreator = new ElementCreator(containerParam);
-    // this.elementCreator.addInnerElement(containerCreator.getElement());
     const eventEmitter = EventEmitter.getInstance();
     const headerCreator = new HeaderGameView(this.mainView);
     this.elementCreator.addInnerElement(headerCreator.getHtmlElement());
     this.resultContainer = new ResultGameView(LevelInfo.wordCollection, LevelInfo.currentRound);
-    eventEmitter.on('newEpisode', () => {
-      this.resultContainer.unsubscribe();
-      this.resultContainer.updateView();
-    });
     this.elementCreator.addInnerElement(this.resultContainer.getHtmlElement());
-    // const peaceContainer = new ContainerPieceGameView(LevelInfo.wordCollection, LevelInfo.currentRound, LevelInfo.currentEpisode);
-    // this.elementCreator.addInnerElement(peaceContainer.getHtmlElement());
     const BTNContainer = new ContainerBtnGameView();
     this.elementCreator.addInnerElement(BTNContainer.getHtmlElement());
+    this.newEpisodeHandler = () => {
+      this.resultContainer.unsubscribe();
+      this.resultContainer.updateView();
+    };
+    eventEmitter.on('newEpisode', this.newEpisodeHandler);
   }
 
   setupEventListeners() {
     const eventEmitter = EventEmitter.getInstance();
-    eventEmitter.on('changeLevel', (wordCollection, currentRound) => this.updateView(wordCollection, currentRound));
-    eventEmitter.on('changeRound', (wordCollection, currentRound) => this.updateView(wordCollection, currentRound));
+    this.changeLevelHandler = (wordCollection, currentRound) => this.updateView(wordCollection, currentRound);
+    this.changeRoundHandler = (wordCollection, currentRound) => this.updateView(wordCollection, currentRound);
+    eventEmitter.on('changeLevel', this.changeLevelHandler);
+    eventEmitter.on('changeRound', this.changeRoundHandler);
+    // eventEmitter.on('changeLevel', (wordCollection, currentRound) => this.updateView(wordCollection, currentRound));
+    // eventEmitter.on('changeRound', (wordCollection, currentRound) => this.updateView(wordCollection, currentRound));
   }
 
   updateView(wordCollection: WordCollection, round: number) {
-    // console.log(wordCollection);
-    // const eventEmitter = EventEmitter.getInstance();
     const containerCreator = this.elementCreator.getElement();
+    this.resultContainer.unsubscribeNextEpisode();
     this.resultContainer.unsubscribe();
     this.resultContainer.unsubscribePiece();
     const oldResultContainer = this.resultContainer.getHtmlElement();
-    // const eventNames = eventEmitter.getEventNames();
-    // console.log(eventNames);
     const { nextSibling } = oldResultContainer;
     containerCreator.removeChild(oldResultContainer);
     this.resultContainer = new ResultGameView(wordCollection, round);
@@ -80,5 +78,16 @@ export default class GameView extends View {
     } else {
       containerCreator.appendChild(this.resultContainer.getHtmlElement());
     }
+  }
+
+  unsubscribe() {
+    const eventEmitter = EventEmitter.getInstance();
+    eventEmitter.unsubscribe('changeLevel', this.changeLevelHandler);
+    eventEmitter.unsubscribe('changeRound', this.changeRoundHandler);
+  }
+
+  unsubscribeNewEpisode() {
+    const eventEmitter = EventEmitter.getInstance();
+    eventEmitter.unsubscribe('newEpisode', this.newEpisodeHandler);
   }
 }

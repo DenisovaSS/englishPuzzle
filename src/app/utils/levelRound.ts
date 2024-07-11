@@ -39,11 +39,13 @@ function getCurrentRounds(currentElement:number) {
   currentLevel = currentElement;
   currentRound = 1;
   wordCollection = wordCollections[currentLevel - 1];
+  currentEpisode = 0;
   // console.log(currentLevel, currentRound);
   eventEmitter.emit('changeLevel', wordCollection, currentRound);
 }
 function setCurrentRounds(round:number) {
   currentRound = round;
+  currentEpisode = 0;
   // console.log(currentLevel, currentRound);
   eventEmitter.emit('changeRound', wordCollection, currentRound);
 }

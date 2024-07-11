@@ -202,6 +202,7 @@ export default class ContainerPieceGameView extends View {
 
     element.draggable = true;
     const lineIndex = this.currentEpisode;
+    console.log(lineIndex);
     let backgroundPositionX = 0;
     let backgroundPositionY = 0;
     const puzzleIndex = Number(element.dataset.index);

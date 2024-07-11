@@ -63,7 +63,7 @@ export default class ResultGameView extends View {
 
   createSetNextEpisodeHandler() {
     return (nextEpisode: number) => {
-      console.log('nwxt episode');
+      console.log('nwxt episode', nextEpisode);
       this.unsubscribe();
       this.initialize(nextEpisode);
       const containerCreator = this.configureView(this.gameResultContainer);
@@ -307,11 +307,18 @@ export default class ResultGameView extends View {
   unsubscribe() {
     const eventEmitter = EventEmitter.getInstance();
     eventEmitter.unsubscribe('piece', this.pieceEventListener);
+    // eventEmitter.on('autoCompleteSentence', () => this.autoCompleteSentence(allChildren));
+    // eventEmitter.on('check-sentences', this.highlightIncorrectWords);
   }
 
   unsubscribePiece() {
     if (this.peaceContainer) {
       this.peaceContainer.unsubscribe();
     }
+  }
+
+  unsubscribeNextEpisode() {
+    const eventEmitter = EventEmitter.getInstance();
+    eventEmitter.unsubscribe('setNextEpisode', this.setNextEpisodeHandler);
   }
 }

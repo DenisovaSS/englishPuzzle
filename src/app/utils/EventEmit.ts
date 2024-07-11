@@ -99,4 +99,8 @@ export default class EventEmitter {
   getEventNames(): string[] {
     return Object.keys(this.listeners);
   }
+
+  getAllListeners(): Record<string, EventListener[]> {
+    return this.listeners;
+  }
 }
