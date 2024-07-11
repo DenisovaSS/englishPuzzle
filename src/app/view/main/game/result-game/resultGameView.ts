@@ -38,6 +38,8 @@ export default class ResultGameView extends View {
 
   private setNextEpisodeHandler: (nextEpisode: number) => void;
 
+  private pieceEventListener!: (clickedElement: HTMLElement) => void;
+
   constructor(wordCollection: WordCollection, round: number) {
     const params: ElementParams = {
       tag: 'div',
@@ -59,6 +61,8 @@ export default class ResultGameView extends View {
 
   createSetNextEpisodeHandler() {
     return (nextEpisode: number) => {
+      console.log('nwxt episode');
+      this.unsubscribe();
       this.initialize(nextEpisode);
       const containerCreator = this.configureView(this.gameResultContainer);
       this.fillField(containerCreator);
@@ -78,7 +82,7 @@ export default class ResultGameView extends View {
     if (this.peaceContainer) {
       this.peaceContainer.getHtmlElement().remove();
     }
-    console.log(this.wordCollection, this.round, currentEpisode);
+    // console.log(this.wordCollection, this.round, currentEpisode);
     this.peaceContainer = new ContainerPieceGameView(this.wordCollection, this.round, currentEpisode);
     this.elementCreator.addInnerElement(this.peaceContainer.getHtmlElement());
   }
@@ -86,15 +90,13 @@ export default class ResultGameView extends View {
   configureView(resultContainer: ElementCreator) {
     const containerCreator = this.containerDivCreator(cssClasses.PARTRESULT);
     const gameResultContainer = resultContainer.getElement();
-
     const roundWordCollection = this.wordCollection.rounds[this.round - 1].levelData;
     gameResultContainer.style.backgroundImage = `url(${getImgURL(roundWordCollection.imageSrc)})`;
-    // gameResultContainer.style.backgroundSize = '719px 490px';
-
     resultContainer.addInnerElement(containerCreator.getElement());
     for (let i = 0; i < this.countWordSentence; i++) {
       const containerPieceCreator = this.containerDivCreator(cssClasses.PARTPIECE);
       const currentPieceCreator = containerPieceCreator.getElement();
+      // baclog: todo size width more dinymic
       currentPieceCreator.style.width = `${702 / this.countWordSentence}px`;
       currentPieceCreator.addEventListener('dragover', this.handleDragOver);
       // currentPieceCreator.addEventListener('dragleave', this.handleDragLeave);
@@ -121,6 +123,7 @@ export default class ResultGameView extends View {
   }
 
   handleDragDrop(e: DragEvent) {
+    console.log('3');
     const eventEmitter = EventEmitter.getInstance();
     const target = e.target as HTMLElement;
     const currentTarget = e.currentTarget as HTMLElement;
@@ -137,11 +140,13 @@ export default class ResultGameView extends View {
         eventEmitter.emit('DropInPiece', article);
       }
     }
+    // ВСЕ элементы game-result-container-part
     const container = currentTarget.parentElement?.children;
-    // console.log(container);
     if (container) {
+      // eslint-disable-next-line max-len
+      // countAllchildrenCurent это длинна масива у которого элемент из game-result-container-part это  в каЖдом не пустом child(те также чем-то заполнен)
       const countAllchildrenCurent = Array.from(container).filter((child) => (child as HTMLElement).childElementCount > 0).length;
-      console.log(countAllchildrenCurent, this.countWordSentence);
+      // console.log(countAllchildrenCurent, this.countWordSentence);
       if (countAllchildrenCurent === this.countWordSentence) {
         this.checkSentence(container, eventEmitter);
       }
@@ -150,14 +155,36 @@ export default class ResultGameView extends View {
 
   fillField(containerCreator: ElementCreator) {
     const eventEmitter = EventEmitter.getInstance();
-
     const currentContainerCreator = containerCreator.getElement();
     const allChildren = currentContainerCreator.children;
     eventEmitter.on('autoCompleteSentence', () => this.autoCompleteSentence(allChildren));
-    eventEmitter.on('piece', (clickedElement: HTMLElement) => this.pieceEventListener(clickedElement, allChildren, eventEmitter));
+    this.pieceEventListener = (clickedElement: HTMLElement) => {
+      console.log('send piece to result', clickedElement);
+      const newElement = this.createPieceElement(clickedElement);
+      let childIndex = 0;
+      console.log('two');
+      while (
+        // eslint-disable-next-line operator-linebreak
+        childIndex < allChildren.length &&
+        allChildren[childIndex].childElementCount > 0
+      ) {
+        childIndex++;
+      }
+      if (childIndex < allChildren.length) {
+        allChildren[childIndex].append(newElement);
+      }
+      const countAllchildrenCurent = Array.from(allChildren).filter((child) => (child as HTMLElement).childElementCount > 0).length;
+      if (this.countWordSentence === countAllchildrenCurent) {
+        this.checkSentence(allChildren, eventEmitter);
+      }
+      // console.trace();
+    };
+    eventEmitter.on('piece', this.pieceEventListener);
+    // unsc();
   }
 
   autoCompleteSentence(allChildren: HTMLCollection) {
+    console.log('one');
     const eventEmitter = EventEmitter.getInstance();
     // delete all pieces in result container
     for (let i = 0; i < allChildren.length; i++) {
@@ -168,28 +195,10 @@ export default class ResultGameView extends View {
         child.firstElementChild.remove();
       }
     }
+    // теперь эелементы из game-container-pieces по одному переправляются в обратно после правильной сортировки
     eventEmitter.emit('clearPeaceContainer');
     eventEmitter.emit('check-remove');
     // eventEmitter.emit('continue');
-  }
-
-  pieceEventListener(clickedElement: HTMLElement, allChildren: HTMLCollection, eventEmitter: EventEmitter) {
-    const newElement = this.createPieceElement(clickedElement);
-    let childIndex = 0;
-    while (
-      // eslint-disable-next-line operator-linebreak
-      childIndex < allChildren.length &&
-      allChildren[childIndex].childElementCount > 0
-    ) {
-      childIndex++;
-    }
-    if (childIndex < allChildren.length) {
-      allChildren[childIndex].append(newElement);
-    }
-    const countAllchildrenCurent = Array.from(allChildren).filter((child) => (child as HTMLElement).childElementCount > 0).length;
-    if (this.countWordSentence === countAllchildrenCurent) {
-      this.checkSentence(allChildren, eventEmitter);
-    }
   }
 
   createPieceElement(clickedElement: HTMLElement): HTMLElement {
@@ -294,5 +303,10 @@ export default class ResultGameView extends View {
   updateView() {
     const eventEmitter = EventEmitter.getInstance();
     eventEmitter.emit('nextEpisode');
+  }
+
+  unsubscribe() {
+    const eventEmitter = EventEmitter.getInstance();
+    eventEmitter.unsubscribe('piece', this.pieceEventListener);
   }
 }

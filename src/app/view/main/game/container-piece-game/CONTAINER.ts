@@ -29,14 +29,6 @@ export default class ContainerPieceGameView extends View {
 
   private arrayAnswer: Array<string>;
 
-  private eventEmitter!: EventEmitter;
-
-  private dropInPieceCallback!: (article: HTMLElement) => void;
-
-  private handlePushInPiece!: (clickedElement: HTMLElement) => void;
-
-  private clearPeaceContainer!:()=>void;
-
   constructor(wordCollection: WordCollection, round: number, currentEpisode: number) {
     const params: ElementParams = {
       tag: 'div',
@@ -69,16 +61,16 @@ export default class ContainerPieceGameView extends View {
         currentElement.append(article);
       }
     });
-    this.dropInPieceCallback = (article: HTMLElement) => {
+    const dropInPieceCallback = (article: HTMLElement) => {
       console.log('DropInPiece');
       currentElement.append(article);
     };
-    eventEmitter.on('DropInPiece', this.dropInPieceCallback);
+    eventEmitter.on('DropInPiece', dropInPieceCallback);
 
-    this.clearPeaceContainer = () => {
+    eventEmitter.on('clearPeaceContainer', () => {
       // console.log(currentElement.children);
       const itemsArray = Array.from(currentElement.children);
-      // console.log(itemsArray);
+      console.log(itemsArray);
       if (itemsArray) {
         itemsArray.sort((a, b) => {
           const indexA = parseInt(a.getAttribute('data-index') || '0', 10);
@@ -92,8 +84,7 @@ export default class ContainerPieceGameView extends View {
       itemsArray.forEach((item) => {
         eventEmitter.emit('piece', item);
       });
-    };
-    eventEmitter.on('clearPeaceContainer', this.clearPeaceContainer);
+    });
     const handlePieceClick = (clickedElement: HTMLElement) => {
       for (let i = 0; i < currentElement.children.length; i++) {
         const child = currentElement.children[i] as HTMLElement;
@@ -121,8 +112,7 @@ export default class ContainerPieceGameView extends View {
       createContainerWithClickHandler(elem);
     });
     // Function to handle 'pushInPiece' event
-    this.handlePushInPiece = (clickedElement: HTMLElement) => {
-      console.log('send to result');
+    const handlePushInPiece = (clickedElement: HTMLElement) => {
       const word = clickedElement.textContent || '';
       let index = 0;
       if (clickedElement.dataset.index) { index = +clickedElement.dataset.index; }
@@ -130,7 +120,7 @@ export default class ContainerPieceGameView extends View {
       createContainerWithClickHandler({ word, index });
     };
 
-    eventEmitter.on('pushInPiece', this.handlePushInPiece);
+    eventEmitter.on('pushInPiece', handlePushInPiece);
   }
 
   randomArray(array:{
@@ -229,12 +219,5 @@ export default class ContainerPieceGameView extends View {
     } else {
       console.error('Drag target does not have an id');
     }
-  }
-
-  unsubscribe() {
-    const eventEmitter = EventEmitter.getInstance();
-    eventEmitter.unsubscribe('DropInPiece', this.dropInPieceCallback);
-    eventEmitter.unsubscribe('pushInPiece', this.handlePushInPiece);
-    eventEmitter.unsubscribe('clearPeaceContainer', this.clearPeaceContainer);
   }
 }

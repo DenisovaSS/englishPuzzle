@@ -37,10 +37,12 @@ export default class App {
     }
     const eventEmitter = EventEmitter.getInstance();
     eventEmitter.on('logout', () => {
+      console.log('2');
       localStorage.clear();
       mainView.setContent(new LoginView(mainView));
     });
     eventEmitter.on('startGame', () => {
+      console.log('1');
       mainView.setContent(new GameView(mainView));
     });
   }

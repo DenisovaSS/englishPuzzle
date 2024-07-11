@@ -47,6 +47,7 @@ export default class GameView extends View {
     this.elementCreator.addInnerElement(headerCreator.getHtmlElement());
     this.resultContainer = new ResultGameView(LevelInfo.wordCollection, LevelInfo.currentRound);
     eventEmitter.on('newEpisode', () => {
+      this.resultContainer.unsubscribe();
       this.resultContainer.updateView();
     });
     this.elementCreator.addInnerElement(this.resultContainer.getHtmlElement());
@@ -64,8 +65,12 @@ export default class GameView extends View {
 
   updateView(wordCollection: WordCollection, round: number) {
     // console.log(wordCollection);
+    const eventEmitter = EventEmitter.getInstance();
     const containerCreator = this.elementCreator.getElement();
+    this.resultContainer.unsubscribe();
     const oldResultContainer = this.resultContainer.getHtmlElement();
+    const eventNames = eventEmitter.getEventNames();
+    console.log(eventNames);
     const { nextSibling } = oldResultContainer;
     containerCreator.removeChild(oldResultContainer);
     this.resultContainer = new ResultGameView(wordCollection, round);
