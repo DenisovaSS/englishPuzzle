@@ -65,12 +65,13 @@ export default class GameView extends View {
 
   updateView(wordCollection: WordCollection, round: number) {
     // console.log(wordCollection);
-    const eventEmitter = EventEmitter.getInstance();
+    // const eventEmitter = EventEmitter.getInstance();
     const containerCreator = this.elementCreator.getElement();
     this.resultContainer.unsubscribe();
+    this.resultContainer.unsubscribePiece();
     const oldResultContainer = this.resultContainer.getHtmlElement();
-    const eventNames = eventEmitter.getEventNames();
-    console.log(eventNames);
+    // const eventNames = eventEmitter.getEventNames();
+    // console.log(eventNames);
     const { nextSibling } = oldResultContainer;
     containerCreator.removeChild(oldResultContainer);
     this.resultContainer = new ResultGameView(wordCollection, round);

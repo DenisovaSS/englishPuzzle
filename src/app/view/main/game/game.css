@@ -10,7 +10,7 @@
   border-radius: 10px;
   background-color: rgba(126, 126, 126, 0.7);
   padding: 20px;
-  /* backdrop-filter: blur(9px); */
+   /* backdrop-filter: blur(9px); */
   transition: opacity 0.3s;
   opacity: 1;
   /* display: flex;

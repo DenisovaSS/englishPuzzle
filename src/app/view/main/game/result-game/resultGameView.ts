@@ -40,6 +40,8 @@ export default class ResultGameView extends View {
 
   private pieceEventListener!: (clickedElement: HTMLElement) => void;
 
+  private highlightIncorrectWords!: ()=>void;
+
   constructor(wordCollection: WordCollection, round: number) {
     const params: ElementParams = {
       tag: 'div',
@@ -80,6 +82,7 @@ export default class ResultGameView extends View {
     this.textSentances = currentEpisodePart.textExample;
     this.countWordSentence = this.textSentances.split(' ').length;
     if (this.peaceContainer) {
+      this.peaceContainer.unsubscribe();
       this.peaceContainer.getHtmlElement().remove();
     }
     // console.log(this.wordCollection, this.round, currentEpisode);
@@ -159,10 +162,9 @@ export default class ResultGameView extends View {
     const allChildren = currentContainerCreator.children;
     eventEmitter.on('autoCompleteSentence', () => this.autoCompleteSentence(allChildren));
     this.pieceEventListener = (clickedElement: HTMLElement) => {
-      console.log('send piece to result', clickedElement);
+      console.log('send piece to result');
       const newElement = this.createPieceElement(clickedElement);
       let childIndex = 0;
-      console.log('two');
       while (
         // eslint-disable-next-line operator-linebreak
         childIndex < allChildren.length &&
@@ -177,10 +179,22 @@ export default class ResultGameView extends View {
       if (this.countWordSentence === countAllchildrenCurent) {
         this.checkSentence(allChildren, eventEmitter);
       }
-      // console.trace();
     };
     eventEmitter.on('piece', this.pieceEventListener);
-    // unsc();
+    this.highlightIncorrectWords = () => {
+      const currentChildren = allChildren;
+      for (let j = 0; j < currentChildren.length; j++) {
+        const partchild = currentChildren[j] as HTMLElement;
+        partchild.classList.remove('incorrect');
+        const word = this.textSentances.split(' ')[j];
+        if (partchild.textContent) {
+          if (partchild.textContent !== word) {
+            partchild.classList.add('incorrect');
+          }
+        }
+      }
+    };
+    eventEmitter.on('check-sentences', this.highlightIncorrectWords);
   }
 
   autoCompleteSentence(allChildren: HTMLCollection) {
@@ -250,21 +264,6 @@ export default class ResultGameView extends View {
       eventEmitter.emit('check-remove');
       eventEmitter.emit('continue');
     }
-    eventEmitter.on('check-sentences', () => this.highlightIncorrectWords(allChildren));
-  }
-
-  highlightIncorrectWords(allChildren: HTMLCollection) {
-    const currentChildren = allChildren;
-    for (let j = 0; j < currentChildren.length; j++) {
-      const partchild = currentChildren[j] as HTMLElement;
-      partchild.classList.remove('incorrect');
-      const word = this.textSentances.split(' ')[j];
-      if (partchild.textContent) {
-        if (partchild.textContent !== word) {
-          partchild.classList.add('incorrect');
-        }
-      }
-    }
   }
 
   createPuzzlePiece(word:string, originalIndex: number) {
@@ -308,5 +307,11 @@ export default class ResultGameView extends View {
   unsubscribe() {
     const eventEmitter = EventEmitter.getInstance();
     eventEmitter.unsubscribe('piece', this.pieceEventListener);
+  }
+
+  unsubscribePiece() {
+    if (this.peaceContainer) {
+      this.peaceContainer.unsubscribe();
+    }
   }
 }
