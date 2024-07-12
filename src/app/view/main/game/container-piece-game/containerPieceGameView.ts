@@ -49,7 +49,7 @@ export default class ContainerPieceGameView extends View {
     this.currentEpisode = currentEpisode;
     const currentEpisodePart = this.wordCollection.rounds[this.round - 1].words[this.currentEpisode];
     this.arrayAnswer = currentEpisodePart.textExample.split(' ');
-    console.log(this.arrayAnswer);
+    // console.log(this.arrayAnswer);
     this.configureView();
   }
 
@@ -76,6 +76,8 @@ export default class ContainerPieceGameView extends View {
     eventEmitter.on('DropInPiece', this.dropInPieceCallback);
 
     this.clearPeaceContainer = () => {
+      // const eventNames = eventEmitter.getAllListeners();
+      // console.log(eventNames);
       // console.log(currentElement.children);
       const itemsArray = Array.from(currentElement.children);
       // console.log(itemsArray);
@@ -98,8 +100,6 @@ export default class ContainerPieceGameView extends View {
       for (let i = 0; i < currentElement.children.length; i++) {
         const child = currentElement.children[i] as HTMLElement;
         if (child === clickedElement) {
-          // eslint-disable-next-line no-debugger
-          // debugger;
           eventEmitter.emit('piece', clickedElement);
           // currentElement.removeChild(child);
           break;
@@ -122,7 +122,7 @@ export default class ContainerPieceGameView extends View {
     });
     // Function to handle 'pushInPiece' event
     this.handlePushInPiece = (clickedElement: HTMLElement) => {
-      console.log('send to result');
+      // console.log('send to pieceView');
       const word = clickedElement.textContent || '';
       let index = 0;
       if (clickedElement.dataset.index) { index = +clickedElement.dataset.index; }
@@ -202,7 +202,7 @@ export default class ContainerPieceGameView extends View {
 
     element.draggable = true;
     const lineIndex = this.currentEpisode;
-    console.log(lineIndex);
+    // console.log(lineIndex);
     let backgroundPositionX = 0;
     let backgroundPositionY = 0;
     const puzzleIndex = Number(element.dataset.index);

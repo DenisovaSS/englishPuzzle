@@ -90,20 +90,21 @@ export default class ContainerBtnGameView extends View {
     const target = e.target as HTMLButtonElement;
     const BtnAUTOCreator = target.parentElement?.firstChild as HTMLButtonElement;
     BtnAUTOCreator.disabled = false;
-    BtnAUTOCreator.addEventListener('click', (event) => this.eventAuto(event));
     // console.log(target.parentElement?.firstChild);
+
     this.removeBTN(target);
     eventEmitter.emit('newEpisode');
+
     eventEmitter.emit('check-disabled');
-    const eventNames = eventEmitter.getAllListeners();
-    console.log(eventNames);
   }
 
   eventAuto(e:Event) {
     const eventEmitter = EventEmitter.getInstance();
     const target = e.target as HTMLButtonElement;
     eventEmitter.emit('autoCompleteSentence');
+    const eventNames = eventEmitter.getAllListeners();
+    console.log(eventNames);
     target.disabled = true;
-    target.removeEventListener('click', this.eventAuto);
+    // target.removeEventListener('click', this.eventAuto);
   }
 }

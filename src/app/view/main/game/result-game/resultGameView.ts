@@ -173,16 +173,16 @@ export default class ResultGameView extends View {
           child.firstElementChild.remove();
         }
       }
+
       // теперь эелементы из game-container-pieces по одному переправляются в обратно после правильной сортировки
       eventEmitter.emit('clearPeaceContainer');
-      eventEmitter.emit('check-remove');
+
+      // eventEmitter.emit('check-remove');
       // eventEmitter.emit('continue');
     };
     eventEmitter.on('autoCompleteSentence', this.autoCompleteSentence);
     this.pieceEventListener = (clickedElement: HTMLElement) => {
-      const eventNames = eventEmitter.getAllListeners();
-      console.log(eventNames);
-      console.log('send piece to result');
+      // console.log('send piece to result');
       const newElement = this.createPieceElement(clickedElement);
       let childIndex = 0;
       while (
