@@ -1,11 +1,12 @@
 import './game.css';
 import View from '../../view';
-import { ElementParams, ElementCreator } from '../../../utils/element-creator';
+import { ElementParams, WordCollection } from '../../../utils/element-creator';
 import HeaderGameView from './header-game/headerGameView';
 import MainView from '../main';
-import ContainerPieceGameView from './container-piece-game/containerPieceGameView';
+// import ContainerPieceGameView from './container-piece-game/containerPieceGameView';
 import ResultGameView from './result-game/resultGameView';
 import ContainerBtnGameView from './container-btn-game/btn-game';
+import LevelInfo from '../../../utils/levelRound';
 import EventEmitter from '../../../utils/EventEmit';
 
 const cssClasses = {
@@ -18,6 +19,14 @@ const cssClasses = {
 };
 
 export default class GameView extends View {
+  private resultContainer!: ResultGameView;
+
+  private changeLevelHandler!: (wordCollection: WordCollection, currentRound: number) => void;
+
+  private changeRoundHandler!: (wordCollection: WordCollection, currentRound: number) => void;
+
+  private newEpisodeHandler!: () => void;
+
   constructor(private mainView: MainView) {
     const params: ElementParams = {
       tag: 'section',
@@ -27,28 +36,58 @@ export default class GameView extends View {
     super(params);
 
     this.configureView();
+    this.setupEventListeners();
   }
 
   configureView() {
-    const containerParam = {
-      tag: 'div',
-      classNames: [cssClasses.CONTAINER],
-      textContent: '',
-    };
     const eventEmitter = EventEmitter.getInstance();
-    const containerCreator = new ElementCreator(containerParam);
-    this.elementCreator.addInnerElement(containerCreator.getElement());
-
     const headerCreator = new HeaderGameView(this.mainView);
-    containerCreator.addInnerElement(headerCreator.getHtmlElement());
-    const resultContainer = new ResultGameView();
-    containerCreator.addInnerElement(resultContainer.getHtmlElement());
-    const peaceContainer = new ContainerPieceGameView();
-    containerCreator.addInnerElement(peaceContainer.getHtmlElement());
+    this.elementCreator.addInnerElement(headerCreator.getHtmlElement());
+    this.resultContainer = new ResultGameView(LevelInfo.wordCollection, LevelInfo.currentRound);
+    this.elementCreator.addInnerElement(this.resultContainer.getHtmlElement());
     const BTNContainer = new ContainerBtnGameView();
-    containerCreator.addInnerElement(BTNContainer.getHtmlElement());
-    eventEmitter.on('continue', () => {
-      BTNContainer.createBTN(['button', 'continue-button'], 'continue');
-    });
+    this.elementCreator.addInnerElement(BTNContainer.getHtmlElement());
+    this.newEpisodeHandler = () => {
+      this.resultContainer.unsubscribe();
+      this.resultContainer.updateView();
+    };
+    eventEmitter.on('newEpisode', this.newEpisodeHandler);
+  }
+
+  setupEventListeners() {
+    const eventEmitter = EventEmitter.getInstance();
+    this.changeLevelHandler = (wordCollection, currentRound) => this.updateView(wordCollection, currentRound);
+    this.changeRoundHandler = (wordCollection, currentRound) => this.updateView(wordCollection, currentRound);
+    eventEmitter.on('changeLevel', this.changeLevelHandler);
+    eventEmitter.on('changeRound', this.changeRoundHandler);
+    // eventEmitter.on('changeLevel', (wordCollection, currentRound) => this.updateView(wordCollection, currentRound));
+    // eventEmitter.on('changeRound', (wordCollection, currentRound) => this.updateView(wordCollection, currentRound));
+  }
+
+  updateView(wordCollection: WordCollection, round: number) {
+    const containerCreator = this.elementCreator.getElement();
+    this.resultContainer.unsubscribeNextEpisode();
+    this.resultContainer.unsubscribe();
+    this.resultContainer.unsubscribePiece();
+    const oldResultContainer = this.resultContainer.getHtmlElement();
+    const { nextSibling } = oldResultContainer;
+    containerCreator.removeChild(oldResultContainer);
+    this.resultContainer = new ResultGameView(wordCollection, round);
+    if (nextSibling) {
+      containerCreator.insertBefore(this.resultContainer.getHtmlElement(), nextSibling);
+    } else {
+      containerCreator.appendChild(this.resultContainer.getHtmlElement());
+    }
+  }
+
+  unsubscribe() {
+    const eventEmitter = EventEmitter.getInstance();
+    eventEmitter.unsubscribe('changeLevel', this.changeLevelHandler);
+    eventEmitter.unsubscribe('changeRound', this.changeRoundHandler);
+  }
+
+  unsubscribeNewEpisode() {
+    const eventEmitter = EventEmitter.getInstance();
+    eventEmitter.unsubscribe('newEpisode', this.newEpisodeHandler);
   }
 }

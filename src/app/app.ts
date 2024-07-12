@@ -32,13 +32,18 @@ export default class App {
     const customerDataString = localStorage.getItem(myKeySaveLocalStorage);
     if (customerDataString !== null) {
       mainView.setContent(new WelcomeView(mainView));
-      const eventEmitter = EventEmitter.getInstance();
-      eventEmitter.on('logout', () => {
-        mainView.setContent(new LoginView(mainView));
-      });
-      eventEmitter.on('startGame', () => {
-        mainView.setContent(new GameView(mainView));
-      });
+    } else {
+      mainView.setContent(new LoginView(mainView));
     }
+    const eventEmitter = EventEmitter.getInstance();
+    eventEmitter.on('logout', () => {
+      console.log('2');
+      localStorage.clear();
+      mainView.setContent(new LoginView(mainView));
+    });
+    eventEmitter.on('startGame', () => {
+      console.log('1');
+      mainView.setContent(new GameView(mainView));
+    });
   }
 }

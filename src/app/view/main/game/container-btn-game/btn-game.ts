@@ -34,13 +34,8 @@ export default class ContainerBtnGameView extends View {
       textContent: 'Auto-complete',
     };
     const BtnAUTOCreator = new ElementCreator(BtnAUTOParam);
-    const eventAuto = () => {
-      eventEmitter.emit('autoCompleteSentence');
-      BtnAUTOCreator.setDisabled(true);
-      BtnAUTOCreator.removeEventHandler('click', eventAuto);
-    };
 
-    BtnAUTOCreator.setEventHandler('click', eventAuto);
+    BtnAUTOCreator.setEventHandler('click', (e) => this.eventAuto(e));
     //
     this.elementCreator.addInnerElement(BtnAUTOCreator.getElement());
     const BtnCheckParam = {
@@ -55,6 +50,8 @@ export default class ContainerBtnGameView extends View {
       BtnCheckCreator.setEventHandler('click', this.checknewSentances);
     });
     eventEmitter.on('check-disabled', () => {
+      const visible = BtnCheckCreator.getElement().classList.contains('invisible');
+      if (visible) { BtnCheckCreator.getElement().classList.remove('invisible'); }
       BtnCheckCreator.setDisabled(true);
       BtnCheckCreator.removeEventHandler('click', this.checknewSentances);
     });
@@ -62,6 +59,10 @@ export default class ContainerBtnGameView extends View {
       BtnCheckCreator.setCssClasses(['invisible']);
     });
     this.elementCreator.addInnerElement(BtnCheckCreator.getElement());
+    eventEmitter.on('continue', () => {
+      const continueBTN = this.createBTN(['button', 'continue-button'], 'continue');
+      continueBTN.setEventHandler('click', (e) => this.clickContinueBtn(e));
+    });
   }
 
   checknewSentances() {
@@ -82,5 +83,28 @@ export default class ContainerBtnGameView extends View {
 
   removeBTN(btn: HTMLButtonElement) {
     btn.remove();
+  }
+
+  clickContinueBtn(e:Event) {
+    const eventEmitter = EventEmitter.getInstance();
+    const target = e.target as HTMLButtonElement;
+    const BtnAUTOCreator = target.parentElement?.firstChild as HTMLButtonElement;
+    BtnAUTOCreator.disabled = false;
+    // console.log(target.parentElement?.firstChild);
+
+    this.removeBTN(target);
+    eventEmitter.emit('newEpisode');
+
+    eventEmitter.emit('check-disabled');
+  }
+
+  eventAuto(e:Event) {
+    const eventEmitter = EventEmitter.getInstance();
+    const target = e.target as HTMLButtonElement;
+    eventEmitter.emit('autoCompleteSentence');
+    const eventNames = eventEmitter.getAllListeners();
+    console.log(eventNames);
+    target.disabled = true;
+    // target.removeEventListener('click', this.eventAuto);
   }
 }

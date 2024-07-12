@@ -5,7 +5,10 @@
   justify-content: center;
   width: 100%;
 }
-.back-off .item-piece .after,.back-off .item-piece {
-
-  background-image: none!important
+.back-off .item-piece .after,.back-off .item-piece {  
+  background-image: none!important; 
+}
+.back-off .game-result-container{
+  background-image: none!important;
+  background-color: rgba(255, 255, 255, 0);
 }
