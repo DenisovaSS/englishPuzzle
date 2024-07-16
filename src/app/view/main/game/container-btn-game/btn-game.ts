@@ -63,6 +63,14 @@ export default class ContainerBtnGameView extends View {
       const continueBTN = this.createBTN(['button', 'continue-button'], 'continue');
       continueBTN.setEventHandler('click', (e) => this.clickContinueBtn(e));
     });
+    eventEmitter.on('startButton', () => {
+      const continueBTN = this.elementCreator.getElement().querySelector('.continue-button');
+      if (continueBTN) {
+        continueBTN.remove();
+      }
+      eventEmitter.emit('check-disabled');
+      BtnAUTOCreator.setDisabled(false);
+    });
   }
 
   checknewSentances() {

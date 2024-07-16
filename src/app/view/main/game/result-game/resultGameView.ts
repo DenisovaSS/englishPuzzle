@@ -9,10 +9,6 @@ import LevelInfo from '../../../../utils/levelRound';
 import { getImgURL } from '../../../../utils/fileLoader';
 import ContainerPieceGameView from '../container-piece-game/containerPieceGameView';
 
-// const wordCollection = LevelInfo.currentEpisodePart.textExample;
-// const roundWordCollection = LevelInfo.wordCollection.rounds[LevelInfo.currentRound - 1].levelData;
-// console.log(wordCollection);
-// const arrayAnswer = wordCollection.split(' ');
 const cssClasses = {
   RESULTWRAPPER: 'game-wrapper',
   RESULT: 'game-result-container',
@@ -65,7 +61,7 @@ export default class ResultGameView extends View {
 
   createSetNextEpisodeHandler() {
     return (nextEpisode: number) => {
-      console.log('nwxt episode', nextEpisode);
+      console.log('next episode', nextEpisode);
       this.unsubscribe();
       this.initialize(nextEpisode);
       const containerCreator = this.configureView(this.gameResultContainer);
