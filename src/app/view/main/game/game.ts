@@ -65,6 +65,7 @@ export default class GameView extends View {
   }
 
   updateView(wordCollection: WordCollection, round: number) {
+    const eventEmitter = EventEmitter.getInstance();
     const containerCreator = this.elementCreator.getElement();
     this.resultContainer.unsubscribeNextEpisode();
     this.resultContainer.unsubscribe();
@@ -78,6 +79,7 @@ export default class GameView extends View {
     } else {
       containerCreator.appendChild(this.resultContainer.getHtmlElement());
     }
+    eventEmitter.emit('startButton');
   }
 
   unsubscribe() {
