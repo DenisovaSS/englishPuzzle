@@ -48,6 +48,10 @@ export default class ContainerPieceGameView extends View {
     this.round = round;
     this.currentEpisode = currentEpisode;
     const currentEpisodePart = this.wordCollection.rounds[this.round - 1].words[this.currentEpisode];
+    const eventEmitter = EventEmitter.getInstance();
+    eventEmitter.emit('setTranslate', currentEpisodePart.textExampleTranslate);
+    eventEmitter.emit('setAudio', currentEpisodePart.audioExample);
+    console.log(currentEpisodePart.textExampleTranslate);
     this.arrayAnswer = currentEpisodePart.textExample.split(' ');
     // console.log(this.arrayAnswer);
     this.configureView();

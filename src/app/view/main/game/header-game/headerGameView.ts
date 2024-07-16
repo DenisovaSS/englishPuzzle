@@ -10,6 +10,7 @@ import MainView from '../../main';
 import LevelInfo from '../../../../utils/levelRound';
 import EventEmitter from '../../../../utils/EventEmit';
 import { getAudioFileURL } from '../../../../utils/fileLoader';
+
 // import audioFile from '../../../../../files/01_0001_example.mp3';
 
 const cssClasses = {
@@ -52,6 +53,19 @@ export default class HeaderGameView extends View {
     const containerHintsCreator = this.containerCreator('div', cssClasses.BLOCKHINTS);
     this.fillContainerHints(containerHintsCreator);
     this.elementCreator.addInnerElement(containerHintsCreator.getElement());
+    // Add event listener for setAudio here
+    const eventEmitter = EventEmitter.getInstance();
+    eventEmitter.on('setAudio', (audioExample: string) => {
+      const audioCurent = document.querySelector('audio');
+      if (audioCurent) { audioCurent.remove(); }
+      const audio = document.createElement('audio') as HTMLAudioElement;
+      // audio.autoplay = true;
+      const source = document.createElement('source');
+      source.src = getAudioFileURL(audioExample);
+      audio.append(source);
+      this.elementCreator.addInnerElement(audio);
+      // audio.play();
+    });
   }
 
   containerCreator(tag:string, classNames: string) {
@@ -130,11 +144,16 @@ export default class HeaderGameView extends View {
   fillContainerHints(container: ElementCreator) {
     const currentContainer = container.getElement();
     const buttonPlay = this.containerCreator('button', cssClasses.BUTTONPLAYAUDIO);
+
     buttonPlay.setEventHandler('click', (e) => this.clickButtonPlay(e));
     const img = this.renderSVG();
     buttonPlay.getElement().append(img);
     const textHint = document.createElement('div');
     textHint.classList.add(cssClasses.TEXTHINT);
+    const eventEmitter = EventEmitter.getInstance();
+    eventEmitter.on('setTranslate', (textExampleTranslate: string) => {
+      textHint.textContent = textExampleTranslate;
+    });
     textHint.textContent = currentEpisodePartNow.textExampleTranslate;
     currentContainer.append(buttonPlay.getElement(), textHint);
   }
@@ -206,19 +225,18 @@ export default class HeaderGameView extends View {
 
   clickButtonPlay(e:Event) {
     const currentTarget = e.currentTarget as HTMLElement;
-    const audio = document.createElement('audio') as HTMLAudioElement;
-    audio.autoplay = true;
-    const source = document.createElement('source');
-    source.src = getAudioFileURL(currentEpisodePartNow.audioExample);
-    this.elementCreator.addInnerElement(audio);
-    audio.append(source);
-    audio.play();
-    audio.addEventListener('play', () => {
-      currentTarget.classList.add('play');
-    });
-    audio.addEventListener('ended', () => {
-      currentTarget.classList.remove('play');
-      audio.remove();
-    });
+    // console.log(document.querySelectorAll('audio'));
+    const audio = document.querySelector('audio');
+    if (audio) {
+      audio.autoplay = true;
+      audio.play();
+      audio.addEventListener('play', () => {
+        currentTarget.classList.add('play');
+      });
+      audio.addEventListener('ended', () => {
+        currentTarget.classList.remove('play');
+        // audio.remove();
+      });
+    }
   }
 }
