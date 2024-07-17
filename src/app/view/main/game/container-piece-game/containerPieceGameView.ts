@@ -13,11 +13,12 @@ const cssClasses = {
   BLOCKPIECE: 'item-piece',
   SPANPIECEBEFORE: 'before',
   SPANPIECEAFTER: 'after',
+  DESCRIPTION: 'nameYearAutor',
 };
 // const gameResultContainer = document.querySelector('.game-result-container');
 // console.log(gameResultContainer);
 const GAMERESULTCONTAINERWIDTH = 702;
-const GAMERESULTCONTAINERHEIGHT = 400;
+const GAMERESULTCONTAINERHEIGHT = 414;
 const MAXLINES = 10;
 
 export default class ContainerPieceGameView extends View {
@@ -51,7 +52,7 @@ export default class ContainerPieceGameView extends View {
     const eventEmitter = EventEmitter.getInstance();
     eventEmitter.emit('setTranslate', currentEpisodePart.textExampleTranslate);
     eventEmitter.emit('setAudio', currentEpisodePart.audioExample);
-    console.log(currentEpisodePart.textExampleTranslate);
+    console.log(currentEpisodePart.textExample);
     this.arrayAnswer = currentEpisodePart.textExample.split(' ');
     // console.log(this.arrayAnswer);
     this.configureView();
@@ -74,7 +75,7 @@ export default class ContainerPieceGameView extends View {
       }
     });
     this.dropInPieceCallback = (article: HTMLElement) => {
-      console.log('DropInPiece');
+      // console.log('DropInPiece');
       currentElement.append(article);
     };
     eventEmitter.on('DropInPiece', this.dropInPieceCallback);
@@ -111,7 +112,7 @@ export default class ContainerPieceGameView extends View {
       }
     };
     const createContainerWithClickHandler = ({ word, index }: { word: string, index: number }) => {
-      eventEmitter.emit('check-disabled');
+      // eventEmitter.emit('check-disabled');
 
       const element = this.createPuzzlePiece(word, String(index));
       element.addEventListener('dragstart', this.dragStart);
@@ -130,7 +131,7 @@ export default class ContainerPieceGameView extends View {
       const word = clickedElement.textContent || '';
       let index = 0;
       if (clickedElement.dataset.index) { index = +clickedElement.dataset.index; }
-
+      eventEmitter.emit('check-disabled');
       createContainerWithClickHandler({ word, index });
     };
 
@@ -241,5 +242,19 @@ export default class ContainerPieceGameView extends View {
     eventEmitter.unsubscribe('DropInPiece', this.dropInPieceCallback);
     eventEmitter.unsubscribe('pushInPiece', this.handlePushInPiece);
     eventEmitter.unsubscribe('clearPeaceContainer', this.clearPeaceContainer);
+  }
+
+  addNameYearAutor() {
+    // const currentEpisodePart = this.wordCollection.rounds[this.round - 1].words[this.currentEpisode];
+    // eslint-disable-next-line max-len
+    const descriptionText = `${this.wordCollection.rounds[this.round - 1].levelData.author} - ${this.wordCollection.rounds[this.round - 1].levelData.name}, ${this.wordCollection.rounds[this.round - 1].levelData.year}`;
+    console.log(descriptionText);
+    const description = {
+      tag: 'div',
+      classNames: [cssClasses.DESCRIPTION],
+      textContent: descriptionText,
+    };
+    const descriptionrCreator = new ElementCreator(description);
+    this.elementCreator.addInnerElement(descriptionrCreator.getElement());
   }
 }

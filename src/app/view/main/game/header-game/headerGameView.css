@@ -118,6 +118,9 @@
     gap: 5px;
     min-width: 90%;
 }
+.hide{
+  opacity: 0;
+}
 .text-hint{
     font-size: 22px;
     font-weight: 400;

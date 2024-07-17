@@ -18,6 +18,7 @@ const cssClasses = {
   SPANPIECEBEFORE: 'before',
   SPANPIECEAFTER: 'after',
 };
+const MAXLINES = 10;
 // const countWordSentence: number = arrayAnswer.length;
 export default class ResultGameView extends View {
   private wordCollection: WordCollection;
@@ -61,11 +62,15 @@ export default class ResultGameView extends View {
 
   createSetNextEpisodeHandler() {
     return (nextEpisode: number) => {
-      console.log('next episode', nextEpisode);
-      this.unsubscribe();
-      this.initialize(nextEpisode);
-      const containerCreator = this.configureView(this.gameResultContainer);
-      this.fillField(containerCreator);
+      const countCurentEpisode = this.gameResultContainer.getElement().childElementCount;
+      if (countCurentEpisode === MAXLINES) {
+        this.nextRound();
+      } else {
+        this.unsubscribe();
+        this.initialize(nextEpisode);
+        const containerCreator = this.configureView(this.gameResultContainer);
+        this.fillField(containerCreator);
+      }
     };
   }
 
@@ -318,5 +323,17 @@ export default class ResultGameView extends View {
   unsubscribeNextEpisode() {
     const eventEmitter = EventEmitter.getInstance();
     eventEmitter.unsubscribe('setNextEpisode', this.setNextEpisodeHandler);
+  }
+
+  nextRound() {
+    const eventEmitter = EventEmitter.getInstance();
+    this.gameResultContainer.getElement().classList.add('complete');
+    const allChildren = this.gameResultContainer.getElement().children;
+    for (let i = 0; i < allChildren.length; i++) {
+      const child = allChildren[i] as HTMLElement;
+      child.style.opacity = '0';
+    }
+    this.peaceContainer.addNameYearAutor();
+    eventEmitter.emit('andRound');
   }
 }

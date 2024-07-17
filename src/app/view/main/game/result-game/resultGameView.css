@@ -1,13 +1,15 @@
 .game-result-container {
   width: 702px;
-  height: 400px;
-  background-color: #0000002c;
+  height: 414px;
   border: 1px solid black;
-  background-size: 702px 400px;
+  background-size: 702px 414px;
   background-blend-mode: luminosity;
   background-color: rgba(255, 255, 255, 1);
   transition: background-color 1s ease-out;
-
+}
+.game-result-container.complete {
+  background-color: unset;
+ 
 }
 .game-result-container-part {
   width: 702px;
