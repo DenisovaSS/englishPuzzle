@@ -11,6 +11,7 @@ const cssClasses = {
   BTNAUTOCOMPLETE: 'auto-complete-button',
   BTNCONTINUE: 'continue-button',
   BTNCHECK: 'check-button',
+  BTNRESULTS: 'results-button',
   BUTTON: 'button',
 };
 
@@ -60,16 +61,25 @@ export default class ContainerBtnGameView extends View {
     });
     this.elementCreator.addInnerElement(BtnCheckCreator.getElement());
     eventEmitter.on('continue', () => {
-      const continueBTN = this.createBTN(['button', 'continue-button'], 'continue');
+      const continueBTN = this.createBTN([cssClasses.BUTTON, cssClasses.BTNCONTINUE], 'continue');
       continueBTN.setEventHandler('click', (e) => this.clickContinueBtn(e));
     });
     eventEmitter.on('startButton', () => {
-      const continueBTN = this.elementCreator.getElement().querySelector('.continue-button');
+      const continueBTN = this.elementCreator.getElement().querySelector(`.${cssClasses.BTNCONTINUE}`);
       if (continueBTN) {
         continueBTN.remove();
       }
       eventEmitter.emit('check-disabled');
       BtnAUTOCreator.setDisabled(false);
+    });
+    eventEmitter.on('andRound', () => {
+      const statisBTN = this.createBTN([cssClasses.BUTTON, cssClasses.BTNRESULTS], 'results');
+      statisBTN.setEventHandler('click', (e) => this.clickResultsBtn(e));
+      BtnAUTOCreator.setCssClasses(['invisible']);
+      eventEmitter.emit('check-remove');
+      console.log(BtnCheckCreator);
+      const continueBTN = this.createBTN([cssClasses.BUTTON, cssClasses.BTNCONTINUE], 'continue');
+      continueBTN.setEventHandler('click', (e) => this.clickContinueBtnForNextRound(e));
     });
   }
 
@@ -101,9 +111,19 @@ export default class ContainerBtnGameView extends View {
     // console.log(target.parentElement?.firstChild);
 
     this.removeBTN(target);
-    eventEmitter.emit('newEpisode');
 
     eventEmitter.emit('check-disabled');
+    eventEmitter.emit('newEpisode');
+  }
+
+  clickContinueBtnForNextRound(e:Event) {
+    const target = e.target as HTMLButtonElement;
+    console.log(target);
+  }
+
+  clickResultsBtn(e:Event) {
+    const target = e.target as HTMLButtonElement;
+    console.log(target);
   }
 
   eventAuto(e:Event) {

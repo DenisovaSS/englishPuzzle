@@ -36,14 +36,6 @@
 
 
 .game-container-pieces {
-  /* display: flex;
-  justify-content: space-between;
-  margin-top: auto;
-  padding: 0;
-  width: 100%;
-  max-width: 900px;
-  margin-right: 10px;
-  background-color: #e7e7e7; */
   margin-top: 20px;
   width: 702px;
     height: 40px;
@@ -53,8 +45,18 @@
     justify-content: flex-start;
     gap: 2px;
     transition: all .5s;
+    position: relative;
 }
-
+.nameYearAutor{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  width: 90%;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+}
 .item-piece {
   position: relative;
   display: flex;

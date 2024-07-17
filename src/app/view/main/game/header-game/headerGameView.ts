@@ -53,8 +53,12 @@ export default class HeaderGameView extends View {
     const containerHintsCreator = this.containerCreator('div', cssClasses.BLOCKHINTS);
     this.fillContainerHints(containerHintsCreator);
     this.elementCreator.addInnerElement(containerHintsCreator.getElement());
+
     // Add event listener for setAudio here
     const eventEmitter = EventEmitter.getInstance();
+    eventEmitter.on('andRound', () => {
+      containerHintsCreator.getElement().classList.add('hide');
+    });
     eventEmitter.on('setAudio', (audioExample: string) => {
       const audioCurent = document.querySelector('audio');
       if (audioCurent) { audioCurent.remove(); }
