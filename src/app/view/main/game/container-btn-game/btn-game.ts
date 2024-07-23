@@ -69,7 +69,13 @@ export default class ContainerBtnGameView extends View {
       if (continueBTN) {
         continueBTN.remove();
       }
+      const resultsBTN = this.elementCreator.getElement().querySelector(`.${cssClasses.BTNRESULTS}`);
+      if (resultsBTN) {
+        resultsBTN.remove();
+      }
       eventEmitter.emit('check-disabled');
+      const visible = BtnAUTOCreator.getElement().classList.contains('invisible');
+      if (visible) { BtnAUTOCreator.getElement().classList.remove('invisible'); }
       BtnAUTOCreator.setDisabled(false);
     });
     eventEmitter.on('andRound', () => {
@@ -77,9 +83,9 @@ export default class ContainerBtnGameView extends View {
       statisBTN.setEventHandler('click', (e) => this.clickResultsBtn(e));
       BtnAUTOCreator.setCssClasses(['invisible']);
       eventEmitter.emit('check-remove');
-      console.log(BtnCheckCreator);
+      // console.log(BtnCheckCreator);
       const continueBTN = this.createBTN([cssClasses.BUTTON, cssClasses.BTNCONTINUE], 'continue');
-      continueBTN.setEventHandler('click', (e) => this.clickContinueBtnForNextRound(e));
+      continueBTN.setEventHandler('click', this.clickContinueBtnForNextRound);
     });
   }
 
@@ -116,9 +122,10 @@ export default class ContainerBtnGameView extends View {
     eventEmitter.emit('newEpisode');
   }
 
-  clickContinueBtnForNextRound(e:Event) {
-    const target = e.target as HTMLButtonElement;
-    console.log(target);
+  clickContinueBtnForNextRound() {
+    const eventEmitter = EventEmitter.getInstance();
+    eventEmitter.emit('StartNewRound');
+    // eventEmitter.emit('startButton');
   }
 
   clickResultsBtn(e:Event) {
@@ -130,8 +137,8 @@ export default class ContainerBtnGameView extends View {
     const eventEmitter = EventEmitter.getInstance();
     const target = e.target as HTMLButtonElement;
     eventEmitter.emit('autoCompleteSentence');
-    const eventNames = eventEmitter.getAllListeners();
-    console.log(eventNames);
+    // const eventNames = eventEmitter.getAllListeners();
+    // console.log(eventNames);
     target.disabled = true;
     // target.removeEventListener('click', this.eventAuto);
   }

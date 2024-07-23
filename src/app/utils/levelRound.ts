@@ -34,6 +34,7 @@ function getCurrentRounds(currentElement:number) {
     const option = document.createElement('option') as HTMLOptionElement;
     option.value = String(i);
     option.textContent = String(i);
+    /// ////////////////////////
     selectList.append(option);
   }
   currentLevel = currentElement;
@@ -55,6 +56,29 @@ eventEmitter.on('setRounds', (round:number) => setCurrentRounds(round));
 eventEmitter.on('nextEpisode', () => {
   currentEpisode += 1;
   eventEmitter.emit('setNextEpisode', currentEpisode);
+});
+eventEmitter.on('sendinfo', (wordCollectionCurent:WordCollection, roundCurrent:number) => {
+  // console.log(wordCollectionCurent, roundCurrent);
+  currentRound = roundCurrent + 1;
+  const levelInEpisode = wordCollections.indexOf(wordCollectionCurent);
+  if (levelInEpisode !== -1) {
+    const InEpisodeRounds = getRoundsCount(levelInEpisode + 1);
+    // console.log(InEpisodeRounds);
+    if (roundCurrent + 1 <= InEpisodeRounds) {
+      currentRound = roundCurrent + 1;
+      wordCollection = wordCollectionCurent;
+      currentEpisode = 0;
+      eventEmitter.emit('NextRoundHeader', levelInEpisode + 1, currentRound);
+    } else {
+      wordCollection = wordCollections[levelInEpisode + 1] || wordCollections[0];
+      currentRound = 1;
+      currentEpisode = 0;
+      eventEmitter.emit('NextRoundHeader', levelInEpisode + 2, currentRound);
+    }
+
+    eventEmitter.emit('NextRound', wordCollection, currentRound);
+  }
+  // throw new Error('WordCollection not found in the list.');
 });
 const LevelInfo = {
   levels, currentLevel, currentLevelRounds, currentRound, currentEpisodePart, wordCollection, currentEpisode,

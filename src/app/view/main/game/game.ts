@@ -60,8 +60,7 @@ export default class GameView extends View {
     this.changeRoundHandler = (wordCollection, currentRound) => this.updateView(wordCollection, currentRound);
     eventEmitter.on('changeLevel', this.changeLevelHandler);
     eventEmitter.on('changeRound', this.changeRoundHandler);
-    // eventEmitter.on('changeLevel', (wordCollection, currentRound) => this.updateView(wordCollection, currentRound));
-    // eventEmitter.on('changeRound', (wordCollection, currentRound) => this.updateView(wordCollection, currentRound));
+    eventEmitter.on('NextRound', (wordCollection, currentRound) => this.updateView(wordCollection, currentRound));
   }
 
   updateView(wordCollection: WordCollection, round: number) {

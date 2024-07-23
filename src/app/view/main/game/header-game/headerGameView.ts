@@ -116,7 +116,17 @@ export default class HeaderGameView extends View {
     const select = document.createElement('select');
     select.classList.add(cssClasses.SELECTLIST);
     select.id = id;
-
+    const eventEmitter = EventEmitter.getInstance();
+    eventEmitter.on('NextRoundHeader', (level:number, roundCurrent:number) => {
+      if (isLevel) {
+        console.log(level);
+        select.value = String(level);
+      } else {
+        select.value = String(roundCurrent);
+        const specificOption = select.options[roundCurrent];
+        specificOption.classList.add('passed');
+      }
+    });
     if (isLevel) {
       select.addEventListener('change', (e) => this.createRoundsForLevel(e));
     } else {
