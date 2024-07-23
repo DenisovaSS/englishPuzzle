@@ -52,7 +52,7 @@ export default class ContainerPieceGameView extends View {
     const eventEmitter = EventEmitter.getInstance();
     eventEmitter.emit('setTranslate', currentEpisodePart.textExampleTranslate);
     eventEmitter.emit('setAudio', currentEpisodePart.audioExample);
-    console.log(currentEpisodePart.textExample);
+    // console.log(currentEpisodePart.textExample);
     this.arrayAnswer = currentEpisodePart.textExample.split(' ');
     // console.log(this.arrayAnswer);
     this.configureView();
@@ -75,7 +75,7 @@ export default class ContainerPieceGameView extends View {
       }
     });
     this.dropInPieceCallback = (article: HTMLElement) => {
-      // console.log('DropInPiece');
+      console.log('DropInPiece');
       currentElement.append(article);
     };
     eventEmitter.on('DropInPiece', this.dropInPieceCallback);

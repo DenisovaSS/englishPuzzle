@@ -129,13 +129,19 @@ export default class ResultGameView extends View {
   }
 
   handleDragDrop(e: DragEvent) {
-    console.log('3');
+    // console.log('3');
     const eventEmitter = EventEmitter.getInstance();
     const target = e.target as HTMLElement;
     const currentTarget = e.currentTarget as HTMLElement;
 
     const article = document.querySelector(`[data-drag-index='${e.dataTransfer?.getData('text')}']`);
+
     if (article) {
+      // backlog to fix problem with event listener
+      const IsOldArticleParentPARTPIECE = article.parentElement?.classList.contains((cssClasses.PARTPIECE));
+      if (!IsOldArticleParentPARTPIECE) {
+        article.addEventListener('click', (event) => this.handlePieceClick(event));
+      }
       if (target.classList.contains(cssClasses.PARTPIECE)) {
         target.appendChild(article);
       } else if (target.classList.contains(cssClasses.BLOCKPIECE)) {
@@ -164,7 +170,7 @@ export default class ResultGameView extends View {
     const currentContainerCreator = containerCreator.getElement();
     const allChildren = currentContainerCreator.children;
     this.autoCompleteSentence = () => {
-      console.log('one');
+      // console.log('one');
       // delete all pieces in result container
       for (let i = 0; i < allChildren.length; i++) {
         const child = allChildren[i] as HTMLElement;
@@ -221,7 +227,7 @@ export default class ResultGameView extends View {
   createPieceElement(clickedElement: HTMLElement): HTMLElement {
     const newElement = clickedElement;
     newElement.addEventListener('click', (event) => this.handlePieceClick(event));
-    newElement.addEventListener('dragstart', this.dragStart);
+    // newElement.addEventListener('dragstart', this.dragStart);
     return newElement;
   }
 
@@ -240,14 +246,14 @@ export default class ResultGameView extends View {
     }
   }
 
-  dragStart(event: DragEvent) {
-    const target = event.target as HTMLElement;
-    if (target && target.dataset.dragIndex) {
-      event.dataTransfer?.setData('text', target.dataset.dragIndex);
-    } else {
-      console.error('Drag target does not have an id');
-    }
-  }
+  // dragStart(event: DragEvent) {
+  //   const target = event.target as HTMLElement;
+  //   if (target && target.dataset.dragIndex) {
+  //     event.dataTransfer?.setData('text', target.dataset.dragIndex);
+  //   } else {
+  //     console.error('Drag target does not have an id');
+  //   }
+  // }
 
   checkSentence(allChildren: HTMLCollection, eventEmitter: EventEmitter) {
     eventEmitter.emit('check');
@@ -269,38 +275,38 @@ export default class ResultGameView extends View {
     }
   }
 
-  createPuzzlePiece(word:string, originalIndex: number) {
-    const containerParam = {
-      tag: 'div',
-      classNames: [cssClasses.BLOCKPIECE],
-      textContent: word,
-    };
-    const beforeParam = {
-      tag: 'span',
-      classNames: [cssClasses.SPANPIECEBEFORE],
-      textContent: '',
-    };
-    const afterParam = {
-      tag: 'span',
-      classNames: [cssClasses.SPANPIECEAFTER],
-      textContent: '',
-    };
-    const containerCreator = new ElementCreator(containerParam);
-    const element = containerCreator.getElement();
-    if (+originalIndex === 0) {
-      const spanCreator = new ElementCreator(afterParam);
-      element.append(spanCreator.getElement());
-    } else if (+originalIndex === this.countWordSentence - 1) {
-      const spanCreator = new ElementCreator(beforeParam);
-      element.append(spanCreator.getElement());
-    } else {
-      let spanCreator = new ElementCreator(beforeParam);
-      element.append(spanCreator.getElement());
-      spanCreator = new ElementCreator(afterParam);
-      element.append(spanCreator.getElement());
-    }
-    return element;
-  }
+  // createPuzzlePiece(word:string, originalIndex: number) {
+  //   const containerParam = {
+  //     tag: 'div',
+  //     classNames: [cssClasses.BLOCKPIECE],
+  //     textContent: word,
+  //   };
+  //   const beforeParam = {
+  //     tag: 'span',
+  //     classNames: [cssClasses.SPANPIECEBEFORE],
+  //     textContent: '',
+  //   };
+  //   const afterParam = {
+  //     tag: 'span',
+  //     classNames: [cssClasses.SPANPIECEAFTER],
+  //     textContent: '',
+  //   };
+  //   const containerCreator = new ElementCreator(containerParam);
+  //   const element = containerCreator.getElement();
+  //   if (+originalIndex === 0) {
+  //     const spanCreator = new ElementCreator(afterParam);
+  //     element.append(spanCreator.getElement());
+  //   } else if (+originalIndex === this.countWordSentence - 1) {
+  //     const spanCreator = new ElementCreator(beforeParam);
+  //     element.append(spanCreator.getElement());
+  //   } else {
+  //     let spanCreator = new ElementCreator(beforeParam);
+  //     element.append(spanCreator.getElement());
+  //     spanCreator = new ElementCreator(afterParam);
+  //     element.append(spanCreator.getElement());
+  //   }
+  //   return element;
+  // }
 
   updateView() {
     const eventEmitter = EventEmitter.getInstance();
@@ -334,6 +340,10 @@ export default class ResultGameView extends View {
       child.style.opacity = '0';
     }
     this.peaceContainer.addNameYearAutor();
+    // eventEmitter.emit('sendinfo', this.wordCollection, this.round);
     eventEmitter.emit('andRound');
+    eventEmitter.on('StartNewRound', () => {
+      eventEmitter.emit('sendinfo', this.wordCollection, this.round);
+    });
   }
 }

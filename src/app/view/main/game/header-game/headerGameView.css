@@ -28,6 +28,9 @@
     text-transform: capitalize;
 
   }
+  .passed {
+   background-color: green;
+}
   .select__list{
     padding: 2px;
     border-radius: 5px;
