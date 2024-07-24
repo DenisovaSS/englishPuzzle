@@ -19,6 +19,7 @@ let currentEpisode = 0;
 let wordCollection: WordCollection = wordCollections[currentLevel - 1];
 
 const currentEpisodePart = wordCollection.rounds[currentRound - 1].words[currentEpisode];
+
 function getRoundsCount(level:number):number {
   return level ? wordCollections[level - 1].roundsCount : 0;
 }
@@ -71,11 +72,21 @@ eventEmitter.on('nextEpisode', () => {
   currentEpisode += 1;
   eventEmitter.emit('setNextEpisode', currentEpisode);
 });
-function saveCompleteRoundInLocalStorage(level:number, round:number) {
+function saveCompleteRoundInLocalStorage(level:number, round:number, countRoundsInLevel:number) {
   // console.log(level);
+
   const dataStringStorage = localStorage.getItem(myKeySaveLocalStorage);
   if (dataStringStorage) {
     const objectData = JSON.parse(dataStringStorage);
+    let lastwordCollection; let nextRoundStart;
+    if (round + 1 <= countRoundsInLevel) {
+      lastwordCollection = wordCollections[level];
+      nextRoundStart = round + 1;
+    } else {
+      lastwordCollection = wordCollections[level + 1];
+      nextRoundStart = 1;
+    }
+    objectData.lastRound = { level, nextRoundStart, lastwordCollection };
     const completeRounds = objectData.completeRounds || [[], [], [], [], [], []];
     if (!completeRounds[level].includes(round)) { completeRounds[level].push(round); }
     objectData.completeRounds = completeRounds;
@@ -87,8 +98,8 @@ eventEmitter.on('sendinfo', (wordCollectionCurent:WordCollection, roundCurrent:n
   currentRound = roundCurrent + 1;
   const levelInEpisode = wordCollections.indexOf(wordCollectionCurent);
   if (levelInEpisode !== -1) {
-    saveCompleteRoundInLocalStorage(levelInEpisode, roundCurrent);
     const InEpisodeRounds = getRoundsCount(levelInEpisode + 1);
+    saveCompleteRoundInLocalStorage(levelInEpisode, roundCurrent, InEpisodeRounds);
     // console.log(InEpisodeRounds);
     if (roundCurrent + 1 <= InEpisodeRounds) {
       currentRound = roundCurrent + 1;

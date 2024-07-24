@@ -8,6 +8,7 @@ import ResultGameView from './result-game/resultGameView';
 import ContainerBtnGameView from './container-btn-game/btn-game';
 import LevelInfo from '../../../utils/levelRound';
 import EventEmitter from '../../../utils/EventEmit';
+import { myKeySaveLocalStorage } from '../../../utils/consts';
 
 const cssClasses = {
   SECTIONG: 'game-page',
@@ -43,7 +44,18 @@ export default class GameView extends View {
     const eventEmitter = EventEmitter.getInstance();
     const headerCreator = new HeaderGameView(this.mainView);
     this.elementCreator.addInnerElement(headerCreator.getHtmlElement());
-    this.resultContainer = new ResultGameView(LevelInfo.wordCollection, LevelInfo.currentRound);
+    const localStorageInfo = localStorage.getItem(myKeySaveLocalStorage);
+    if (localStorageInfo !== null) {
+      const lastCompleteGame = JSON.parse(localStorageInfo).lastRound;
+      if (lastCompleteGame) {
+        const currentWordCollection = lastCompleteGame.lastwordCollection;
+        const currentRound = lastCompleteGame.nextRoundStart;
+        const currentLevel = lastCompleteGame.level;
+        // eventEmitter.emit('lastCompleteGameStart', lastCompleteGame.level, lastCompleteGame.round);
+        this.resultContainer = new ResultGameView(currentWordCollection, currentRound);
+        eventEmitter.emit('NextRoundHeader', currentLevel + 1, currentRound);
+      } else { this.resultContainer = new ResultGameView(LevelInfo.wordCollection, LevelInfo.currentRound); }
+    }
     this.elementCreator.addInnerElement(this.resultContainer.getHtmlElement());
     const BTNContainer = new ContainerBtnGameView();
     this.elementCreator.addInnerElement(BTNContainer.getHtmlElement());
