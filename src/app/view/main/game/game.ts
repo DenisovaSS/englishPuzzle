@@ -81,11 +81,11 @@ export default class GameView extends View {
     eventEmitter.emit('startButton');
   }
 
-  unsubscribe() {
-    const eventEmitter = EventEmitter.getInstance();
-    eventEmitter.unsubscribe('changeLevel', this.changeLevelHandler);
-    eventEmitter.unsubscribe('changeRound', this.changeRoundHandler);
-  }
+  // unsubscribe() {
+  //   const eventEmitter = EventEmitter.getInstance();
+  //   eventEmitter.unsubscribe('changeLevel', this.changeLevelHandler);
+  //   eventEmitter.unsubscribe('changeRound', this.changeRoundHandler);
+  // }
 
   unsubscribeNewEpisode() {
     const eventEmitter = EventEmitter.getInstance();

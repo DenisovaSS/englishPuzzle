@@ -7,6 +7,7 @@ import wordCollectionLevel4 from '../../data/wordCollectionLevel4.json';
 import wordCollectionLevel5 from '../../data/wordCollectionLevel5.json';
 import wordCollectionLevel6 from '../../data/wordCollectionLevel6.json';
 import EventEmitter from './EventEmit';
+import { myKeySaveLocalStorage } from './consts';
 
 const eventEmitter = EventEmitter.getInstance();
 const levels = 6;
@@ -57,11 +58,23 @@ eventEmitter.on('nextEpisode', () => {
   currentEpisode += 1;
   eventEmitter.emit('setNextEpisode', currentEpisode);
 });
+function saveCompleteRoundInLocalStorage(level:number, round:number) {
+  console.log(level);
+  const dataStringStorage = localStorage.getItem(myKeySaveLocalStorage);
+  if (dataStringStorage) {
+    const objectData = JSON.parse(dataStringStorage);
+    const completeRounds = objectData.completeRounds || [[], [], [], [], [], []];
+    if (!completeRounds[level].includes(round)) { completeRounds[level].push(round); }
+    objectData.completeRounds = completeRounds;
+    localStorage.setItem(myKeySaveLocalStorage, JSON.stringify(objectData));
+  }
+}
 eventEmitter.on('sendinfo', (wordCollectionCurent:WordCollection, roundCurrent:number) => {
   // console.log(wordCollectionCurent, roundCurrent);
   currentRound = roundCurrent + 1;
   const levelInEpisode = wordCollections.indexOf(wordCollectionCurent);
   if (levelInEpisode !== -1) {
+    saveCompleteRoundInLocalStorage(levelInEpisode, roundCurrent);
     const InEpisodeRounds = getRoundsCount(levelInEpisode + 1);
     // console.log(InEpisodeRounds);
     if (roundCurrent + 1 <= InEpisodeRounds) {
