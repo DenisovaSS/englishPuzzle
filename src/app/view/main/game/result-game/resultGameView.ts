@@ -41,6 +41,8 @@ export default class ResultGameView extends View {
 
   private autoCompleteSentence!: ()=>void;
 
+  private sendInfo!:()=>void;
+
   constructor(wordCollection: WordCollection, round: number) {
     const params: ElementParams = {
       tag: 'div',
@@ -167,6 +169,7 @@ export default class ResultGameView extends View {
 
   fillField(containerCreator: ElementCreator) {
     const eventEmitter = EventEmitter.getInstance();
+
     const currentContainerCreator = containerCreator.getElement();
     const allChildren = currentContainerCreator.children;
     this.autoCompleteSentence = () => {
@@ -329,6 +332,7 @@ export default class ResultGameView extends View {
   unsubscribeNextEpisode() {
     const eventEmitter = EventEmitter.getInstance();
     eventEmitter.unsubscribe('setNextEpisode', this.setNextEpisodeHandler);
+    eventEmitter.unsubscribe('StartNewRound', this.sendInfo);
   }
 
   nextRound() {
@@ -342,8 +346,11 @@ export default class ResultGameView extends View {
     this.peaceContainer.addNameYearAutor();
     // eventEmitter.emit('sendinfo', this.wordCollection, this.round);
     eventEmitter.emit('andRound');
-    eventEmitter.on('StartNewRound', () => {
+    this.sendInfo = () => {
       eventEmitter.emit('sendinfo', this.wordCollection, this.round);
-    });
+      // const eventNames = eventEmitter.getAllListeners();
+      // console.log(eventNames);
+    };
+    eventEmitter.on('StartNewRound', this.sendInfo);
   }
 }

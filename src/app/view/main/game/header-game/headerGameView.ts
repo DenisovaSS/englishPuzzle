@@ -10,6 +10,7 @@ import MainView from '../../main';
 import LevelInfo from '../../../../utils/levelRound';
 import EventEmitter from '../../../../utils/EventEmit';
 import { getAudioFileURL } from '../../../../utils/fileLoader';
+import { myKeySaveLocalStorage } from '../../../../utils/consts';
 
 // import audioFile from '../../../../../files/01_0001_example.mp3';
 
@@ -123,8 +124,8 @@ export default class HeaderGameView extends View {
         select.value = String(level);
       } else {
         select.value = String(roundCurrent);
-        const specificOption = select.options[roundCurrent];
-        specificOption.classList.add('passed');
+        // const specificOption = select.options[roundCurrent - 2];
+        // specificOption.classList.add('passed');
       }
     });
     if (isLevel) {
@@ -137,6 +138,26 @@ export default class HeaderGameView extends View {
       const option = document.createElement('option') as HTMLOptionElement;
       option.value = String(i);
       option.textContent = String(i);
+      if (!isLevel) {
+        const curentLevel = LevelInfo.currentLevel;
+        const isRoundComplete = (level:number, round:number) => {
+          const dataStringStorage = localStorage.getItem(myKeySaveLocalStorage);
+          if (dataStringStorage) {
+            const objectData = JSON.parse(dataStringStorage).completeRounds;
+            if (objectData) {
+              if (objectData[level - 1].includes(round)
+              ) {
+                return true;
+              }
+            }
+          }
+          return false;
+        };
+        const isRoundCompleteCur = isRoundComplete(curentLevel, i);
+        if (isRoundCompleteCur) {
+          option.classList.add('passed');
+        }
+      }
       select.append(option);
     }
     selectContainer.append(label, select);

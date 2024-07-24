@@ -108,8 +108,8 @@ export class FormCreator {
     this.formElement.querySelectorAll('input').forEach((inputElement) => {
       formData[inputElement.name] = (inputElement as HTMLInputElement).value;
     });
-
-    localStorage.setItem(myKeySaveLocalStorage, JSON.stringify(formData));
+    const user = { user: formData };
+    localStorage.setItem(myKeySaveLocalStorage, JSON.stringify(user));
   }
 
   getElement(): HTMLFormElement {

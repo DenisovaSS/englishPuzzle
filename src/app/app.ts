@@ -16,8 +16,8 @@ export default class App {
   createView() {
     const headerView = new HeaderView();
     const mainView = new MainView();
-    mainView.setContent(new GameView(mainView));
-    // this.renderNewPage(mainView);
+    // mainView.setContent(new GameView(mainView));
+    this.renderNewPage(mainView);
     const footerView = new FooterView();
 
     document.body.append(
@@ -37,12 +37,12 @@ export default class App {
     }
     const eventEmitter = EventEmitter.getInstance();
     eventEmitter.on('logout', () => {
-      console.log('2');
+      // console.log('2');
       localStorage.clear();
       mainView.setContent(new LoginView(mainView));
     });
     eventEmitter.on('startGame', () => {
-      console.log('1');
+      // console.log('1');
       mainView.setContent(new GameView(mainView));
     });
   }

@@ -7,6 +7,7 @@ import wordCollectionLevel4 from '../../data/wordCollectionLevel4.json';
 import wordCollectionLevel5 from '../../data/wordCollectionLevel5.json';
 import wordCollectionLevel6 from '../../data/wordCollectionLevel6.json';
 import EventEmitter from './EventEmit';
+import { myKeySaveLocalStorage } from './consts';
 
 const eventEmitter = EventEmitter.getInstance();
 const levels = 6;
@@ -18,15 +19,27 @@ let currentEpisode = 0;
 let wordCollection: WordCollection = wordCollections[currentLevel - 1];
 
 const currentEpisodePart = wordCollection.rounds[currentRound - 1].words[currentEpisode];
-// console.log(currentEpisodePart);
+
 function getRoundsCount(level:number):number {
   return level ? wordCollections[level - 1].roundsCount : 0;
 }
 let currentLevelRounds = getRoundsCount(currentLevel);
+const isRoundComplete = (level:number, round:number) => {
+  const dataStringStorage = localStorage.getItem(myKeySaveLocalStorage);
+  if (dataStringStorage) {
+    const objectData = JSON.parse(dataStringStorage).completeRounds;
+    if (objectData) {
+      if (objectData[level - 1].includes(round)
+      ) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
 function getCurrentRounds(currentElement:number) {
   currentLevelRounds = getRoundsCount(currentElement);
   const selectList = document.getElementById('round') as HTMLSelectElement;
-  // console.log(currentLevelRounds);
   while (selectList.firstElementChild) {
     selectList.firstElementChild.remove();
   }
@@ -34,14 +47,16 @@ function getCurrentRounds(currentElement:number) {
     const option = document.createElement('option') as HTMLOptionElement;
     option.value = String(i);
     option.textContent = String(i);
-    /// ////////////////////////
+    const isRoundCompleteCur = isRoundComplete(currentElement, i);
+    if (isRoundCompleteCur) {
+      option.classList.add('passed');
+    }
     selectList.append(option);
   }
   currentLevel = currentElement;
   currentRound = 1;
   wordCollection = wordCollections[currentLevel - 1];
   currentEpisode = 0;
-  // console.log(currentLevel, currentRound);
   eventEmitter.emit('changeLevel', wordCollection, currentRound);
 }
 function setCurrentRounds(round:number) {
@@ -57,12 +72,40 @@ eventEmitter.on('nextEpisode', () => {
   currentEpisode += 1;
   eventEmitter.emit('setNextEpisode', currentEpisode);
 });
+function saveCompleteRoundInLocalStorage(level:number, round:number, countRoundsInLevel:number) {
+  console.log(level, 'last');
+
+  const dataStringStorage = localStorage.getItem(myKeySaveLocalStorage);
+  if (dataStringStorage) {
+    const objectData = JSON.parse(dataStringStorage);
+    let lastwordCollection; let nextRoundStart; let lastLevel;
+    if (round + 1 <= countRoundsInLevel) {
+      lastwordCollection = wordCollections[level];
+      nextRoundStart = round + 1;
+      lastLevel = level;
+    } else if (level + 1 < levels) {
+      lastLevel = level + 1;
+      lastwordCollection = wordCollections[lastLevel];
+      nextRoundStart = 1;
+    } else {
+      lastLevel = 0;
+      lastwordCollection = wordCollections[lastLevel];
+      nextRoundStart = 1;
+    }
+    objectData.lastRound = { lastLevel, nextRoundStart, lastwordCollection };
+    const completeRounds = objectData.completeRounds || [[], [], [], [], [], []];
+    if (!completeRounds[level].includes(round)) { completeRounds[level].push(round); }
+    objectData.completeRounds = completeRounds;
+    localStorage.setItem(myKeySaveLocalStorage, JSON.stringify(objectData));
+  }
+}
 eventEmitter.on('sendinfo', (wordCollectionCurent:WordCollection, roundCurrent:number) => {
   // console.log(wordCollectionCurent, roundCurrent);
   currentRound = roundCurrent + 1;
   const levelInEpisode = wordCollections.indexOf(wordCollectionCurent);
   if (levelInEpisode !== -1) {
     const InEpisodeRounds = getRoundsCount(levelInEpisode + 1);
+    saveCompleteRoundInLocalStorage(levelInEpisode, roundCurrent, InEpisodeRounds);
     // console.log(InEpisodeRounds);
     if (roundCurrent + 1 <= InEpisodeRounds) {
       currentRound = roundCurrent + 1;
