@@ -50,7 +50,7 @@ export default class GameView extends View {
       if (lastCompleteGame) {
         const currentWordCollection = lastCompleteGame.lastwordCollection;
         const currentRound = lastCompleteGame.nextRoundStart;
-        const currentLevel = lastCompleteGame.level;
+        const currentLevel = lastCompleteGame.lastLevel;
         // eventEmitter.emit('lastCompleteGameStart', lastCompleteGame.level, lastCompleteGame.round);
         this.resultContainer = new ResultGameView(currentWordCollection, currentRound);
         eventEmitter.emit('NextRoundHeader', currentLevel + 1, currentRound);
