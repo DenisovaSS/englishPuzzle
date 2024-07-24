@@ -348,8 +348,8 @@ export default class ResultGameView extends View {
     eventEmitter.emit('andRound');
     this.sendInfo = () => {
       eventEmitter.emit('sendinfo', this.wordCollection, this.round);
-      const eventNames = eventEmitter.getAllListeners();
-      console.log(eventNames);
+      // const eventNames = eventEmitter.getAllListeners();
+      // console.log(eventNames);
     };
     eventEmitter.on('StartNewRound', this.sendInfo);
   }

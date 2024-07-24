@@ -19,15 +19,26 @@ let currentEpisode = 0;
 let wordCollection: WordCollection = wordCollections[currentLevel - 1];
 
 const currentEpisodePart = wordCollection.rounds[currentRound - 1].words[currentEpisode];
-// console.log(currentEpisodePart);
 function getRoundsCount(level:number):number {
   return level ? wordCollections[level - 1].roundsCount : 0;
 }
 let currentLevelRounds = getRoundsCount(currentLevel);
+const isRoundComplete = (level:number, round:number) => {
+  const dataStringStorage = localStorage.getItem(myKeySaveLocalStorage);
+  if (dataStringStorage) {
+    const objectData = JSON.parse(dataStringStorage).completeRounds;
+    if (objectData) {
+      if (objectData[level - 1].includes(round)
+      ) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
 function getCurrentRounds(currentElement:number) {
   currentLevelRounds = getRoundsCount(currentElement);
   const selectList = document.getElementById('round') as HTMLSelectElement;
-  // console.log(currentLevelRounds);
   while (selectList.firstElementChild) {
     selectList.firstElementChild.remove();
   }
@@ -35,14 +46,16 @@ function getCurrentRounds(currentElement:number) {
     const option = document.createElement('option') as HTMLOptionElement;
     option.value = String(i);
     option.textContent = String(i);
-    /// ////////////////////////
+    const isRoundCompleteCur = isRoundComplete(currentElement, i);
+    if (isRoundCompleteCur) {
+      option.classList.add('passed');
+    }
     selectList.append(option);
   }
   currentLevel = currentElement;
   currentRound = 1;
   wordCollection = wordCollections[currentLevel - 1];
   currentEpisode = 0;
-  // console.log(currentLevel, currentRound);
   eventEmitter.emit('changeLevel', wordCollection, currentRound);
 }
 function setCurrentRounds(round:number) {
@@ -59,7 +72,7 @@ eventEmitter.on('nextEpisode', () => {
   eventEmitter.emit('setNextEpisode', currentEpisode);
 });
 function saveCompleteRoundInLocalStorage(level:number, round:number) {
-  console.log(level);
+  // console.log(level);
   const dataStringStorage = localStorage.getItem(myKeySaveLocalStorage);
   if (dataStringStorage) {
     const objectData = JSON.parse(dataStringStorage);
