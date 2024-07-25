@@ -100,9 +100,11 @@ function saveCompleteRoundInLocalStorage(level:number, round:number, countRounds
   }
 }
 eventEmitter.on('sendinfo', (wordCollectionCurent:WordCollection, roundCurrent:number) => {
-  // console.log(wordCollectionCurent, roundCurrent);
+  // console.log('work', wordCollectionCurent, roundCurrent);
+
   currentRound = roundCurrent + 1;
   const levelInEpisode = wordCollections.indexOf(wordCollectionCurent);
+  console.log(wordCollections[0] === wordCollectionCurent);
   if (levelInEpisode !== -1) {
     const InEpisodeRounds = getRoundsCount(levelInEpisode + 1);
     saveCompleteRoundInLocalStorage(levelInEpisode, roundCurrent, InEpisodeRounds);
@@ -120,10 +122,12 @@ eventEmitter.on('sendinfo', (wordCollectionCurent:WordCollection, roundCurrent:n
     }
 
     eventEmitter.emit('NextRound', wordCollection, currentRound);
+  } else {
+    console.log('WordCollection not found in the list');
   }
   // throw new Error('WordCollection not found in the list.');
 });
 const LevelInfo = {
-  levels, currentLevel, currentLevelRounds, currentRound, currentEpisodePart, wordCollection, currentEpisode,
+  levels, currentLevel, currentLevelRounds, currentRound, currentEpisodePart, wordCollection, currentEpisode, wordCollections,
 };
 export default LevelInfo;

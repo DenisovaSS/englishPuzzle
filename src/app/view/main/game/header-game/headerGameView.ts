@@ -124,8 +124,8 @@ export default class HeaderGameView extends View {
         select.value = String(level);
       } else {
         select.value = String(roundCurrent);
-        // const specificOption = select.options[roundCurrent - 2];
-        // specificOption.classList.add('passed');
+        const specificOption = select.options[roundCurrent - 2];
+        specificOption.classList.add('passed');
       }
     });
     if (isLevel) {
