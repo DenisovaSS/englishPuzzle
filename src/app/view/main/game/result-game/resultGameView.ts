@@ -278,39 +278,6 @@ export default class ResultGameView extends View {
     }
   }
 
-  // createPuzzlePiece(word:string, originalIndex: number) {
-  //   const containerParam = {
-  //     tag: 'div',
-  //     classNames: [cssClasses.BLOCKPIECE],
-  //     textContent: word,
-  //   };
-  //   const beforeParam = {
-  //     tag: 'span',
-  //     classNames: [cssClasses.SPANPIECEBEFORE],
-  //     textContent: '',
-  //   };
-  //   const afterParam = {
-  //     tag: 'span',
-  //     classNames: [cssClasses.SPANPIECEAFTER],
-  //     textContent: '',
-  //   };
-  //   const containerCreator = new ElementCreator(containerParam);
-  //   const element = containerCreator.getElement();
-  //   if (+originalIndex === 0) {
-  //     const spanCreator = new ElementCreator(afterParam);
-  //     element.append(spanCreator.getElement());
-  //   } else if (+originalIndex === this.countWordSentence - 1) {
-  //     const spanCreator = new ElementCreator(beforeParam);
-  //     element.append(spanCreator.getElement());
-  //   } else {
-  //     let spanCreator = new ElementCreator(beforeParam);
-  //     element.append(spanCreator.getElement());
-  //     spanCreator = new ElementCreator(afterParam);
-  //     element.append(spanCreator.getElement());
-  //   }
-  //   return element;
-  // }
-
   updateView() {
     const eventEmitter = EventEmitter.getInstance();
     eventEmitter.emit('nextEpisode');
@@ -345,6 +312,7 @@ export default class ResultGameView extends View {
     }
     this.peaceContainer.addNameYearAutor();
     // eventEmitter.emit('sendinfo', this.wordCollection, this.round);
+    eventEmitter.emit('saveLastCompletedRound', this.wordCollection, this.round);
     eventEmitter.emit('andRound');
     this.sendInfo = () => {
       eventEmitter.emit('sendinfo', this.wordCollection, this.round);

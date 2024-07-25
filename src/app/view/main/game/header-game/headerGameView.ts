@@ -119,8 +119,10 @@ export default class HeaderGameView extends View {
     select.id = id;
     const eventEmitter = EventEmitter.getInstance();
     eventEmitter.on('NextRoundHeader', (level:number, roundCurrent:number) => {
+      const visible = this.elementCreator.getElement().children[1].classList.contains('hide');
+      if (visible) { this.elementCreator.getElement().children[1].classList.remove('hide'); }
       if (isLevel) {
-        console.log(level);
+        // console.log(level);
         select.value = String(level);
       } else {
         select.value = String(roundCurrent);
