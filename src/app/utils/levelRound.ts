@@ -73,40 +73,41 @@ eventEmitter.on('nextEpisode', () => {
   eventEmitter.emit('setNextEpisode', currentEpisode);
 });
 function saveCompleteRoundInLocalStorage(level:number, round:number, countRoundsInLevel:number) {
-  console.log(level, 'last');
-
   const dataStringStorage = localStorage.getItem(myKeySaveLocalStorage);
   if (dataStringStorage) {
     const objectData = JSON.parse(dataStringStorage);
-    let lastwordCollection; let nextRoundStart; let lastLevel;
+    let nextRoundStart; let lastLevel;
     if (round + 1 <= countRoundsInLevel) {
-      lastwordCollection = wordCollections[level];
       nextRoundStart = round + 1;
       lastLevel = level;
     } else if (level + 1 < levels) {
       lastLevel = level + 1;
-      lastwordCollection = wordCollections[lastLevel];
       nextRoundStart = 1;
     } else {
       lastLevel = 0;
-      lastwordCollection = wordCollections[lastLevel];
       nextRoundStart = 1;
     }
-    objectData.lastRound = { lastLevel, nextRoundStart, lastwordCollection };
+    objectData.lastRound = { lastLevel, nextRoundStart };
     const completeRounds = objectData.completeRounds || [[], [], [], [], [], []];
     if (!completeRounds[level].includes(round)) { completeRounds[level].push(round); }
     objectData.completeRounds = completeRounds;
     localStorage.setItem(myKeySaveLocalStorage, JSON.stringify(objectData));
   }
 }
+eventEmitter.on('saveLastCompletedRound', (lastWordCollection:WordCollection, lastRound:number) => {
+  const levelInEpisode = wordCollections.indexOf(lastWordCollection);
+  if (levelInEpisode !== -1) {
+    const InEpisodeRounds = getRoundsCount(levelInEpisode + 1);
+    saveCompleteRoundInLocalStorage(levelInEpisode, lastRound, InEpisodeRounds);
+  } else {
+    console.log('WordCollection not found in the list');
+  }
+});
 eventEmitter.on('sendinfo', (wordCollectionCurent:WordCollection, roundCurrent:number) => {
-  // console.log(wordCollectionCurent, roundCurrent);
   currentRound = roundCurrent + 1;
   const levelInEpisode = wordCollections.indexOf(wordCollectionCurent);
   if (levelInEpisode !== -1) {
     const InEpisodeRounds = getRoundsCount(levelInEpisode + 1);
-    saveCompleteRoundInLocalStorage(levelInEpisode, roundCurrent, InEpisodeRounds);
-    // console.log(InEpisodeRounds);
     if (roundCurrent + 1 <= InEpisodeRounds) {
       currentRound = roundCurrent + 1;
       wordCollection = wordCollectionCurent;
@@ -120,10 +121,12 @@ eventEmitter.on('sendinfo', (wordCollectionCurent:WordCollection, roundCurrent:n
     }
 
     eventEmitter.emit('NextRound', wordCollection, currentRound);
+  } else {
+    console.log('WordCollection not found in the list');
   }
   // throw new Error('WordCollection not found in the list.');
 });
 const LevelInfo = {
-  levels, currentLevel, currentLevelRounds, currentRound, currentEpisodePart, wordCollection, currentEpisode,
+  levels, currentLevel, currentLevelRounds, currentRound, currentEpisodePart, wordCollection, currentEpisode, wordCollections,
 };
 export default LevelInfo;
