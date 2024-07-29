@@ -4,7 +4,7 @@ import FooterView from './view/footer/footer';
 import { myKeySaveLocalStorage } from './utils/consts';
 import LoginView from './view/main/login/login_view';
 import WelcomeView from './view/main/welcome/welcome';
-
+import ResultView from './view/main/result/resultView';
 import GameView from './view/main/game/game';
 import EventEmitter from './utils/EventEmit';
 
@@ -44,6 +44,10 @@ export default class App {
     eventEmitter.on('startGame', () => {
       // console.log('1');
       mainView.setContent(new GameView(mainView));
+    });
+    eventEmitter.on('statistic', () => {
+      // console.log('1');
+      mainView.setContent(new ResultView(mainView));
     });
   }
 }
