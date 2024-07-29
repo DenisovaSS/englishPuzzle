@@ -34,6 +34,7 @@ const cssClasses = {
 const eventEmitter = EventEmitter.getInstance();
 const COUNTLEVEL = LevelInfo.levels;
 const wordCollectionRounds = LevelInfo.currentLevelRounds;
+console.log(wordCollectionRounds);
 
 const currentEpisodePartNow = LevelInfo.currentEpisodePart;
 
@@ -88,19 +89,21 @@ export default class HeaderGameView extends View {
     // const eventEmitter = EventEmitter.getInstance();
     const currentContainer = container.getElement();
     const settingLevel = this.containerCreator('div', cssClasses.SETTINGLEVEL);
-    const levels = this.createSelect('level', COUNTLEVEL, true);
-    const rounds = this.createSelect('round', wordCollectionRounds, false);
+    const levels = this.createSelectLevel('level', COUNTLEVEL);
+    const curentLevel = LevelInfo.currentLevel;
+    const rounds = this.createSelectRound('round', wordCollectionRounds, curentLevel);
     eventEmitter.on('NextRoundHeader', (currentLevel:number, currentRound:number, contRounds :number) => {
+      console.log(currentLevel, 'whaen start');
       const visible = this.elementCreator.getElement().children[1].classList.contains('hide');
       if (visible) { this.elementCreator.getElement().children[1].classList.remove('hide'); }
       const oldRounds = settingLevel.getElement().querySelector('.round');
       if (oldRounds) { oldRounds.remove(); }
-      const roundsStart = this.createSelect('round', contRounds, false);
+      const roundsStart = this.createSelectRound('round', contRounds, currentLevel);
       settingLevel.addInnerElement(roundsStart);
       const selectElementLevel = levels.querySelector('select');
       const selectElementRound = roundsStart.querySelector('select');
       if (selectElementLevel && selectElementRound) {
-        selectElementLevel.value = String(currentLevel);
+        selectElementLevel.value = String(currentLevel + 1);
         selectElementRound.value = String(currentRound);
       } else {
         console.log('please check rounds or levels');
@@ -130,7 +133,7 @@ export default class HeaderGameView extends View {
     // });
   }
 
-  createSelect(id:string, count:number, isLevel: boolean = true) {
+  createSelectLevel(id:string, count:number) {
     const selectContainer = document.createElement('div');
     selectContainer.classList.add(cssClasses.SELECTCONTAINER);
     selectContainer.classList.add(id);
@@ -142,48 +145,51 @@ export default class HeaderGameView extends View {
     const select = document.createElement('select');
     select.classList.add(cssClasses.SELECTLIST);
     select.id = id;
-    // const eventEmitter = EventEmitter.getInstance();
-    // eventEmitter.on('NextRoundHeader', (level:number, roundCurrent:number) => {
-    //   if (isLevel) {
-    //     // console.log(level);
-    //     select.value = String(level);
-    //   } else {
-    //     select.value = String(roundCurrent);
-    //     // backlog create to drow completed rounds
-    //     // const specificOption = select.options[roundCurrent - 2];
-    //     // specificOption.classList.add('passed');
-    //   }
-    // });
-
-    if (isLevel) {
-      select.addEventListener('change', (e) => this.createRoundsForLevel(e));
-    } else {
-      select.addEventListener('change', (e) => this.setRound(e));
-    }
-
+    select.addEventListener('change', (e) => this.createRoundsForLevel(e));
     for (let i = 1; i < count + 1; i++) {
       const option = document.createElement('option') as HTMLOptionElement;
       option.value = String(i);
       option.textContent = String(i);
-      if (!isLevel) {
-        const curentLevel = LevelInfo.currentLevel;
-        const isRoundComplete = (level:number, round:number) => {
-          const dataStringStorage = localStorage.getItem(myKeySaveLocalStorage);
-          if (dataStringStorage) {
-            const objectData = JSON.parse(dataStringStorage).completeRounds;
-            if (objectData) {
-              if (objectData[level - 1].includes(round)
-              ) {
-                return true;
-              }
+      select.append(option);
+    }
+    selectContainer.append(label, select);
+
+    return selectContainer;
+  }
+
+  createSelectRound(id:string, count:number, level: number) {
+    const selectContainer = document.createElement('div');
+    selectContainer.classList.add(cssClasses.SELECTCONTAINER);
+    selectContainer.classList.add(id);
+    const label = document.createElement('label');
+    label.textContent = id;
+    label.classList.add(cssClasses.SELECTLABEL);
+    label.htmlFor = id;
+
+    const select = document.createElement('select');
+    select.classList.add(cssClasses.SELECTLIST);
+    select.id = id;
+    select.addEventListener('change', (e) => this.setRound(e));
+    for (let i = 1; i < count + 1; i++) {
+      const option = document.createElement('option') as HTMLOptionElement;
+      option.value = String(i);
+      option.textContent = String(i);
+      const isRoundComplete = (checkLevel:number, round:number) => {
+        const dataStringStorage = localStorage.getItem(myKeySaveLocalStorage);
+        if (dataStringStorage) {
+          const objectData = JSON.parse(dataStringStorage).completeRounds;
+          if (objectData) {
+            if (objectData[checkLevel].includes(round)
+            ) {
+              return true;
             }
           }
-          return false;
-        };
-        const isRoundCompleteCur = isRoundComplete(curentLevel, i);
-        if (isRoundCompleteCur) {
-          option.classList.add('passed');
         }
+        return false;
+      };
+      const isRoundCompleteCur = isRoundComplete(level, i);
+      if (isRoundCompleteCur) {
+        option.classList.add('passed');
       }
       select.append(option);
     }
@@ -255,7 +261,7 @@ export default class HeaderGameView extends View {
   createRoundsForLevel(e: Event) {
     const currentTarget = e.currentTarget as HTMLOptionElement;
     // const eventEmitter = EventEmitter.getInstance();
-    eventEmitter.emit('getRounds', +currentTarget.value);
+    eventEmitter.emit('getRounds', +currentTarget.value - 1);
   }
 
   setRound(e: Event) {
