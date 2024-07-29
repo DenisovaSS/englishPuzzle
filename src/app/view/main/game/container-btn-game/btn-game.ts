@@ -130,7 +130,7 @@ export default class ContainerBtnGameView extends View {
 
   clickResultsBtn(e:Event) {
     const target = e.target as HTMLButtonElement;
-    console.log(target);
+    console.log(target, 'hello result');
   }
 
   eventAuto(e:Event) {
