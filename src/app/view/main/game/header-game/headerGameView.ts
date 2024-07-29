@@ -145,12 +145,15 @@ export default class HeaderGameView extends View {
     const select = document.createElement('select');
     select.classList.add(cssClasses.SELECTLIST);
     select.id = id;
+
     select.addEventListener('change', (e) => this.createRoundsForLevel(e));
     for (let i = 1; i < count + 1; i++) {
       const option = document.createElement('option') as HTMLOptionElement;
       option.value = String(i);
       option.textContent = String(i);
       select.append(option);
+
+
     }
     selectContainer.append(label, select);
 
