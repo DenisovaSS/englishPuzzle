@@ -31,8 +31,10 @@ const cssClasses = {
   SELECTLABEL: 'select__label',
   SELECTLIST: 'select__list',
 };
+const eventEmitter = EventEmitter.getInstance();
 const COUNTLEVEL = LevelInfo.levels;
 const wordCollectionRounds = LevelInfo.currentLevelRounds;
+
 const currentEpisodePartNow = LevelInfo.currentEpisodePart;
 
 export default class HeaderGameView extends View {
@@ -56,7 +58,7 @@ export default class HeaderGameView extends View {
     this.elementCreator.addInnerElement(containerHintsCreator.getElement());
 
     // Add event listener for setAudio here
-    const eventEmitter = EventEmitter.getInstance();
+    // const eventEmitter = EventEmitter.getInstance();
     eventEmitter.on('andRound', () => {
       containerHintsCreator.getElement().classList.add('hide');
     });
@@ -83,12 +85,21 @@ export default class HeaderGameView extends View {
   }
 
   fillContainerSetting(container: ElementCreator) {
+    // const eventEmitter = EventEmitter.getInstance();
     const currentContainer = container.getElement();
     const settingLevel = this.containerCreator('div', cssClasses.SETTINGLEVEL);
     const levels = this.createSelect('level', COUNTLEVEL, true);
     const rounds = this.createSelect('round', wordCollectionRounds, false);
+    eventEmitter.on('startRoundNextLevel', (currentLevelRounds:number) => {
+      rounds.remove();
+      const roundsStart = this.createSelect('round', currentLevelRounds, false);
+      settingLevel.addInnerElement(roundsStart);
+    });
+    console.log(wordCollectionRounds);
+
     settingLevel.addInnerElement(levels);
     settingLevel.addInnerElement(rounds);
+
     const BtnLogOutParam = {
       tag: 'button',
       classNames: [cssClasses.BUTTON, cssClasses.BUTTONLOGOOUT],
@@ -96,13 +107,16 @@ export default class HeaderGameView extends View {
     };
     const BtnLogOutCreator = new ElementCreator(BtnLogOutParam);
     BtnLogOutCreator.setEventHandler('click', () => {
-      const eventEmitter = EventEmitter.getInstance();
+      // const eventEmitter = EventEmitter.getInstance();
       eventEmitter.emit('logout');
       // this.mainView.setContent(new LoginView(this.mainView));
     });
     const settingHints = this.containerCreator('div', cssClasses.SETINGHINTS);
     this.fillSettingHints(settingHints);
     currentContainer.append(settingLevel.getElement(), BtnLogOutCreator.getElement(), settingHints.getElement());
+    // eventEmitter.on('NextRoundHeader', (level: number) => {
+    //   eventEmitter.emit('getRounds', level);
+    // });
   }
 
   createSelect(id:string, count:number, isLevel: boolean = true) {
@@ -117,19 +131,21 @@ export default class HeaderGameView extends View {
     const select = document.createElement('select');
     select.classList.add(cssClasses.SELECTLIST);
     select.id = id;
-    const eventEmitter = EventEmitter.getInstance();
+    // const eventEmitter = EventEmitter.getInstance();
     eventEmitter.on('NextRoundHeader', (level:number, roundCurrent:number) => {
       const visible = this.elementCreator.getElement().children[1].classList.contains('hide');
       if (visible) { this.elementCreator.getElement().children[1].classList.remove('hide'); }
       if (isLevel) {
-        // console.log(level);
+        console.log(level);
         select.value = String(level);
       } else {
         select.value = String(roundCurrent);
-        const specificOption = select.options[roundCurrent - 2];
-        specificOption.classList.add('passed');
+        // backlog create to drow completed rounds
+        // const specificOption = select.options[roundCurrent - 2];
+        // specificOption.classList.add('passed');
       }
     });
+
     if (isLevel) {
       select.addEventListener('change', (e) => this.createRoundsForLevel(e));
     } else {
@@ -187,7 +203,7 @@ export default class HeaderGameView extends View {
     buttonPlay.getElement().append(img);
     const textHint = document.createElement('div');
     textHint.classList.add(cssClasses.TEXTHINT);
-    const eventEmitter = EventEmitter.getInstance();
+    // const eventEmitter = EventEmitter.getInstance();
     eventEmitter.on('setTranslate', (textExampleTranslate: string) => {
       textHint.textContent = textExampleTranslate;
     });
@@ -229,13 +245,13 @@ export default class HeaderGameView extends View {
 
   createRoundsForLevel(e: Event) {
     const currentTarget = e.currentTarget as HTMLOptionElement;
-    const eventEmitter = EventEmitter.getInstance();
+    // const eventEmitter = EventEmitter.getInstance();
     eventEmitter.emit('getRounds', +currentTarget.value);
   }
 
   setRound(e: Event) {
     const currentTarget = e.currentTarget as HTMLOptionElement;
-    const eventEmitter = EventEmitter.getInstance();
+    // const eventEmitter = EventEmitter.getInstance();
     eventEmitter.emit('setRounds', +currentTarget.value);
   }
 
