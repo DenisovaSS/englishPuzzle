@@ -107,17 +107,18 @@ eventEmitter.on('sendinfo', (wordCollectionCurent:WordCollection, roundCurrent:n
   currentRound = roundCurrent + 1;
   const levelInEpisode = wordCollections.indexOf(wordCollectionCurent);
   if (levelInEpisode !== -1) {
-    const InEpisodeRounds = getRoundsCount(levelInEpisode + 1);
+    let InEpisodeRounds = getRoundsCount(levelInEpisode + 1);
     if (roundCurrent + 1 <= InEpisodeRounds) {
       currentRound = roundCurrent + 1;
       wordCollection = wordCollectionCurent;
       currentEpisode = 0;
-      eventEmitter.emit('NextRoundHeader', levelInEpisode + 1, currentRound);
+      eventEmitter.emit('NextRoundHeader', levelInEpisode + 1, currentRound, InEpisodeRounds);
     } else {
       wordCollection = wordCollections[levelInEpisode + 1] || wordCollections[0];
       currentRound = 1;
       currentEpisode = 0;
-      eventEmitter.emit('NextRoundHeader', levelInEpisode + 2, currentRound);
+      InEpisodeRounds = getRoundsCount(levelInEpisode + 2);
+      eventEmitter.emit('NextRoundHeader', levelInEpisode + 2, currentRound, InEpisodeRounds);
     }
 
     eventEmitter.emit('NextRound', wordCollection, currentRound);

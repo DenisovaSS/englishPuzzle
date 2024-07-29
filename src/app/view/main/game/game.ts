@@ -54,8 +54,8 @@ export default class GameView extends View {
         const currentRound:number = +lastCompleteGame.nextRoundStart;
         // eventEmitter.emit('lastCompleteGameStart', lastCompleteGame.level, lastCompleteGame.round);
         this.resultContainer = new ResultGameView(currentWordCollection, currentRound);
-        eventEmitter.emit('startRoundNextLevel', contRounds);
-        eventEmitter.emit('NextRoundHeader', currentLevel + 1, currentRound);
+        eventEmitter.emit('NextRoundHeader', currentLevel + 1, currentRound, contRounds);
+        // eventEmitter.emit('NextRoundHeader', currentLevel + 1, currentRound);
       } else { this.resultContainer = new ResultGameView(LevelInfo.wordCollection, LevelInfo.currentRound); }
     }
     this.elementCreator.addInnerElement(this.resultContainer.getHtmlElement());

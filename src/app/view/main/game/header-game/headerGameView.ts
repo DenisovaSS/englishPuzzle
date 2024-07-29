@@ -90,12 +90,23 @@ export default class HeaderGameView extends View {
     const settingLevel = this.containerCreator('div', cssClasses.SETTINGLEVEL);
     const levels = this.createSelect('level', COUNTLEVEL, true);
     const rounds = this.createSelect('round', wordCollectionRounds, false);
-    eventEmitter.on('startRoundNextLevel', (currentLevelRounds:number) => {
-      rounds.remove();
-      const roundsStart = this.createSelect('round', currentLevelRounds, false);
+    eventEmitter.on('NextRoundHeader', (currentLevel:number, currentRound:number, contRounds :number) => {
+      const visible = this.elementCreator.getElement().children[1].classList.contains('hide');
+      if (visible) { this.elementCreator.getElement().children[1].classList.remove('hide'); }
+      const oldRounds = settingLevel.getElement().querySelector('.round');
+      if (oldRounds) { oldRounds.remove(); }
+      const roundsStart = this.createSelect('round', contRounds, false);
       settingLevel.addInnerElement(roundsStart);
+      const selectElementLevel = levels.querySelector('select');
+      const selectElementRound = roundsStart.querySelector('select');
+      if (selectElementLevel && selectElementRound) {
+        selectElementLevel.value = String(currentLevel);
+        selectElementRound.value = String(currentRound);
+      } else {
+        console.log('please check rounds or levels');
+      }
     });
-    console.log(wordCollectionRounds);
+    // console.log(wordCollectionRounds);
 
     settingLevel.addInnerElement(levels);
     settingLevel.addInnerElement(rounds);
@@ -122,7 +133,7 @@ export default class HeaderGameView extends View {
   createSelect(id:string, count:number, isLevel: boolean = true) {
     const selectContainer = document.createElement('div');
     selectContainer.classList.add(cssClasses.SELECTCONTAINER);
-
+    selectContainer.classList.add(id);
     const label = document.createElement('label');
     label.textContent = id;
     label.classList.add(cssClasses.SELECTLABEL);
@@ -132,19 +143,17 @@ export default class HeaderGameView extends View {
     select.classList.add(cssClasses.SELECTLIST);
     select.id = id;
     // const eventEmitter = EventEmitter.getInstance();
-    eventEmitter.on('NextRoundHeader', (level:number, roundCurrent:number) => {
-      const visible = this.elementCreator.getElement().children[1].classList.contains('hide');
-      if (visible) { this.elementCreator.getElement().children[1].classList.remove('hide'); }
-      if (isLevel) {
-        console.log(level);
-        select.value = String(level);
-      } else {
-        select.value = String(roundCurrent);
-        // backlog create to drow completed rounds
-        // const specificOption = select.options[roundCurrent - 2];
-        // specificOption.classList.add('passed');
-      }
-    });
+    // eventEmitter.on('NextRoundHeader', (level:number, roundCurrent:number) => {
+    //   if (isLevel) {
+    //     // console.log(level);
+    //     select.value = String(level);
+    //   } else {
+    //     select.value = String(roundCurrent);
+    //     // backlog create to drow completed rounds
+    //     // const specificOption = select.options[roundCurrent - 2];
+    //     // specificOption.classList.add('passed');
+    //   }
+    // });
 
     if (isLevel) {
       select.addEventListener('change', (e) => this.createRoundsForLevel(e));
