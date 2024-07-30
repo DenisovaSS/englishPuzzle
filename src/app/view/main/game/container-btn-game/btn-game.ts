@@ -80,7 +80,7 @@ export default class ContainerBtnGameView extends View {
     });
     eventEmitter.on('andRound', () => {
       const statisBTN = this.createBTN([cssClasses.BUTTON, cssClasses.BTNRESULTS], 'results');
-      statisBTN.setEventHandler('click', (e) => this.clickResultsBtn(e));
+      statisBTN.setEventHandler('click', () => this.clickResultsBtn());
       BtnAUTOCreator.setCssClasses(['invisible']);
       eventEmitter.emit('check-remove');
       // console.log(BtnCheckCreator);
@@ -125,12 +125,11 @@ export default class ContainerBtnGameView extends View {
   clickContinueBtnForNextRound() {
     const eventEmitter = EventEmitter.getInstance();
     eventEmitter.emit('StartNewRound');
-    // eventEmitter.emit('startButton');
   }
 
-  clickResultsBtn(e:Event) {
-    const target = e.target as HTMLButtonElement;
-    console.log(target);
+  clickResultsBtn() {
+    const eventEmitter = EventEmitter.getInstance();
+    eventEmitter.emit('statisticSetInfo');
   }
 
   eventAuto(e:Event) {

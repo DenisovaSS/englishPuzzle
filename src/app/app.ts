@@ -4,7 +4,6 @@ import FooterView from './view/footer/footer';
 import { myKeySaveLocalStorage } from './utils/consts';
 import LoginView from './view/main/login/login_view';
 import WelcomeView from './view/main/welcome/welcome';
-
 import GameView from './view/main/game/game';
 import EventEmitter from './utils/EventEmit';
 

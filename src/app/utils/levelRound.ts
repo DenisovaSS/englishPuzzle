@@ -98,7 +98,6 @@ function saveCompleteRoundInLocalStorage(level:number, round:number, countRounds
 eventEmitter.on('saveLastCompletedRound', (lastWordCollection:WordCollection, lastRound:number) => {
   const levelInEpisode = wordCollections.indexOf(lastWordCollection);
   if (levelInEpisode !== -1) {
-
     const InEpisodeRounds = getRoundsCount(levelInEpisode);
 
     saveCompleteRoundInLocalStorage(levelInEpisode, lastRound, InEpisodeRounds);
@@ -109,9 +108,8 @@ eventEmitter.on('saveLastCompletedRound', (lastWordCollection:WordCollection, la
 eventEmitter.on('sendinfo', (wordCollectionCurent:WordCollection, roundCurrent:number) => {
   currentRound = roundCurrent + 1;
   let levelInEpisode = wordCollections.indexOf(wordCollectionCurent);
-  console.log(levelInEpisode);
+  // console.log(levelInEpisode);
   if (levelInEpisode !== -1) {
-
     let InEpisodeRounds = getRoundsCount(levelInEpisode);
 
     if (roundCurrent + 1 <= InEpisodeRounds) {
@@ -132,7 +130,7 @@ eventEmitter.on('sendinfo', (wordCollectionCurent:WordCollection, roundCurrent:n
         levelInEpisode = 0;
       }
     }
-    console.log(levelInEpisode);
+    // console.log(levelInEpisode);
     eventEmitter.emit('NextRoundHeader', levelInEpisode, currentRound, InEpisodeRounds);
     eventEmitter.emit('NextRound', wordCollection, currentRound);
   } else {
