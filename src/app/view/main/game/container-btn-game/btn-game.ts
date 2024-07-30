@@ -125,12 +125,11 @@ export default class ContainerBtnGameView extends View {
   clickContinueBtnForNextRound() {
     const eventEmitter = EventEmitter.getInstance();
     eventEmitter.emit('StartNewRound');
-    // eventEmitter.emit('startButton');
   }
 
   clickResultsBtn() {
     const eventEmitter = EventEmitter.getInstance();
-    eventEmitter.emit('statistic');
+    eventEmitter.emit('statisticSetInfo');
   }
 
   eventAuto(e:Event) {

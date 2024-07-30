@@ -9,7 +9,9 @@ import ContainerBtnGameView from './container-btn-game/btn-game';
 import LevelInfo from '../../../utils/levelRound';
 import EventEmitter from '../../../utils/EventEmit';
 import { myKeySaveLocalStorage } from '../../../utils/consts';
+import StatisticView from './statistic/statisticView';
 
+const eventEmitter = EventEmitter.getInstance();
 const cssClasses = {
   SECTIONG: 'game-page',
   CONTAINER: 'game-content-container',
@@ -21,6 +23,8 @@ const cssClasses = {
 
 export default class GameView extends View {
   private resultContainer!: ResultGameView;
+
+  private statisticView?: StatisticView;
 
   private changeLevelHandler!: (wordCollection: WordCollection, currentRound: number) => void;
 
@@ -41,7 +45,6 @@ export default class GameView extends View {
   }
 
   configureView() {
-    const eventEmitter = EventEmitter.getInstance();
     const headerCreator = new HeaderGameView(this.mainView);
     this.elementCreator.addInnerElement(headerCreator.getHtmlElement());
     const localStorageInfo = localStorage.getItem(myKeySaveLocalStorage);
@@ -54,12 +57,8 @@ export default class GameView extends View {
         const contRounds = LevelInfo.wordCollections[currentLevel].roundsCount;
 
         const currentRound:number = +lastCompleteGame.nextRoundStart;
-        console.log(contRounds, 'count', currentRound, 'currentRound');
-
-        // eventEmitter.emit('lastCompleteGameStart', lastCompleteGame.level, lastCompleteGame.round);
         this.resultContainer = new ResultGameView(currentWordCollection, currentRound);
         eventEmitter.emit('NextRoundHeader', currentLevel, currentRound, contRounds);
-        // eventEmitter.emit('NextRoundHeader', currentLevel + 1, currentRound);
       } else { this.resultContainer = new ResultGameView(LevelInfo.wordCollection, LevelInfo.currentRound); }
     }
     this.elementCreator.addInnerElement(this.resultContainer.getHtmlElement());
@@ -70,19 +69,30 @@ export default class GameView extends View {
       this.resultContainer.updateView();
     };
     eventEmitter.on('newEpisode', this.newEpisodeHandler);
+    eventEmitter.on('statistic', (wordCollection, currentRound) => {
+      this.statisticView = new StatisticView(wordCollection, currentRound);
+      this.elementCreator.addInnerElement(this.statisticView.getHtmlElement());
+      // console.log(resultGame);
+    });
   }
 
   setupEventListeners() {
-    const eventEmitter = EventEmitter.getInstance();
     this.changeLevelHandler = (wordCollection, currentRound) => this.updateView(wordCollection, currentRound);
     this.changeRoundHandler = (wordCollection, currentRound) => this.updateView(wordCollection, currentRound);
     eventEmitter.on('changeLevel', this.changeLevelHandler);
     eventEmitter.on('changeRound', this.changeRoundHandler);
-    eventEmitter.on('NextRound', (wordCollection, currentRound) => this.updateView(wordCollection, currentRound));
+    eventEmitter.on('NextRound', (wordCollection, currentRound) => {
+      this.updateView(wordCollection, currentRound);
+      if (this.statisticView) {
+        const oldStatisticContainer = this.statisticView.getHtmlElement();
+        const containerCreator = this.elementCreator.getElement();
+        containerCreator.removeChild(oldStatisticContainer);
+        this.statisticView = undefined;
+      }
+    });
   }
 
   updateView(wordCollection: WordCollection, round: number) {
-    const eventEmitter = EventEmitter.getInstance();
     const containerCreator = this.elementCreator.getElement();
     this.resultContainer.unsubscribeNextEpisode();
     this.resultContainer.unsubscribe();
@@ -100,13 +110,12 @@ export default class GameView extends View {
   }
 
   // unsubscribe() {
-  //   const eventEmitter = EventEmitter.getInstance();
+  //
   //   eventEmitter.unsubscribe('changeLevel', this.changeLevelHandler);
   //   eventEmitter.unsubscribe('changeRound', this.changeRoundHandler);
   // }
 
   unsubscribeNewEpisode() {
-    const eventEmitter = EventEmitter.getInstance();
     eventEmitter.unsubscribe('newEpisode', this.newEpisodeHandler);
   }
 }

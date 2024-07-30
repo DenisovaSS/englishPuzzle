@@ -128,9 +128,6 @@ export default class HeaderGameView extends View {
     const settingHints = this.containerCreator('div', cssClasses.SETINGHINTS);
     this.fillSettingHints(settingHints);
     currentContainer.append(settingLevel.getElement(), BtnLogOutCreator.getElement(), settingHints.getElement());
-    // eventEmitter.on('NextRoundHeader', (level: number) => {
-    //   eventEmitter.emit('getRounds', level);
-    // });
   }
 
   createSelectLevel(id:string, count:number) {
@@ -152,8 +149,6 @@ export default class HeaderGameView extends View {
       option.value = String(i);
       option.textContent = String(i);
       select.append(option);
-
-
     }
     selectContainer.append(label, select);
 

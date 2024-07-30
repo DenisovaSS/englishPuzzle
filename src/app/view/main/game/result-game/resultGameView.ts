@@ -43,6 +43,8 @@ export default class ResultGameView extends View {
 
   private sendInfo!:()=>void;
 
+  private statisticSetInfo!:()=>void;
+
   constructor(wordCollection: WordCollection, round: number) {
     const params: ElementParams = {
       tag: 'div',
@@ -300,6 +302,7 @@ export default class ResultGameView extends View {
     const eventEmitter = EventEmitter.getInstance();
     eventEmitter.unsubscribe('setNextEpisode', this.setNextEpisodeHandler);
     eventEmitter.unsubscribe('StartNewRound', this.sendInfo);
+    eventEmitter.unsubscribe('statisticSetInfo', this.statisticSetInfo);
   }
 
   nextRound() {
@@ -320,5 +323,9 @@ export default class ResultGameView extends View {
       // console.log(eventNames);
     };
     eventEmitter.on('StartNewRound', this.sendInfo);
+    this.statisticSetInfo = () => {
+      eventEmitter.emit('statistic', this.wordCollection, this.round);
+    };
+    eventEmitter.on('statisticSetInfo', this.statisticSetInfo);
   }
 }
