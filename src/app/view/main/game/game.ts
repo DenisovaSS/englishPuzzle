@@ -84,10 +84,11 @@ export default class GameView extends View {
     eventEmitter.on('NextRound', (wordCollection, currentRound) => {
       this.updateView(wordCollection, currentRound);
       if (this.statisticView) {
-        const oldStatisticContainer = this.statisticView.getHtmlElement();
-        const containerCreator = this.elementCreator.getElement();
-        containerCreator.removeChild(oldStatisticContainer);
-        this.statisticView = undefined;
+        // const oldStatisticContainer = this.statisticView.getHtmlElement();
+        // const containerCreator = this.elementCreator.getElement();
+        // containerCreator.removeChild(oldStatisticContainer);
+        // this.statisticView = undefined;
+        this.statisticView.getHtmlElement().remove();
       }
     });
   }

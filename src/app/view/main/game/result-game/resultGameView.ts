@@ -27,6 +27,8 @@ export default class ResultGameView extends View {
 
   private countWordSentence: number = 0;
 
+  private customerAnswers: number[][];
+
   private textSentances: string = '';
 
   private gameResultContainer!: ElementCreator;
@@ -55,6 +57,7 @@ export default class ResultGameView extends View {
     this.wordCollection = wordCollection;
     this.round = round;
     this.gameResultContainer = this.createResultContainer();
+    this.customerAnswers = [[], []];
     const { currentEpisode } = LevelInfo;
     this.initialize(currentEpisode);
     const containerCreator = this.configureView(this.gameResultContainer);
@@ -66,6 +69,9 @@ export default class ResultGameView extends View {
 
   createSetNextEpisodeHandler() {
     return (nextEpisode: number) => {
+      this.customerAnswers[0].push(nextEpisode);
+      this.customerAnswers[1].push(nextEpisode + 1);
+      console.log(this.customerAnswers, 'this episode');
       const countCurentEpisode = this.gameResultContainer.getElement().childElementCount;
       if (countCurentEpisode === MAXLINES) {
         this.nextRound();
@@ -92,7 +98,6 @@ export default class ResultGameView extends View {
       this.peaceContainer.unsubscribe();
       this.peaceContainer.getHtmlElement().remove();
     }
-    // console.log(this.wordCollection, this.round, currentEpisode);
     this.peaceContainer = new ContainerPieceGameView(this.wordCollection, this.round, currentEpisode);
     this.elementCreator.addInnerElement(this.peaceContainer.getHtmlElement());
   }

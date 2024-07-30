@@ -108,7 +108,7 @@ eventEmitter.on('saveLastCompletedRound', (lastWordCollection:WordCollection, la
 eventEmitter.on('sendinfo', (wordCollectionCurent:WordCollection, roundCurrent:number) => {
   currentRound = roundCurrent + 1;
   let levelInEpisode = wordCollections.indexOf(wordCollectionCurent);
-  console.log(levelInEpisode);
+  // console.log(levelInEpisode);
   if (levelInEpisode !== -1) {
     let InEpisodeRounds = getRoundsCount(levelInEpisode);
 
@@ -130,7 +130,7 @@ eventEmitter.on('sendinfo', (wordCollectionCurent:WordCollection, roundCurrent:n
         levelInEpisode = 0;
       }
     }
-    console.log(levelInEpisode);
+    // console.log(levelInEpisode);
     eventEmitter.emit('NextRoundHeader', levelInEpisode, currentRound, InEpisodeRounds);
     eventEmitter.emit('NextRound', wordCollection, currentRound);
   } else {

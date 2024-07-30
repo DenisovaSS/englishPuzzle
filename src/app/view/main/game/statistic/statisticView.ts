@@ -96,7 +96,7 @@ export default class StatisticView extends View {
 
   private handleContinue() {
     eventEmitter.emit('StartNewRound');
-    const eventNames = eventEmitter.getAllListeners();
-    console.log(eventNames);
+    // const eventNames = eventEmitter.getAllListeners();
+    // console.log(eventNames);
   }
 }
