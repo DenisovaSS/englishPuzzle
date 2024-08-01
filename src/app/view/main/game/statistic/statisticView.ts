@@ -26,7 +26,9 @@ export default class StatisticView extends View {
 
   private round: number;
 
-  constructor(wordCollection: WordCollection, round: number) {
+  private answerArray: number[][];
+
+  constructor(wordCollection: WordCollection, round: number, answerArray:[[], []]) {
     const params: ElementParams = {
       tag: 'section',
       classNames: [cssClasses.STATISTICWRAPPER],
@@ -35,6 +37,7 @@ export default class StatisticView extends View {
     super(params);
     this.wordCollection = wordCollection;
     this.round = round;
+    this.answerArray = answerArray;
     this.configureView();
   }
 
@@ -87,11 +90,28 @@ export default class StatisticView extends View {
     const headList = this.containerTagCreator('h3', cssClasses.HEADLIST);
     headList.getElement().textContent = 'I know';
     const resultList = this.containerTagCreator('ul', cssClasses.RESULTLIST);
+    this.addListItems(0, resultList);
+
+    // this.answerArray[0]
     container.getElement().append(headList.getElement(), resultList.getElement());
   }
 
+  addListItems(countArray:number, curentResultList:ElementCreator) {
+    this.answerArray[countArray].forEach((item) => {
+      const currentEpisodePart = this.wordCollection.rounds[this.round - 1].words[item];
+      const textSentances = currentEpisodePart.textExample;
+      const itemList = this.containerTagCreator('li', cssClasses.RESULTITEM);
+      itemList.setTextContent(textSentances);
+      curentResultList.addInnerElement(itemList);
+    });
+  }
+
   fillDontKnowListContainer(container: ElementCreator) {
-    console.log(container);
+    const headList = this.containerTagCreator('h3', cssClasses.HEADLIST);
+    headList.getElement().textContent = "I don't know";
+    const resultList = this.containerTagCreator('ul', cssClasses.RESULTLIST);
+    this.addListItems(1, resultList);
+    container.getElement().append(headList.getElement(), resultList.getElement());
   }
 
   private handleContinue() {

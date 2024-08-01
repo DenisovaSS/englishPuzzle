@@ -210,7 +210,6 @@ export default class HeaderGameView extends View {
   fillContainerHints(container: ElementCreator) {
     const currentContainer = container.getElement();
     const buttonPlay = this.containerCreator('button', cssClasses.BUTTONPLAYAUDIO);
-
     buttonPlay.setEventHandler('click', (e) => this.clickButtonPlay(e));
     const img = this.renderSVG();
     buttonPlay.getElement().append(img);
