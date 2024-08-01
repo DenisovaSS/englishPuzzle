@@ -4,6 +4,7 @@ import View from '../../../view';
 import { ElementParams, ElementCreator, WordCollection } from '../../../../utils/element-creator';
 import EventEmitter from '../../../../utils/EventEmit';
 import { getImgURL } from '../../../../utils/fileLoader';
+import SoundButton from '../../../../utils/createSoundButton';
 
 const eventEmitter = EventEmitter.getInstance();
 const cssClasses = {
@@ -101,9 +102,29 @@ export default class StatisticView extends View {
       const currentEpisodePart = this.wordCollection.rounds[this.round - 1].words[item];
       const textSentances = currentEpisodePart.textExample;
       const itemList = this.containerTagCreator('li', cssClasses.RESULTITEM);
+      const { buttonPlay } = SoundButton;
+      // buttonPlay.setEventHandler('click', (e) => this.clickThisButtonSound(e));
       itemList.setTextContent(textSentances);
+      itemList.addInnerElement(buttonPlay.getElement());
       curentResultList.addInnerElement(itemList);
     });
+  }
+
+  clickThisButtonSound(e:Event) {
+    const currentTarget = e.currentTarget as HTMLElement;
+    // console.log(document.querySelectorAll('audio'));
+    const audio = document.querySelector('audio');
+    if (audio) {
+      audio.autoplay = true;
+      audio.play();
+      audio.addEventListener('play', () => {
+        currentTarget.classList.add('play');
+      });
+      audio.addEventListener('ended', () => {
+        currentTarget.classList.remove('play');
+        // audio.remove();
+      });
+    }
   }
 
   fillDontKnowListContainer(container: ElementCreator) {
