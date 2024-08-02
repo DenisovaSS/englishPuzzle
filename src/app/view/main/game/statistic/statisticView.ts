@@ -3,7 +3,8 @@ import './statisticView.css';
 import View from '../../../view';
 import { ElementParams, ElementCreator, WordCollection } from '../../../../utils/element-creator';
 import EventEmitter from '../../../../utils/EventEmit';
-import { getImgURL } from '../../../../utils/fileLoader';
+import { getImgURL, getAudioFileURL } from '../../../../utils/fileLoader';
+import SoundButton from '../../../../utils/createSoundButton';
 
 const eventEmitter = EventEmitter.getInstance();
 const cssClasses = {
@@ -19,6 +20,8 @@ const cssClasses = {
   RESULTITEM: 'result-list-item',
   BTNCONTINUE: 'continue-button',
   BUTTON: 'button',
+  BUTTONPLAYAUDIOSENTANCES: 'audio-sentances',
+
 };
 
 export default class StatisticView extends View {
@@ -26,7 +29,9 @@ export default class StatisticView extends View {
 
   private round: number;
 
-  constructor(wordCollection: WordCollection, round: number) {
+  private answerArray: number[][];
+
+  constructor(wordCollection: WordCollection, round: number, answerArray:[[], []]) {
     const params: ElementParams = {
       tag: 'section',
       classNames: [cssClasses.STATISTICWRAPPER],
@@ -35,6 +40,7 @@ export default class StatisticView extends View {
     super(params);
     this.wordCollection = wordCollection;
     this.round = round;
+    this.answerArray = answerArray;
     this.configureView();
   }
 
@@ -87,11 +93,47 @@ export default class StatisticView extends View {
     const headList = this.containerTagCreator('h3', cssClasses.HEADLIST);
     headList.getElement().textContent = 'I know';
     const resultList = this.containerTagCreator('ul', cssClasses.RESULTLIST);
+    this.addListItems(0, resultList);
+
+    // this.answerArray[0]
     container.getElement().append(headList.getElement(), resultList.getElement());
   }
 
+  addListItems(countArray:number, curentResultList:ElementCreator) {
+    this.answerArray[countArray].forEach((item) => {
+      const currentEpisodePart = this.wordCollection.rounds[this.round - 1].words[item];
+      const textSentances = currentEpisodePart.textExample;
+      const itemList = this.containerTagCreator('li', cssClasses.RESULTITEM);
+      const buttonPlay = SoundButton.BTNSoundCreator(cssClasses.BUTTONPLAYAUDIOSENTANCES);
+      buttonPlay.setEventHandler('click', (e) => {
+        const currentTarget = e.currentTarget as HTMLElement;
+        const audio = document.createElement('audio') as HTMLAudioElement;
+        audio.autoplay = true;
+        const source = document.createElement('source');
+        source.src = getAudioFileURL(currentEpisodePart.audioExample);
+        this.elementCreator.addInnerElement(audio);
+        audio.append(source);
+        audio.play();
+        audio.addEventListener('play', () => {
+          currentTarget.classList.add('play');
+        });
+        audio.addEventListener('ended', () => {
+          currentTarget.classList.remove('play');
+          audio.remove();
+        });
+      });
+      itemList.setTextContent(textSentances);
+      itemList.addInnerElement(buttonPlay.getElement());
+      curentResultList.addInnerElement(itemList.getElement());
+    });
+  }
+
   fillDontKnowListContainer(container: ElementCreator) {
-    console.log(container);
+    const headList = this.containerTagCreator('h3', cssClasses.HEADLIST);
+    headList.getElement().textContent = "I don't know";
+    const resultList = this.containerTagCreator('ul', cssClasses.RESULTLIST);
+    this.addListItems(1, resultList);
+    container.getElement().append(headList.getElement(), resultList.getElement());
   }
 
   private handleContinue() {

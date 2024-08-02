@@ -31,6 +31,8 @@ export default class ResultGameView extends View {
 
   private textSentances: string = '';
 
+  private currentEpisode: number = LevelInfo.currentEpisode;
+
   private gameResultContainer!: ElementCreator;
 
   private peaceContainer!: ContainerPieceGameView;
@@ -58,8 +60,8 @@ export default class ResultGameView extends View {
     this.round = round;
     this.gameResultContainer = this.createResultContainer();
     this.customerAnswers = [[], []];
-    const { currentEpisode } = LevelInfo;
-    this.initialize(currentEpisode);
+    // this.currentEpisode = LevelInfo.currentEpisode;
+    this.initialize(this.currentEpisode);
     const containerCreator = this.configureView(this.gameResultContainer);
     this.fillField(containerCreator);
     this.setNextEpisodeHandler = this.createSetNextEpisodeHandler();
@@ -69,14 +71,15 @@ export default class ResultGameView extends View {
 
   createSetNextEpisodeHandler() {
     return (nextEpisode: number) => {
-      this.customerAnswers[0].push(nextEpisode);
-      this.customerAnswers[1].push(nextEpisode + 1);
-      console.log(this.customerAnswers, 'this episode');
+      // this.customerAnswers[0].push(nextEpisode);
+      // this.customerAnswers[1].push(nextEpisode + 1);
+      // console.log(this.customerAnswers, 'this episode');
       const countCurentEpisode = this.gameResultContainer.getElement().childElementCount;
       if (countCurentEpisode === MAXLINES) {
         this.nextRound();
       } else {
         this.unsubscribe();
+        this.currentEpisode = nextEpisode;
         this.initialize(nextEpisode);
         const containerCreator = this.configureView(this.gameResultContainer);
         this.fillField(containerCreator);
@@ -138,7 +141,6 @@ export default class ResultGameView extends View {
   }
 
   handleDragDrop(e: DragEvent) {
-    // console.log('3');
     const eventEmitter = EventEmitter.getInstance();
     const target = e.target as HTMLElement;
     const currentTarget = e.currentTarget as HTMLElement;
@@ -159,6 +161,8 @@ export default class ResultGameView extends View {
         oldParent?.appendChild(target);
       } else {
         eventEmitter.emit('DropInPiece', article);
+        const eventNames = eventEmitter.getAllListeners();
+        console.log(eventNames);
       }
     }
     // ВСЕ элементы game-result-container-part
@@ -180,6 +184,8 @@ export default class ResultGameView extends View {
     const currentContainerCreator = containerCreator.getElement();
     const allChildren = currentContainerCreator.children;
     this.autoCompleteSentence = () => {
+      this.customerAnswers[1].push(this.currentEpisode);
+      console.log(this.currentEpisode, 'first');
       // console.log('one');
       // delete all pieces in result container
       for (let i = 0; i < allChildren.length; i++) {
@@ -193,9 +199,6 @@ export default class ResultGameView extends View {
 
       // теперь эелементы из game-container-pieces по одному переправляются в обратно после правильной сортировки
       eventEmitter.emit('clearPeaceContainer');
-
-      // eventEmitter.emit('check-remove');
-      // eventEmitter.emit('continue');
     };
     eventEmitter.on('autoCompleteSentence', this.autoCompleteSentence);
     this.pieceEventListener = (clickedElement: HTMLElement) => {
@@ -280,8 +283,13 @@ export default class ResultGameView extends View {
         child.classList.remove('incorrect');
         child.style.pointerEvents = 'none';
       }
+      if (!this.customerAnswers[1].includes(this.currentEpisode)) {
+        console.log(this.customerAnswers[1].indexOf(this.currentEpisode), 'index');
+        this.customerAnswers[0].push(this.currentEpisode);
+      }
       eventEmitter.emit('check-remove');
       eventEmitter.emit('continue');
+      console.log(this.customerAnswers, 'this episode');
     }
   }
 
@@ -329,7 +337,7 @@ export default class ResultGameView extends View {
     };
     eventEmitter.on('StartNewRound', this.sendInfo);
     this.statisticSetInfo = () => {
-      eventEmitter.emit('statistic', this.wordCollection, this.round);
+      eventEmitter.emit('statistic', this.wordCollection, this.round, this.customerAnswers);
     };
     eventEmitter.on('statisticSetInfo', this.statisticSetInfo);
   }

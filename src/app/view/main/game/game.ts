@@ -69,8 +69,8 @@ export default class GameView extends View {
       this.resultContainer.updateView();
     };
     eventEmitter.on('newEpisode', this.newEpisodeHandler);
-    eventEmitter.on('statistic', (wordCollection, currentRound) => {
-      this.statisticView = new StatisticView(wordCollection, currentRound);
+    eventEmitter.on('statistic', (wordCollection, currentRound, answerArray) => {
+      this.statisticView = new StatisticView(wordCollection, currentRound, answerArray);
       this.elementCreator.addInnerElement(this.statisticView.getHtmlElement());
       // console.log(resultGame);
     });
