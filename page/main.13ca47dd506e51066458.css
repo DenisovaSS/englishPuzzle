@@ -782,17 +782,27 @@ button[disabled]:hover {
     background-image: url(img/hint-hide..png);
     transition: all .2s linear;
  }
-.audio-hint-play-button{
+.audio-hint-play-button, .audio-sentances{
     width: 45px;
     height: 45px;
     background-repeat: no-repeat;
     background-position: center;
     background: inherit;
-       border: none;
+    border: none;
     cursor: pointer;
     transition: all .2s linear;
 
 }
+.audio-sentances{
+  width: 32px;
+    height: 32px;
+    position: absolute;
+    left: -38px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+
 .audio-hint-play-button.hidden{
    opacity: 0;
    pointer-events: none; 
@@ -802,6 +812,10 @@ button[disabled]:hover {
     stroke: #9FA8DA;
     scale: 1.2;
     transition: all .2s linear;
+}
+
+.audio-sentances>svg path {
+  stroke-width: 3px;
 }
 .hints-block{
     display: flex;
@@ -882,7 +896,7 @@ button[disabled]:hover {
 .statistic-container{
     display: flex;
     flex-direction: column;
-    padding: 40px;
+    padding: 30px;
     background: #fff;
     font-family: "Inter",sans-serif;
     font-size: 16px;
@@ -907,7 +921,8 @@ button[disabled]:hover {
     font-weight: 400;
     max-width: 460px;
     text-align: center;
-    margin-bottom: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 .list-container{    
     display: flex;
@@ -935,3 +950,33 @@ button[disabled]:hover {
     transition: all .3s linear;
     padding-bottom: 3px;
 }
+.know-list-container{
+    padding: 11px;
+    background-color:#f2f9f1;
+}
+.dont-know-list-container {
+    background-color: #ffebeb;
+    padding: 11px;
+}
+.dont-know-list-container .result-list-item{
+    color: #c13131
+}
+.know-list-container .result-list-item{
+    color: #295f4e
+}
+.dont-know-list-container .audio-sentances.play>svg{
+    stroke: #c13131;
+    scale: 1.2;
+    transition: all .2s linear;
+  }
+.know-list-container .audio-sentances.play>svg{
+    stroke: #295f4e;
+    scale: 1.2;
+    transition: all .2s linear;
+  }
+.statistic-container .continue-button{
+    background: rgba(0, 0, 0, 0.8588235294 );
+  }
+  .statistic-container .continue-button:hover {
+    background: rgba(0, 0, 0, 0.5019607843)
+  }
