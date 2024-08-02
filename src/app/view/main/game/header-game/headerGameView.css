@@ -111,17 +111,22 @@
     left: -38px;
     top: 50%;
     transform: translateY(-50%);
-    cursor: pointer;}
+    cursor: pointer;
+  }
 
 .audio-hint-play-button.hidden{
    opacity: 0;
    pointer-events: none; 
   
 }
-.audio-hint-play-button.play>svg, .audio-sentances.play>svg{
+.audio-hint-play-button.play>svg{
     stroke: #9FA8DA;
     scale: 1.2;
     transition: all .2s linear;
+}
+
+.audio-sentances>svg path {
+  stroke-width: 3px;
 }
 .hints-block{
     display: flex;
