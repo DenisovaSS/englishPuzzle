@@ -3,17 +3,6 @@ import {
   ElementCreator,
 } from './element-creator';
 
-const cssClasses = {
-  BUTTONPLAYAUDIO: 'audio-hint-play-button',
-};
-function containerCreator(tag:string, classNames: string) {
-  const containerParam:ElementParams = {
-    tag,
-    classNames: [classNames],
-    textContent: '',
-  };
-  return new ElementCreator(containerParam);
-}
 function renderSVG() {
   const iconSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   const iconPath = document.createElementNS(
@@ -46,12 +35,19 @@ function renderSVG() {
 
   return iconSvg;
 }
+function BTNSoundCreator(classNames: string) {
+  const containerParam:ElementParams = {
+    tag: 'button',
+    classNames: [classNames],
+    textContent: '',
+  };
+  const soundBTN = new ElementCreator(containerParam);
+  const img = renderSVG();
+  soundBTN.getElement().append(img);
+  return soundBTN;
+}
 
-const buttonPlay = containerCreator('button', cssClasses.BUTTONPLAYAUDIO);
-
-const img = renderSVG();
-buttonPlay.getElement().append(img);
 const SoundButton = {
-  buttonPlay,
+  BTNSoundCreator,
 };
 export default SoundButton;

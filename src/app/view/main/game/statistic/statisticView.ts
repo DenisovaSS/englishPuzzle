@@ -3,7 +3,7 @@ import './statisticView.css';
 import View from '../../../view';
 import { ElementParams, ElementCreator, WordCollection } from '../../../../utils/element-creator';
 import EventEmitter from '../../../../utils/EventEmit';
-import { getImgURL } from '../../../../utils/fileLoader';
+import { getImgURL, getAudioFileURL } from '../../../../utils/fileLoader';
 import SoundButton from '../../../../utils/createSoundButton';
 
 const eventEmitter = EventEmitter.getInstance();
@@ -20,6 +20,8 @@ const cssClasses = {
   RESULTITEM: 'result-list-item',
   BTNCONTINUE: 'continue-button',
   BUTTON: 'button',
+  BUTTONPLAYAUDIOSENTANCES: 'audio-sentances',
+
 };
 
 export default class StatisticView extends View {
@@ -102,29 +104,28 @@ export default class StatisticView extends View {
       const currentEpisodePart = this.wordCollection.rounds[this.round - 1].words[item];
       const textSentances = currentEpisodePart.textExample;
       const itemList = this.containerTagCreator('li', cssClasses.RESULTITEM);
-      const { buttonPlay } = SoundButton;
-      // buttonPlay.setEventHandler('click', (e) => this.clickThisButtonSound(e));
+      const buttonPlay = SoundButton.BTNSoundCreator(cssClasses.BUTTONPLAYAUDIOSENTANCES);
+      buttonPlay.setEventHandler('click', (e) => {
+        const currentTarget = e.currentTarget as HTMLElement;
+        const audio = document.createElement('audio') as HTMLAudioElement;
+        audio.autoplay = true;
+        const source = document.createElement('source');
+        source.src = getAudioFileURL(currentEpisodePart.audioExample);
+        this.elementCreator.addInnerElement(audio);
+        audio.append(source);
+        audio.play();
+        audio.addEventListener('play', () => {
+          currentTarget.classList.add('play');
+        });
+        audio.addEventListener('ended', () => {
+          currentTarget.classList.remove('play');
+          audio.remove();
+        });
+      });
       itemList.setTextContent(textSentances);
       itemList.addInnerElement(buttonPlay.getElement());
-      curentResultList.addInnerElement(itemList);
+      curentResultList.addInnerElement(itemList.getElement());
     });
-  }
-
-  clickThisButtonSound(e:Event) {
-    const currentTarget = e.currentTarget as HTMLElement;
-    // console.log(document.querySelectorAll('audio'));
-    const audio = document.querySelector('audio');
-    if (audio) {
-      audio.autoplay = true;
-      audio.play();
-      audio.addEventListener('play', () => {
-        currentTarget.classList.add('play');
-      });
-      audio.addEventListener('ended', () => {
-        currentTarget.classList.remove('play');
-        // audio.remove();
-      });
-    }
   }
 
   fillDontKnowListContainer(container: ElementCreator) {

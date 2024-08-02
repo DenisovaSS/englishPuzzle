@@ -210,7 +210,7 @@ export default class HeaderGameView extends View {
 
   fillContainerHints(container: ElementCreator) {
     const currentContainer = container.getElement();
-    const { buttonPlay } = SoundButton;
+    const buttonPlay = SoundButton.BTNSoundCreator(cssClasses.BUTTONPLAYAUDIO);
     buttonPlay.setEventHandler('click', (e) => this.clickButtonPlay(e));
     const textHint = document.createElement('div');
     textHint.classList.add(cssClasses.TEXTHINT);

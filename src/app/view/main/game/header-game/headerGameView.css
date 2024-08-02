@@ -93,23 +93,32 @@
     background-image: url(../../../../../img/hint-hide.png);
     transition: all .2s linear;
  }
-.audio-hint-play-button{
+.audio-hint-play-button, .audio-sentances{
     width: 45px;
     height: 45px;
     background-repeat: no-repeat;
     background-position: center;
     background: inherit;
-       border: none;
+    border: none;
     cursor: pointer;
     transition: all .2s linear;
 
 }
+.audio-sentances{
+  width: 32px;
+    height: 32px;
+    position: absolute;
+    left: -38px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;}
+
 .audio-hint-play-button.hidden{
    opacity: 0;
    pointer-events: none; 
   
 }
-.audio-hint-play-button.play>svg{
+.audio-hint-play-button.play>svg, .audio-sentances.play>svg{
     stroke: #9FA8DA;
     scale: 1.2;
     transition: all .2s linear;
