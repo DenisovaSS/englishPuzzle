@@ -1,19 +1,42 @@
 @import 'lib/normalize.css';
+/* *{
+  outline: 1px solid red;
+} */
+html {
+  --zoom-level: normal;
+}
 body {
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center;
-  background-image: url(./img/sashaP.jpg);
+   background-image: url(./img/sashaP.jpg);
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
-
-.material-symbols-outlined {
+.main{zoom: var(--zoom-level);}
+.header{zoom: var(--zoom-level);}
+.footer{zoom: var(--zoom-level);}
+@media (max-width: 1000px){
+  html {
+    --zoom-level: 70%;
+  }
+}
+@media (max-width: 700px){
+  html {
+    --zoom-level: 50%;
+  }
+}
+@media (max-width: 200px){
+  html {
+    --zoom-level: 20%;
+  }
+  
+}
+/* .material-symbols-outlined {
   font-variation-settings:
   'FILL' 0,
   'wght' 400,
   'GRAD' 0,
   'opsz' 24
-}
+} */

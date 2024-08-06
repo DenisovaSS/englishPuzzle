@@ -1,0 +1,9 @@
+.linkForFooter{
+    margin: 10px;
+    color: rgb(17, 17, 17);
+    text-decoration: none;
+}
+.linkForFooter:hover{
+    color: #9FA8DA;
+    text-decoration:underline;
+}
