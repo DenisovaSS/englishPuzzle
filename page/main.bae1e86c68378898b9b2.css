@@ -354,38 +354,62 @@ template {
   display: none;
 }
 
+/* *{
+  outline: 1px solid red;
+} */
+html {
+  --zoom-level: normal;
+}
 body {
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center;
-  background-image: url(img/sashaP..jpg);
+   background-image: url(img/sashaP..jpg);
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
-
-.material-symbols-outlined {
+.main{zoom: normal;zoom: var(--zoom-level);}
+.header{zoom: normal;zoom: var(--zoom-level);}
+.footer{zoom: normal;zoom: var(--zoom-level);}
+@media (max-width: 1000px){
+  html {
+    --zoom-level: 70%;
+  }
+}
+@media (max-width: 700px){
+  html {
+    --zoom-level: 50%;
+  }
+}
+@media (max-width: 200px){
+  html {
+    --zoom-level: 20%;
+  }
+  
+}
+/* .material-symbols-outlined {
   font-variation-settings:
   'FILL' 0,
   'wght' 400,
   'GRAD' 0,
   'opsz' 24
-}
+} */
 
 .logo {
   margin: 10px;
   box-shadow: none;
-  max-height: 40px;
-  height: auto;
+  height: 40px;
+
 }
+
 
 .main {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
+ 
 }
 .back-off .item-piece .after,.back-off .item-piece {  
   background-image: none!important; 
@@ -395,6 +419,17 @@ body {
   background-color: rgba(255, 255, 255, 0);
 }
 
+.linkForFooter{
+    margin: 10px;
+    color: rgb(17, 17, 17);
+    -webkit-text-decoration: none;
+    text-decoration: none;
+}
+.linkForFooter:hover{
+    color: #9FA8DA;
+    -webkit-text-decoration:underline;
+    text-decoration:underline;
+}
 .login {
   min-width: 30%;
   max-width: 600px;
@@ -438,11 +473,12 @@ form button {
   border-radius: 10px;
   font-size: 20px;
   cursor: pointer;
-  background-color: #474747;
+  background-color: rgba(0, 0, 0, 0.5019607843);
   transition: 0.2s linear;
 }
 form button:hover {
-  background-color: #c77700;
+  background: rgba(0, 0, 0, 0.8588235294);
+
 }
 .title {
   color: #fff;
@@ -457,11 +493,25 @@ form button:hover {
 }
 
 .start-page {
-  display: flex;
+  /* display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  width: 100%;
+  width: 100%; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 580px;
+  width: 70%;
+  max-width: 1100px;
+  border: 3px solid #2e2e2e;
+  border-radius: 10px;
+  background-color: rgba(126, 126, 126, 0.4);
+  padding: 20px;
+  /* backdrop-filter: blur(9px); */
+  transition: opacity 0.3s;
+  opacity: 1;
 }
 .title_start {
   font-size: 56px;
@@ -475,7 +525,6 @@ form button:hover {
 .description {
   font-size: 18px;
   letter-spacing: 0.5px;
-  width: 700px;
   padding: 20px 20px 20px;
   text-align: center;
   text-shadow: 2px 2px 3px #000;
@@ -541,16 +590,16 @@ form button:hover {
 button:disabled {
   cursor: default;
   background: rgba(111, 111, 111, 0.7098039216);
-  transition: all 0.2s linear;
+  /* transition: all 0.2s linear; */
 }
 button[disabled]:hover {
   cursor: default;
   background: rgba(111, 111, 111, 0.7098039216);
-  transition: all 0.2s linear;
+  /* transition: all 0.2s linear; */
 }
 .button:hover {
   background: rgba(0, 0, 0, 0.8588235294);
-  transition: all 0.2s linear;
+  /* transition: all 0.2s linear; */
 }
 
 .game-page {
@@ -689,7 +738,7 @@ button[disabled]:hover {
 }
 .header-game {
     width: 100%;
-    padding: 5px 10%;
+    padding: 5px 10px;
     gap: 10px;
     display: flex;
     flex-direction: column;
