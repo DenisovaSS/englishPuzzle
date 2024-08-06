@@ -46,3 +46,23 @@ export default class App {
     });
   }
 }
+
+// function scaleContent() {
+//   const wrarper = document.getElementById('wrarper');
+//   if (!wrarper) return;
+//   const wrarperWidth = wrarper.offsetWidth;
+//   const wrarperHeight = wrarper.offsetHeight;
+
+//   const windowWidth = window.innerWidth;
+//   const windowHeight = window.innerHeight;
+
+//   const scaleX = windowWidth / wrarperWidth;
+//   const scaleY = windowHeight / wrarperHeight;
+
+//   const scale = Math.min(scaleX, scaleY);
+//   // @ts-ignore
+//   wrarper.style.zoom = String(scale);
+//   document.body.style.height = `${wrarperHeight * scale}px`;
+// }
+// window.addEventListener('resize', scaleContent);
+// scaleContent();

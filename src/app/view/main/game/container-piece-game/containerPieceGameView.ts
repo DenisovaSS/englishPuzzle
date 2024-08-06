@@ -217,7 +217,7 @@ export default class ContainerPieceGameView extends View {
     if (lineIndex > 0 && GAMERESULTCONTAINERHEIGHT) {
       backgroundPositionY = -(lineIndex * (GAMERESULTCONTAINERHEIGHT / MAXLINES));
     }
-    if (GAMERESULTCONTAINERWIDTH) { element.style.width = `${GAMERESULTCONTAINERWIDTH / this.arrayAnswer.length - 40 - 2}px`; }
+    if (GAMERESULTCONTAINERWIDTH) { element.style.width = `${GAMERESULTCONTAINERWIDTH / this.arrayAnswer.length - 30 - 2}px`; }
     element.style.backgroundImage = `url(${getImgURL(backgroundImg)})`;
     element.style.backgroundSize = `${GAMERESULTCONTAINERWIDTH}px ${GAMERESULTCONTAINERHEIGHT}px`;
     element.style.backgroundPosition = `${backgroundPositionX}px ${backgroundPositionY}px`;

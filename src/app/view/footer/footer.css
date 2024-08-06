@@ -2,6 +2,7 @@
     margin: 10px;
     color: rgb(17, 17, 17);
     text-decoration: none;
+    font-size: 30px;
 }
 .linkForFooter:hover{
     color: #9FA8DA;
