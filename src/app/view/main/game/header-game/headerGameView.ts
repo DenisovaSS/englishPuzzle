@@ -35,7 +35,7 @@ const cssClasses = {
 const eventEmitter = EventEmitter.getInstance();
 const COUNTLEVEL = LevelInfo.levels;
 const wordCollectionRounds = LevelInfo.currentLevelRounds;
-console.log(wordCollectionRounds);
+// console.log(wordCollectionRounds);
 
 const currentEpisodePartNow = LevelInfo.currentEpisodePart;
 
@@ -94,7 +94,7 @@ export default class HeaderGameView extends View {
     const curentLevel = LevelInfo.currentLevel;
     const rounds = this.createSelectRound('round', wordCollectionRounds, curentLevel);
     eventEmitter.on('NextRoundHeader', (currentLevel:number, currentRound:number, contRounds :number) => {
-      console.log(currentLevel, 'whaen start');
+      // console.log(currentLevel, 'whaen start');
       const visible = this.elementCreator.getElement().children[1].classList.contains('hide');
       if (visible) { this.elementCreator.getElement().children[1].classList.remove('hide'); }
       const oldRounds = settingLevel.getElement().querySelector('.round');
@@ -234,11 +234,27 @@ export default class HeaderGameView extends View {
     eventEmitter.emit('setRounds', +currentTarget.value);
   }
 
+  toggleButton(button:string) {
+    const dataStringStorage = localStorage.getItem(myKeySaveLocalStorage);
+    if (dataStringStorage) {
+      const objectData = JSON.parse(dataStringStorage);
+      console.log(objectData.buttonsHint[button]);
+      if (objectData.buttonsHint[button]) {
+        objectData.buttonsHint[button] = false;
+        localStorage.setItem(myKeySaveLocalStorage, JSON.stringify(objectData));
+      } else {
+        objectData.buttonsHint[button] = true;
+        localStorage.setItem(myKeySaveLocalStorage, JSON.stringify(objectData));
+      }
+    }
+  }
+
   clickButtonImg(e:Event) {
     const currentTarget = e.currentTarget as HTMLElement;
     currentTarget.classList.toggle('click');
     const bodyElement = document.body;
     bodyElement.classList.toggle('back-off');
+    this.toggleButton('swichBackgroundVisible');
   }
 
   clickButtonText(e:Event) {
@@ -246,6 +262,7 @@ export default class HeaderGameView extends View {
     const textHint = currentTarget.parentElement?.parentElement?.nextElementSibling?.lastElementChild;
     currentTarget.classList.toggle('click');
     textHint?.classList.toggle('hidden');
+    this.toggleButton('swichTranslateVisible');
   }
 
   clickButtonAudio(e:Event) {
@@ -253,6 +270,7 @@ export default class HeaderGameView extends View {
     const buttonAudioPlay = currentTarget.parentElement?.parentElement?.nextElementSibling?.firstElementChild;
     currentTarget.classList.toggle('click');
     buttonAudioPlay?.classList.toggle('hidden');
+    this.toggleButton('swichListenVisible');
   }
 
   clickButtonPlay(e:Event) {
