@@ -115,7 +115,7 @@ export default class ResultGameView extends View {
       const containerPieceCreator = this.containerDivCreator(cssClasses.PARTPIECE);
       const currentPieceCreator = containerPieceCreator.getElement();
       // baclog: todo size width more dinymic
-      currentPieceCreator.style.width = `${702 / this.countWordSentence}px`;
+      // currentPieceCreator.style.width = `${702 / this.countWordSentence}px`;
       currentPieceCreator.addEventListener('dragover', this.handleDragOver);
       // currentPieceCreator.addEventListener('dragleave', this.handleDragLeave);
       currentPieceCreator.addEventListener('drop', this.handleDragDrop.bind(this));
@@ -161,8 +161,8 @@ export default class ResultGameView extends View {
         oldParent?.appendChild(target);
       } else {
         eventEmitter.emit('DropInPiece', article);
-        const eventNames = eventEmitter.getAllListeners();
-        console.log(eventNames);
+        // const eventNames = eventEmitter.getAllListeners();
+        // console.log(eventNames);
       }
     }
     // ВСЕ элементы game-result-container-part
@@ -185,7 +185,7 @@ export default class ResultGameView extends View {
     const allChildren = currentContainerCreator.children;
     this.autoCompleteSentence = () => {
       this.customerAnswers[1].push(this.currentEpisode);
-      console.log(this.currentEpisode, 'first');
+      // console.log(this.currentEpisode, 'first');
       // console.log('one');
       // delete all pieces in result container
       for (let i = 0; i < allChildren.length; i++) {
@@ -284,12 +284,12 @@ export default class ResultGameView extends View {
         child.style.pointerEvents = 'none';
       }
       if (!this.customerAnswers[1].includes(this.currentEpisode)) {
-        console.log(this.customerAnswers[1].indexOf(this.currentEpisode), 'index');
+        // console.log(this.customerAnswers[1].indexOf(this.currentEpisode), 'index');
         this.customerAnswers[0].push(this.currentEpisode);
       }
       eventEmitter.emit('check-remove');
       eventEmitter.emit('continue');
-      console.log(this.customerAnswers, 'this episode');
+      // console.log(this.customerAnswers, 'this episode');
     }
   }
 

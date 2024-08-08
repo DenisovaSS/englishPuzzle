@@ -60,7 +60,7 @@
 .item-piece {
   position: relative;
   display: flex;
-  justify-content: center;
+  justify-content: left;
   align-items: center;
   background-color: #5a0275;
   color: azure;
@@ -69,7 +69,10 @@
   background-size: 702px 400px;
   text-shadow: 3px 2px 2px rgb(0,0,0);
   min-width: 26px;
-  padding: 10px 20px;   
+  height: 40px;
+  padding-left: 13px;
+  font-size: 16px;
+  /* padding: 10px 8px 10px 22px;    */
 }
 .item-piece:hover {
   z-index: 10;
@@ -93,8 +96,8 @@
 
 .before{
   position: absolute;
-  width: 21px;
-  height: 21px;
+  width: 11px;
+  height: 11px;
   top: 50%;
   left: -2px;
   transform: translateY(-50%);
@@ -110,10 +113,10 @@
 }
 .after{
   position: absolute;
-  width: 20px;
-  height: 20px;
+  width: 10px;
+  height: 10px;
   top: 50%;
-  right: -18px;
+  right: -10px;
   transform: translateY(-50%);
   border-radius: 100%;
   background-color: #5a0275;

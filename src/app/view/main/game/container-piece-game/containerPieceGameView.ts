@@ -81,11 +81,7 @@ export default class ContainerPieceGameView extends View {
     eventEmitter.on('DropInPiece', this.dropInPieceCallback);
 
     this.clearPeaceContainer = () => {
-      // const eventNames = eventEmitter.getAllListeners();
-      // console.log(eventNames);
-      // console.log(currentElement.children);
       const itemsArray = Array.from(currentElement.children);
-      // console.log(itemsArray);
       if (itemsArray) {
         itemsArray.sort((a, b) => {
           const indexA = parseInt(a.getAttribute('data-index') || '0', 10);
@@ -176,7 +172,7 @@ export default class ContainerPieceGameView extends View {
         const lineIndex = this.currentEpisode;
         const puzzleIndex = Number(index);
         let backgroundPositionX = -GAMERESULTCONTAINERWIDTH / this.arrayAnswer.length + 2;
-        let backgroundPositionY = -9;
+        let backgroundPositionY = -14;
         if (puzzleIndex > 0) {
           backgroundPositionX = -(puzzleIndex * (GAMERESULTCONTAINERWIDTH / this.arrayAnswer.length) - backgroundPositionX);
         }
@@ -207,7 +203,6 @@ export default class ContainerPieceGameView extends View {
 
     element.draggable = true;
     const lineIndex = this.currentEpisode;
-    // console.log(lineIndex);
     let backgroundPositionX = 0;
     let backgroundPositionY = 0;
     const puzzleIndex = Number(element.dataset.index);
@@ -217,7 +212,18 @@ export default class ContainerPieceGameView extends View {
     if (lineIndex > 0 && GAMERESULTCONTAINERHEIGHT) {
       backgroundPositionY = -(lineIndex * (GAMERESULTCONTAINERHEIGHT / MAXLINES));
     }
-    if (GAMERESULTCONTAINERWIDTH) { element.style.width = `${GAMERESULTCONTAINERWIDTH / this.arrayAnswer.length - 30 - 2}px`; }
+    if (GAMERESULTCONTAINERWIDTH) {
+      const baseWidth = GAMERESULTCONTAINERWIDTH / this.arrayAnswer.length - 13 - 2;
+      const itemWidth = baseWidth;
+      const textCountW = this.arrayAnswer[+originalIndex].length;
+      const minForWordWidth = textCountW * 8;
+      if (baseWidth < minForWordWidth) {
+        element.style.fontSize = '14px';
+      }
+      element.style.width = `${itemWidth}px`;
+
+      // element.style.width = `${GAMERESULTCONTAINERWIDTH / this.arrayAnswer.length - 40 - 2}px`;
+    }
     element.style.backgroundImage = `url(${getImgURL(backgroundImg)})`;
     element.style.backgroundSize = `${GAMERESULTCONTAINERWIDTH}px ${GAMERESULTCONTAINERHEIGHT}px`;
     element.style.backgroundPosition = `${backgroundPositionX}px ${backgroundPositionY}px`;
@@ -248,7 +254,7 @@ export default class ContainerPieceGameView extends View {
     // const currentEpisodePart = this.wordCollection.rounds[this.round - 1].words[this.currentEpisode];
     // eslint-disable-next-line max-len
     const descriptionText = `${this.wordCollection.rounds[this.round - 1].levelData.author} - ${this.wordCollection.rounds[this.round - 1].levelData.name}, ${this.wordCollection.rounds[this.round - 1].levelData.year}`;
-    console.log(descriptionText);
+    // console.log(descriptionText);
     const description = {
       tag: 'div',
       classNames: [cssClasses.DESCRIPTION],
