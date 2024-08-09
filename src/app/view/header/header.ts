@@ -1,7 +1,7 @@
 import './header.css';
 import View from '../view';
 import { ElementParams } from '../../utils/element-creator';
-import logo from '../../../img/sd.svg';
+// import logo from '../../../img/sd.svg';
 
 const CssClasses = {
   HEADER: 'header',
@@ -20,9 +20,10 @@ export default class HeaderView extends View {
   }
 
   configureView() {
-    const imgParam = document.createElement('img') as HTMLImageElement;
-    imgParam.src = logo;
-    imgParam.classList.add('logo');
-    this.elementCreator.addInnerElement(imgParam);
+    // const imgParam = document.createElement('img') as HTMLImageElement;
+    // imgParam.src = logo;
+    // imgParam.classList.add('logo');
+    // this.elementCreator.addInnerElement(imgParam);
+    console.log('hello word');
   }
 }

@@ -107,9 +107,9 @@ export default class ResultGameView extends View {
 
   configureView(resultContainer: ElementCreator) {
     const containerCreator = this.containerDivCreator(cssClasses.PARTRESULT);
-    const gameResultContainer = resultContainer.getElement();
-    const roundWordCollection = this.wordCollection.rounds[this.round - 1].levelData;
-    gameResultContainer.style.backgroundImage = `url(${getImgURL(roundWordCollection.imageSrc)})`;
+    // const gameResultContainer = resultContainer.getElement();
+    // const roundWordCollection = this.wordCollection.rounds[this.round - 1].levelData;
+    // gameResultContainer.style.backgroundImage = `url(${getImgURL(roundWordCollection.imageSrc)})`;
     resultContainer.addInnerElement(containerCreator.getElement());
     for (let i = 0; i < this.countWordSentence; i++) {
       const containerPieceCreator = this.containerDivCreator(cssClasses.PARTPIECE);
@@ -320,7 +320,11 @@ export default class ResultGameView extends View {
 
   nextRound() {
     const eventEmitter = EventEmitter.getInstance();
-    this.gameResultContainer.getElement().classList.add('complete');
+    const gameResultContainer = this.gameResultContainer.getElement();
+    gameResultContainer.classList.add('complete');
+    const roundWordCollection = this.wordCollection.rounds[this.round - 1].levelData;
+    gameResultContainer.style.backgroundImage = `url(${getImgURL(roundWordCollection.imageSrc)})`;
+
     const allChildren = this.gameResultContainer.getElement().children;
     for (let i = 0; i < allChildren.length; i++) {
       const child = allChildren[i] as HTMLElement;

@@ -214,14 +214,19 @@ export default class ContainerPieceGameView extends View {
     }
     if (GAMERESULTCONTAINERWIDTH) {
       const baseWidth = GAMERESULTCONTAINERWIDTH / this.arrayAnswer.length - 13 - 2;
-      const itemWidth = baseWidth;
+      let itemWidth = baseWidth;
       const textCountW = this.arrayAnswer[+originalIndex].length;
       const minForWordWidth = textCountW * 8;
       if (baseWidth < minForWordWidth) {
         element.style.fontSize = '14px';
+        itemWidth = GAMERESULTCONTAINERWIDTH / this.arrayAnswer.length - 5 - 2;
+        element.style.paddingLeft = '5px';
       }
       element.style.width = `${itemWidth}px`;
-
+      const countLetetr = word.length;
+      if (countLetetr > 8) {
+        console.log(word, countLetetr);
+      }
       // element.style.width = `${GAMERESULTCONTAINERWIDTH / this.arrayAnswer.length - 40 - 2}px`;
     }
     element.style.backgroundImage = `url(${getImgURL(backgroundImg)})`;
