@@ -104,12 +104,21 @@ export class FormCreator {
   }
 
   saveFormDataToLocalStorage() {
-    const formData: { [key: string]: string } = {};
+    const user: { [key: string]: string } = {};
     this.formElement.querySelectorAll('input').forEach((inputElement) => {
-      formData[inputElement.name] = (inputElement as HTMLInputElement).value;
+      user[inputElement.name] = (inputElement as HTMLInputElement).value;
     });
-    const user = { user: formData };
-    localStorage.setItem(myKeySaveLocalStorage, JSON.stringify(user));
+    // const user = { formData };
+    const buttonsHint = {
+      swichBackgroundVisible: true,
+      swichListenVisible: true,
+      swichTranslateVisible: true,
+    };
+    const combinedData = {
+      user,
+      buttonsHint,
+    };
+    localStorage.setItem(myKeySaveLocalStorage, JSON.stringify(combinedData));
   }
 
   getElement(): HTMLFormElement {

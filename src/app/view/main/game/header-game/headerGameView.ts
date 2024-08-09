@@ -35,7 +35,7 @@ const cssClasses = {
 const eventEmitter = EventEmitter.getInstance();
 const COUNTLEVEL = LevelInfo.levels;
 const wordCollectionRounds = LevelInfo.currentLevelRounds;
-console.log(wordCollectionRounds);
+// console.log(wordCollectionRounds);
 
 const currentEpisodePartNow = LevelInfo.currentEpisodePart;
 
@@ -58,7 +58,6 @@ export default class HeaderGameView extends View {
     const containerHintsCreator = this.containerCreator('div', cssClasses.BLOCKHINTS);
     this.fillContainerHints(containerHintsCreator);
     this.elementCreator.addInnerElement(containerHintsCreator.getElement());
-
     // Add event listener for setAudio here
     // const eventEmitter = EventEmitter.getInstance();
     eventEmitter.on('andRound', () => {
@@ -94,7 +93,7 @@ export default class HeaderGameView extends View {
     const curentLevel = LevelInfo.currentLevel;
     const rounds = this.createSelectRound('round', wordCollectionRounds, curentLevel);
     eventEmitter.on('NextRoundHeader', (currentLevel:number, currentRound:number, contRounds :number) => {
-      console.log(currentLevel, 'whaen start');
+      // console.log(currentLevel, 'whaen start');
       const visible = this.elementCreator.getElement().children[1].classList.contains('hide');
       if (visible) { this.elementCreator.getElement().children[1].classList.remove('hide'); }
       const oldRounds = settingLevel.getElement().querySelector('.round');
@@ -234,11 +233,27 @@ export default class HeaderGameView extends View {
     eventEmitter.emit('setRounds', +currentTarget.value);
   }
 
+  toggleButton(button:string) {
+    const dataStringStorage = localStorage.getItem(myKeySaveLocalStorage);
+    if (dataStringStorage) {
+      const objectData = JSON.parse(dataStringStorage);
+      // console.log(objectData.buttonsHint[button]);
+      if (objectData.buttonsHint[button]) {
+        objectData.buttonsHint[button] = false;
+        localStorage.setItem(myKeySaveLocalStorage, JSON.stringify(objectData));
+      } else {
+        objectData.buttonsHint[button] = true;
+        localStorage.setItem(myKeySaveLocalStorage, JSON.stringify(objectData));
+      }
+    }
+  }
+
   clickButtonImg(e:Event) {
     const currentTarget = e.currentTarget as HTMLElement;
     currentTarget.classList.toggle('click');
     const bodyElement = document.body;
     bodyElement.classList.toggle('back-off');
+    this.toggleButton('swichBackgroundVisible');
   }
 
   clickButtonText(e:Event) {
@@ -246,6 +261,7 @@ export default class HeaderGameView extends View {
     const textHint = currentTarget.parentElement?.parentElement?.nextElementSibling?.lastElementChild;
     currentTarget.classList.toggle('click');
     textHint?.classList.toggle('hidden');
+    this.toggleButton('swichTranslateVisible');
   }
 
   clickButtonAudio(e:Event) {
@@ -253,6 +269,7 @@ export default class HeaderGameView extends View {
     const buttonAudioPlay = currentTarget.parentElement?.parentElement?.nextElementSibling?.firstElementChild;
     currentTarget.classList.toggle('click');
     buttonAudioPlay?.classList.toggle('hidden');
+    this.toggleButton('swichListenVisible');
   }
 
   clickButtonPlay(e:Event) {
@@ -271,4 +288,40 @@ export default class HeaderGameView extends View {
       });
     }
   }
+
+  // checkCurrentStatusButton() {
+  //   const activeButton = document.querySelector('.image-button');
+  //   console.log(activeButton);
+  //   // const buttonsHint = {
+  //   //   swichBackgroundVisible: 'image-button',
+  //   //   swichListenVisible: 'audio-hint-button',
+  //   //   swichTranslateVisible: 'text-hint-button',
+  //   // };
+  //   // const dataStringStorage = localStorage.getItem(myKeySaveLocalStorage);
+  //   // if (dataStringStorage) {
+  //   //   const objectDataButtons = JSON.parse(dataStringStorage).buttonsHint;
+  //   //   const falseElements = Object.entries(objectDataButtons)
+  //   //     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  //   //     .filter(([key, value]) => value === false)
+  //   //     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  //   //     .map(([key, value]) => key);
+  //   //   for (let i = 0; i < falseElements.length; i++) {
+  //   //     // const classBTN = buttonsHint[falseElements[i] as keyof typeof buttonsHint];
+  //   //     const activeButton = document.querySelector('.image-button');
+  //   //     console.log(activeButton);
+  //   //     activeButton?.classList.add('click');
+  //   // console.log(classBTN);
+  // }
+  // console.log(falseElements);
+
+  // console.log(objectData.buttonsHint[button]);
+  //   if (objectData.buttonsHint[button]) {
+  //     objectData.buttonsHint[button] = false;
+  //     localStorage.setItem(myKeySaveLocalStorage, JSON.stringify(objectData));
+  //   } else {
+  //     objectData.buttonsHint[button] = true;
+  //     localStorage.setItem(myKeySaveLocalStorage, JSON.stringify(objectData));
+  //   }
+  // }
+  // }
 }

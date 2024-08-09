@@ -135,9 +135,9 @@ export default class ResultGameView extends View {
   }
 
   handleDragOver(e: Event) {
-    const target = e.target as HTMLElement;
+    // const target = e.target as HTMLElement;
     e.preventDefault();
-    target.style.backgroundColor = 'red';
+    // target.style.backgroundColor = 'red';
   }
 
   handleDragDrop(e: DragEvent) {
@@ -161,8 +161,8 @@ export default class ResultGameView extends View {
         oldParent?.appendChild(target);
       } else {
         eventEmitter.emit('DropInPiece', article);
-        const eventNames = eventEmitter.getAllListeners();
-        console.log(eventNames);
+        // const eventNames = eventEmitter.getAllListeners();
+        // console.log(eventNames);
       }
     }
     // ВСЕ элементы game-result-container-part
@@ -185,7 +185,7 @@ export default class ResultGameView extends View {
     const allChildren = currentContainerCreator.children;
     this.autoCompleteSentence = () => {
       this.customerAnswers[1].push(this.currentEpisode);
-      console.log(this.currentEpisode, 'first');
+      // console.log(this.currentEpisode, 'first');
       // console.log('one');
       // delete all pieces in result container
       for (let i = 0; i < allChildren.length; i++) {
@@ -251,7 +251,7 @@ export default class ResultGameView extends View {
 
     for (let i = 0; i < allChildren.length; i++) {
       const child = allChildren[i] as HTMLElement;
-      // child.classList.remove('incorrect');
+      child.classList.remove('incorrect');
       if (child.contains(clickedPiece)) {
         eventEmitter.emit('pushInPiece', clickedPiece);
         child.removeChild(clickedPiece);
@@ -284,12 +284,12 @@ export default class ResultGameView extends View {
         child.style.pointerEvents = 'none';
       }
       if (!this.customerAnswers[1].includes(this.currentEpisode)) {
-        console.log(this.customerAnswers[1].indexOf(this.currentEpisode), 'index');
+        // console.log(this.customerAnswers[1].indexOf(this.currentEpisode), 'index');
         this.customerAnswers[0].push(this.currentEpisode);
       }
       eventEmitter.emit('check-remove');
       eventEmitter.emit('continue');
-      console.log(this.customerAnswers, 'this episode');
+      // console.log(this.customerAnswers, 'this episode');
     }
   }
 

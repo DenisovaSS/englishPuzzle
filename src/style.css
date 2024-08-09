@@ -14,25 +14,38 @@ body {
   flex-direction: column;
   justify-content: space-between;
 }
+
 .main{zoom: var(--zoom-level);}
-.header{zoom: var(--zoom-level);}
-.footer{zoom: var(--zoom-level);}
-@media (max-width: 1000px){
+/* .header{zoom: var(--zoom-level);}
+.footer{zoom: var(--zoom-level);} */
+@media (max-width: 800px){
   html {
-    --zoom-level: 70%;
+    --zoom-level: 80%;
   }
 }
-@media (max-width: 700px){
+@media (max-width: 620px){
+  html {
+    --zoom-level: 60%;
+  }
+}
+@media (max-width: 500px){
   html {
     --zoom-level: 50%;
   }
+.header{zoom: 80%;}
+.footer{zoom: 80%;}
 }
-@media (max-width: 200px){
+@media (max-width: 400px){
   html {
-    --zoom-level: 20%;
+    --zoom-level: 40%;
   }
-  
+ 
 }
+@media (max-height: 600px){
+  html {
+    --zoom-level: 70%;
+  }}
+
 /* .material-symbols-outlined {
   font-variation-settings:
   'FILL' 0,

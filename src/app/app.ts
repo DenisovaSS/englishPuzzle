@@ -7,6 +7,7 @@ import WelcomeView from './view/main/welcome/welcome';
 import GameView from './view/main/game/game';
 import EventEmitter from './utils/EventEmit';
 
+const eventEmitter = EventEmitter.getInstance();
 export default class App {
   constructor() {
     this.createView();
@@ -33,16 +34,41 @@ export default class App {
       mainView.setContent(new WelcomeView(mainView));
     } else {
       mainView.setContent(new LoginView(mainView));
+      const eventNames = eventEmitter.getAllListeners();
+      console.log('start game', eventNames);
     }
-    const eventEmitter = EventEmitter.getInstance();
+
     eventEmitter.on('logout', () => {
+      const eventNames = eventEmitter.getAllListeners();
+      console.log('end game', eventNames);
       // console.log('2');
       localStorage.clear();
+      eventEmitter.clearAllListenersExcept(['logout', 'startGame', 'getRounds', 'nextEpisode', 'saveLastCompletedRound', 'setRounds', 'sendinfo']);
+      // console.log(eventEmitter.getEventNames());
       mainView.setContent(new LoginView(mainView));
     });
     eventEmitter.on('startGame', () => {
-      // console.log('1');
       mainView.setContent(new GameView(mainView));
     });
   }
 }
+
+// function scaleContent() {
+//   const wrarper = document.getElementById('wrarper');
+//   if (!wrarper) return;
+//   const wrarperWidth = wrarper.offsetWidth;
+//   const wrarperHeight = wrarper.offsetHeight;
+
+//   const windowWidth = window.innerWidth;
+//   const windowHeight = window.innerHeight;
+
+//   const scaleX = windowWidth / wrarperWidth;
+//   const scaleY = windowHeight / wrarperHeight;
+
+//   const scale = Math.min(scaleX, scaleY);
+//   // @ts-ignore
+//   wrarper.style.zoom = String(scale);
+//   document.body.style.height = `${wrarperHeight * scale}px`;
+// }
+// window.addEventListener('resize', scaleContent);
+// scaleContent();

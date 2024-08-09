@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type EventListener = (...args: any[]) => void;
 
@@ -102,5 +103,15 @@ export default class EventEmitter {
 
   getAllListeners(): Record<string, EventListener[]> {
     return this.listeners;
+  }
+
+  clearAllListenersExcept(exceptions: string[]) {
+    const newListeners: Record<string, EventListener[]> = {};
+    for (const eventName of exceptions) {
+      if (this.listeners[eventName]) {
+        newListeners[eventName] = this.listeners[eventName];
+      }
+    }
+    this.listeners = newListeners;
   }
 }
