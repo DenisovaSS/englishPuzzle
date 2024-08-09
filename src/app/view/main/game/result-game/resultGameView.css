@@ -30,7 +30,7 @@
 }
 
 /* .game-result-container-part-piece:has(:nth-child(1)){
-  border: none;
+
   width: fit-content;
   flex-grow: 0;
   background-color: rgba(0,0,0,0);

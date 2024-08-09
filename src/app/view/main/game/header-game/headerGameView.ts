@@ -58,7 +58,6 @@ export default class HeaderGameView extends View {
     const containerHintsCreator = this.containerCreator('div', cssClasses.BLOCKHINTS);
     this.fillContainerHints(containerHintsCreator);
     this.elementCreator.addInnerElement(containerHintsCreator.getElement());
-
     // Add event listener for setAudio here
     // const eventEmitter = EventEmitter.getInstance();
     eventEmitter.on('andRound', () => {
@@ -238,7 +237,7 @@ export default class HeaderGameView extends View {
     const dataStringStorage = localStorage.getItem(myKeySaveLocalStorage);
     if (dataStringStorage) {
       const objectData = JSON.parse(dataStringStorage);
-      console.log(objectData.buttonsHint[button]);
+      // console.log(objectData.buttonsHint[button]);
       if (objectData.buttonsHint[button]) {
         objectData.buttonsHint[button] = false;
         localStorage.setItem(myKeySaveLocalStorage, JSON.stringify(objectData));
@@ -289,4 +288,40 @@ export default class HeaderGameView extends View {
       });
     }
   }
+
+  // checkCurrentStatusButton() {
+  //   const activeButton = document.querySelector('.image-button');
+  //   console.log(activeButton);
+  //   // const buttonsHint = {
+  //   //   swichBackgroundVisible: 'image-button',
+  //   //   swichListenVisible: 'audio-hint-button',
+  //   //   swichTranslateVisible: 'text-hint-button',
+  //   // };
+  //   // const dataStringStorage = localStorage.getItem(myKeySaveLocalStorage);
+  //   // if (dataStringStorage) {
+  //   //   const objectDataButtons = JSON.parse(dataStringStorage).buttonsHint;
+  //   //   const falseElements = Object.entries(objectDataButtons)
+  //   //     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  //   //     .filter(([key, value]) => value === false)
+  //   //     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  //   //     .map(([key, value]) => key);
+  //   //   for (let i = 0; i < falseElements.length; i++) {
+  //   //     // const classBTN = buttonsHint[falseElements[i] as keyof typeof buttonsHint];
+  //   //     const activeButton = document.querySelector('.image-button');
+  //   //     console.log(activeButton);
+  //   //     activeButton?.classList.add('click');
+  //   // console.log(classBTN);
+  // }
+  // console.log(falseElements);
+
+  // console.log(objectData.buttonsHint[button]);
+  //   if (objectData.buttonsHint[button]) {
+  //     objectData.buttonsHint[button] = false;
+  //     localStorage.setItem(myKeySaveLocalStorage, JSON.stringify(objectData));
+  //   } else {
+  //     objectData.buttonsHint[button] = true;
+  //     localStorage.setItem(myKeySaveLocalStorage, JSON.stringify(objectData));
+  //   }
+  // }
+  // }
 }

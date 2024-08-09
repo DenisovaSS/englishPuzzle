@@ -115,7 +115,7 @@ export default class ResultGameView extends View {
       const containerPieceCreator = this.containerDivCreator(cssClasses.PARTPIECE);
       const currentPieceCreator = containerPieceCreator.getElement();
       // baclog: todo size width more dinymic
-      // currentPieceCreator.style.width = `${702 / this.countWordSentence}px`;
+      currentPieceCreator.style.width = `${702 / this.countWordSentence}px`;
       currentPieceCreator.addEventListener('dragover', this.handleDragOver);
       // currentPieceCreator.addEventListener('dragleave', this.handleDragLeave);
       currentPieceCreator.addEventListener('drop', this.handleDragDrop.bind(this));
@@ -135,9 +135,9 @@ export default class ResultGameView extends View {
   }
 
   handleDragOver(e: Event) {
-    const target = e.target as HTMLElement;
+    // const target = e.target as HTMLElement;
     e.preventDefault();
-    target.style.backgroundColor = 'red';
+    // target.style.backgroundColor = 'red';
   }
 
   handleDragDrop(e: DragEvent) {
@@ -251,7 +251,7 @@ export default class ResultGameView extends View {
 
     for (let i = 0; i < allChildren.length; i++) {
       const child = allChildren[i] as HTMLElement;
-      // child.classList.remove('incorrect');
+      child.classList.remove('incorrect');
       if (child.contains(clickedPiece)) {
         eventEmitter.emit('pushInPiece', clickedPiece);
         child.removeChild(clickedPiece);

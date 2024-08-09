@@ -97,7 +97,6 @@ export default class WelcomeView extends View {
     if (customerDataString) {
       const customerData = JSON.parse(customerDataString);
       const { firstName, lastName } = customerData.user;
-      console.log(customerData.user);
       welcome = `Welcome in game, ${firstName} ${lastName}`;
     }
 
