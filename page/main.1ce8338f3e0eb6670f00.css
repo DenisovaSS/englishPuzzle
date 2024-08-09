@@ -369,25 +369,38 @@ body {
   flex-direction: column;
   justify-content: space-between;
 }
+
 .main{zoom: normal;zoom: var(--zoom-level);}
-.header{zoom: normal;zoom: var(--zoom-level);}
-.footer{zoom: normal;zoom: var(--zoom-level);}
-@media (max-width: 1000px){
+/* .header{zoom: var(--zoom-level);}
+.footer{zoom: var(--zoom-level);} */
+@media (max-width: 800px){
   html {
-    --zoom-level: 70%;
+    --zoom-level: 80%;
   }
 }
-@media (max-width: 700px){
+@media (max-width: 620px){
+  html {
+    --zoom-level: 60%;
+  }
+}
+@media (max-width: 500px){
   html {
     --zoom-level: 50%;
   }
+.header{zoom: 80%;}
+.footer{zoom: 80%;}
 }
-@media (max-width: 200px){
+@media (max-width: 400px){
   html {
-    --zoom-level: 20%;
+    --zoom-level: 40%;
   }
-  
+ 
 }
+@media (max-height: 600px){
+  html {
+    --zoom-level: 70%;
+  }}
+
 /* .material-symbols-outlined {
   font-variation-settings:
   'FILL' 0,
@@ -397,7 +410,7 @@ body {
 } */
 
 .logo {
-  margin: 10px;
+  margin: 8px 8px 0 8px;
   box-shadow: none;
   height: 40px;
 
@@ -424,6 +437,7 @@ body {
     color: rgb(17, 17, 17);
     -webkit-text-decoration: none;
     text-decoration: none;
+    font-size: 30px;
 }
 .linkForFooter:hover{
     color: #9FA8DA;
@@ -613,7 +627,7 @@ button[disabled]:hover {
   border: 3px solid #2e2e2e;
   border-radius: 10px;
   background-color: rgba(126, 126, 126, 0.7);
-  padding: 20px;
+  padding: 15px;
    /* backdrop-filter: blur(9px); */
   transition: opacity 0.3s;
   opacity: 1;
@@ -664,7 +678,7 @@ button[disabled]:hover {
 .item-piece {
   position: relative;
   display: flex;
-  justify-content: center;
+  justify-content: left;
   align-items: center;
   background-color: #5a0275;
   color: azure;
@@ -673,7 +687,10 @@ button[disabled]:hover {
   background-size: 702px 400px;
   text-shadow: 3px 2px 2px rgb(0,0,0);
   min-width: 26px;
-  padding: 10px 20px;   
+  height: 40px;
+  padding-left: 13px;
+  font-size: 16px;
+  /* padding: 10px 8px 10px 22px;    */
 }
 .item-piece:hover {
   z-index: 10;
@@ -681,7 +698,8 @@ button[disabled]:hover {
   box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
 }
 .incorrect {
-  border: 3px solid rgba(194,15,15,0.54118);
+  opacity: .3;
+  background-blend-mode: luminosity;
 }
 .invisible {
   display: none;
@@ -697,8 +715,8 @@ button[disabled]:hover {
 
 .before{
   position: absolute;
-  width: 21px;
-  height: 21px;
+  width: 11px;
+  height: 11px;
   top: 50%;
   left: -2px;
   transform: translateY(-50%);
@@ -714,10 +732,10 @@ button[disabled]:hover {
 }
 .after{
   position: absolute;
-  width: 20px;
-  height: 20px;
+  width: 10px;
+  height: 10px;
   top: 50%;
-  right: -18px;
+  right: -10px;
   transform: translateY(-50%);
   border-radius: 100%;
   background-color: #5a0275;
@@ -736,6 +754,7 @@ button[disabled]:hover {
   border-right: 2px solid rgba(194,119,15,0.54118);
   border-bottom: 2px solid rgba(194,119,15,0.54118);
 }
+
 .header-game {
     width: 100%;
     padding: 5px 10px;
@@ -910,12 +929,19 @@ button[disabled]:hover {
     transition: all .5s;
 }
 .game-result-container-part-piece {
-  min-width: 49px;
+  /* min-width: 49px; */
   min-height: 40px;
   background-color: #e7e7e7;  
   transition: all 0.2s linear;
   flex-grow: 1;
 }
+
+/* .game-result-container-part-piece:has(:nth-child(1)){
+
+  width: fit-content;
+  flex-grow: 0;
+  background-color: rgba(0,0,0,0);
+} */
 .incorrect {
   border: 1px solid rgba(194,15,15,0.54118);
 }
