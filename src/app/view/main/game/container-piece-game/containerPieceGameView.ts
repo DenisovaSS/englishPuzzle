@@ -17,8 +17,8 @@ const cssClasses = {
 };
 // const gameResultContainer = document.querySelector('.game-result-container');
 // console.log(gameResultContainer);
-const GAMERESULTCONTAINERWIDTH = 702;
-const GAMERESULTCONTAINERHEIGHT = 414;
+const GAMERESULTCONTAINERWIDTH = 902;
+const GAMERESULTCONTAINERHEIGHT = 418;
 const MAXLINES = 10;
 
 export default class ContainerPieceGameView extends View {
@@ -214,20 +214,15 @@ export default class ContainerPieceGameView extends View {
     }
     if (GAMERESULTCONTAINERWIDTH) {
       const baseWidth = GAMERESULTCONTAINERWIDTH / this.arrayAnswer.length - 13 - 2;
-      let itemWidth = baseWidth;
+      const itemWidth = baseWidth;
       const textCountW = this.arrayAnswer[+originalIndex].length;
-      const minForWordWidth = textCountW * 8;
-      if (baseWidth < minForWordWidth) {
-        element.style.fontSize = '14px';
-        itemWidth = GAMERESULTCONTAINERWIDTH / this.arrayAnswer.length - 5 - 2;
-        element.style.paddingLeft = '5px';
-      }
-      element.style.width = `${itemWidth}px`;
+      const minForWordWidth = textCountW * 9;
       const countLetetr = word.length;
-      if (countLetetr > 8) {
+      if (baseWidth < minForWordWidth) {
+        element.style.fontSize = '15px';
         console.log(word, countLetetr);
       }
-      // element.style.width = `${GAMERESULTCONTAINERWIDTH / this.arrayAnswer.length - 40 - 2}px`;
+      element.style.width = `${itemWidth}px`;
     }
     element.style.backgroundImage = `url(${getImgURL(backgroundImg)})`;
     element.style.backgroundSize = `${GAMERESULTCONTAINERWIDTH}px ${GAMERESULTCONTAINERHEIGHT}px`;
