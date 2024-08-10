@@ -1,8 +1,8 @@
 .game-result-container {
   width: 902px;
-  height: 418px;
+  height: 518px;
   border: 1px solid black;
-  background-size: 902px 418px;
+  background-size: 902px 518px;
   background-blend-mode: luminosity;
   /* background-color: rgba(255, 255, 255, 1); */
   transition: background-color 1s ease-out;
@@ -13,7 +13,7 @@
 }
 .game-result-container-part {
   width: 902px;
-    height: 40px;
+    height: 50px;
     border: 1px solid black;
     background-color: #fff;
     display: flex;
@@ -23,7 +23,7 @@
 }
 .game-result-container-part-piece {
   /* min-width: 49px; */
-  min-height: 40px;
+  min-height: 50px;
   background-color: #e7e7e7;  
   transition: all 0.2s linear;
   flex-grow: 1;

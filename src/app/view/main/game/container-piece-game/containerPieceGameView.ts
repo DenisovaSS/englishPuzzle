@@ -18,7 +18,7 @@ const cssClasses = {
 // const gameResultContainer = document.querySelector('.game-result-container');
 // console.log(gameResultContainer);
 const GAMERESULTCONTAINERWIDTH = 902;
-const GAMERESULTCONTAINERHEIGHT = 418;
+const GAMERESULTCONTAINERHEIGHT = 518;
 const MAXLINES = 10;
 
 export default class ContainerPieceGameView extends View {
