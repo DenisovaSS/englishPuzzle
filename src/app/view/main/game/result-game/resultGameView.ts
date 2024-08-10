@@ -239,7 +239,17 @@ export default class ResultGameView extends View {
 
   createPieceElement(clickedElement: HTMLElement): HTMLElement {
     const newElement = clickedElement;
-    newElement.addEventListener('click', (event) => this.handlePieceClick(event));
+    newElement.addEventListener('click', (event) => {
+      if (event.target instanceof HTMLElement && (event.target.classList.contains('before') || event.target.classList.contains('after'))) {
+        // Redirect the event to the parent div (the newElement)
+        event.stopPropagation();
+        newElement.click();
+      } else {
+        // Handle the click event normally
+        this.handlePieceClick(event);
+      }
+    });
+
     // newElement.addEventListener('dragstart', this.dragStart);
     return newElement;
   }
