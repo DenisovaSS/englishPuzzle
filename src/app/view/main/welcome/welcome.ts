@@ -22,7 +22,8 @@ const cssClasses = {
 const TEXT_GAME_NAME = 'RSS PUZZLE';
 // eslint-disable-next-line operator-linebreak
 const TEXT_GAME_DESCRIPTION =
-  'RSS Puzzle is a fun platform for learning English where you will have to make sentences out of words.';
+  // eslint-disable-next-line max-len
+  'Begin a delightful adventure in learning English by piecing together jigsaw puzzles featuring masterpieces by renowned artists.';
 
 export default class WelcomeView extends View {
   constructor(private mainView: MainView) {

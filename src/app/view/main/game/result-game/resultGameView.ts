@@ -107,15 +107,15 @@ export default class ResultGameView extends View {
 
   configureView(resultContainer: ElementCreator) {
     const containerCreator = this.containerDivCreator(cssClasses.PARTRESULT);
-    const gameResultContainer = resultContainer.getElement();
-    const roundWordCollection = this.wordCollection.rounds[this.round - 1].levelData;
-    gameResultContainer.style.backgroundImage = `url(${getImgURL(roundWordCollection.imageSrc)})`;
+    // const gameResultContainer = resultContainer.getElement();
+    // const roundWordCollection = this.wordCollection.rounds[this.round - 1].levelData;
+    // gameResultContainer.style.backgroundImage = `url(${getImgURL(roundWordCollection.imageSrc)})`;
     resultContainer.addInnerElement(containerCreator.getElement());
     for (let i = 0; i < this.countWordSentence; i++) {
       const containerPieceCreator = this.containerDivCreator(cssClasses.PARTPIECE);
       const currentPieceCreator = containerPieceCreator.getElement();
       // baclog: todo size width more dinymic
-      currentPieceCreator.style.width = `${702 / this.countWordSentence}px`;
+      currentPieceCreator.style.width = `${902 / this.countWordSentence}px`;
       currentPieceCreator.addEventListener('dragover', this.handleDragOver);
       // currentPieceCreator.addEventListener('dragleave', this.handleDragLeave);
       currentPieceCreator.addEventListener('drop', this.handleDragDrop.bind(this));
@@ -239,7 +239,17 @@ export default class ResultGameView extends View {
 
   createPieceElement(clickedElement: HTMLElement): HTMLElement {
     const newElement = clickedElement;
-    newElement.addEventListener('click', (event) => this.handlePieceClick(event));
+    newElement.addEventListener('click', (event) => {
+      if (event.target instanceof HTMLElement && (event.target.classList.contains('before') || event.target.classList.contains('after'))) {
+        // Redirect the event to the parent div (the newElement)
+        event.stopPropagation();
+        newElement.click();
+      } else {
+        // Handle the click event normally
+        this.handlePieceClick(event);
+      }
+    });
+
     // newElement.addEventListener('dragstart', this.dragStart);
     return newElement;
   }
@@ -320,7 +330,11 @@ export default class ResultGameView extends View {
 
   nextRound() {
     const eventEmitter = EventEmitter.getInstance();
-    this.gameResultContainer.getElement().classList.add('complete');
+    const gameResultContainer = this.gameResultContainer.getElement();
+    gameResultContainer.classList.add('complete');
+    const roundWordCollection = this.wordCollection.rounds[this.round - 1].levelData;
+    gameResultContainer.style.backgroundImage = `url(${getImgURL(roundWordCollection.imageSrc)})`;
+
     const allChildren = this.gameResultContainer.getElement().children;
     for (let i = 0; i < allChildren.length; i++) {
       const child = allChildren[i] as HTMLElement;
