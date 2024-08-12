@@ -51,13 +51,23 @@ body {
   }
  
 }
-@media (max-height: 600px) and ((min-width: 780px)){
+@media (max-width: 380px){
   html {
-    --zoom-level: 70%;
+    --zoom-level: 30%;
+  }
+ 
+}
+@media (max-height: 800px) and ((min-width: 780px)){
+  html {
+    --zoom-level: 60%;
   }}
-  /* @media (max-height: 600px) and ((max-width: 780px)){
+  @media (max-height: 480px) and ((min-width: 780px)){
     html {
-      --zoom-level: 70%;
+      --zoom-level: 50%;
+    }}
+  /* @media (max-height: 500px) and ((max-width: 1000px)){
+    html {
+      --zoom-level: 60%;
     }} */
 /* .material-symbols-outlined {
   font-variation-settings:

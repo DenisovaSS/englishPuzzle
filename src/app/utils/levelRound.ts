@@ -63,7 +63,7 @@ function getCurrentRounds(currentElement:number) {
 function setCurrentRounds(round:number) {
   currentRound = round;
   currentEpisode = 0;
-  // console.log(currentLevel, currentRound);
+  console.log(currentLevel, currentRound);
   eventEmitter.emit('changeRound', wordCollection, currentRound);
 }
 eventEmitter.on('getRounds', (currentElement) => getCurrentRounds(currentElement));
@@ -137,6 +137,11 @@ eventEmitter.on('sendinfo', (wordCollectionCurent:WordCollection, roundCurrent:n
     console.log('WordCollection not found in the list');
   }
   // throw new Error('WordCollection not found in the list.');
+});
+eventEmitter.on('getLevel', (level:number) => {
+  wordCollection = wordCollections[level];
+  currentLevel = level;
+  eventEmitter.emit('changeRound', wordCollection, currentRound);
 });
 const LevelInfo = {
   levels, currentLevel, currentLevelRounds, currentRound, currentEpisodePart, wordCollection, currentEpisode, wordCollections,

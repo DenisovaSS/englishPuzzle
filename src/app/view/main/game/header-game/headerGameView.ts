@@ -90,10 +90,12 @@ export default class HeaderGameView extends View {
     const currentContainer = container.getElement();
     const settingLevel = this.containerCreator('div', cssClasses.SETTINGLEVEL);
     const levels = this.createSelectLevel('level', COUNTLEVEL);
-    const curentLevel = LevelInfo.currentLevel;
+    let curentLevel = LevelInfo.currentLevel;
     const rounds = this.createSelectRound('round', wordCollectionRounds, curentLevel);
     eventEmitter.on('NextRoundHeader', (currentLevel:number, currentRound:number, contRounds :number) => {
+      eventEmitter.emit('getLevel', currentLevel);
       // console.log(currentLevel, 'whaen start');
+      curentLevel = currentLevel;
       const visible = this.elementCreator.getElement().children[1].classList.contains('hide');
       if (visible) { this.elementCreator.getElement().children[1].classList.remove('hide'); }
       const oldRounds = settingLevel.getElement().querySelector('.round');
