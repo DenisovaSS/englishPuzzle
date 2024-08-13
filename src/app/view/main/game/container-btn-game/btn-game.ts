@@ -50,6 +50,9 @@ export default class ContainerBtnGameView extends View {
       BtnCheckCreator.setDisabled(false);
       BtnCheckCreator.setEventHandler('click', this.checknewSentances);
     });
+    eventEmitter.on('auto-completeDisabel', () => {
+      BtnAUTOCreator.setDisabled(true);
+    });
     eventEmitter.on('check-disabled', () => {
       const visible = BtnCheckCreator.getElement().classList.contains('invisible');
       if (visible) { BtnCheckCreator.getElement().classList.remove('invisible'); }
