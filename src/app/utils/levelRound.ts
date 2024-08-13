@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { WordCollection } from './element-creator';
+import { WordCollection, ElementCreator } from './element-creator';
 import wordCollectionLevel1 from '../../data/wordCollectionLevel1.json';
 import wordCollectionLevel2 from '../../data/wordCollectionLevel2.json';
 import wordCollectionLevel3 from '../../data/wordCollectionLevel3.json';
@@ -106,6 +106,35 @@ eventEmitter.on('saveLastCompletedRound', (lastWordCollection:WordCollection, la
   }
 });
 eventEmitter.on('sendinfo', (wordCollectionCurent:WordCollection, roundCurrent:number) => {
+  const dataStringStorage = localStorage.getItem(myKeySaveLocalStorage);
+  if (dataStringStorage) {
+    const objectData = JSON.parse(dataStringStorage).completeRounds;
+    let totalLength = 0;
+    Object.keys(objectData).forEach((key) => {
+      totalLength += objectData[key].length;
+    });
+    console.log(totalLength);
+    if (totalLength === 209) {
+      const divWrapper = document.createElement('div');
+      divWrapper.classList.add('congraTextWrapper');
+      const divText = document.createElement('div');
+      divText.classList.add('congraText');
+      divText.textContent = "🤩Congratulations! You're the winner🎉! You can take a screenshot and send it to Svetlana; after that, you'll receive a chocolate🍫.";
+      divWrapper.append(divText);
+      const BtnContinueParam = {
+        tag: 'button',
+        classNames: ['button', 'continue-button'],
+        textContent: 'continue',
+      };
+      const BtnContinueCreator = new ElementCreator(BtnContinueParam);
+      divWrapper.append(BtnContinueCreator.getElement());
+      BtnContinueCreator.setEventHandler('click', () => {
+        divWrapper.remove();
+      });
+      document.body.append(divWrapper);
+    }
+  }
+
   currentRound = roundCurrent + 1;
   let levelInEpisode = wordCollections.indexOf(wordCollectionCurent);
   // console.log(levelInEpisode);

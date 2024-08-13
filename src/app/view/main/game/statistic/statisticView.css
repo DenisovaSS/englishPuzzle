@@ -1,4 +1,4 @@
-.statistic-wrapper{
+.statistic-wrapper, .congraTextWrapper{
     position: fixed;
     top: 0;
     left: 0;
@@ -11,7 +11,8 @@
     backdrop-filter: blur(6px);
     transition: all .3s linear;
 }
-.statistic-container{
+
+.statistic-container, .congraText{
     display: flex;
     flex-direction: column;
     padding: 30px;
@@ -23,6 +24,10 @@
     letter-spacing: .6px;
     box-shadow: -1px 0px 17px 1px #858585,2px 2px 15px -4px #838383;
     border-radius: 20px;
+}
+.congraText{
+    color: #c13131;
+    font-size: 26px;
 }
 .img-container{
     width: 250px;
