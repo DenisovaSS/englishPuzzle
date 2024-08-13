@@ -297,6 +297,7 @@ export default class ResultGameView extends View {
         // console.log(this.customerAnswers[1].indexOf(this.currentEpisode), 'index');
         this.customerAnswers[0].push(this.currentEpisode);
       }
+      eventEmitter.emit('auto-completeDisabel');
       eventEmitter.emit('check-remove');
       eventEmitter.emit('continue');
       // console.log(this.customerAnswers, 'this episode');

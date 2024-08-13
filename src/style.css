@@ -59,8 +59,12 @@ body {
 }
 @media (max-height: 800px) and ((min-width: 780px)){
   html {
-    --zoom-level: 60%;
+    --zoom-level: 80%;
   }}
+  @media (max-height: 700px) and ((min-width: 780px)){
+    html {
+      --zoom-level: 70%;
+    }}
   @media (max-height: 480px) and ((min-width: 780px)){
     html {
       --zoom-level: 50%;
